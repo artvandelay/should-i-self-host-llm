@@ -151,6 +151,80 @@ export function pickCheapestGpu(
   );
 }
 
+// =============================================================================
+// COST PROJECTIONS — derive monthly / annual from any weekly cost
+// =============================================================================
+
+/** Average weeks per month: 52 / 12 ≈ 4.345. Used so monthly × 12 ≈ annual. */
+export const WEEKS_PER_MONTH = 52 / 12;
+export const WEEKS_PER_YEAR = 52;
+
+export type CostView = "weekly" | "monthly" | "annual";
+
+export interface CostProjection {
+  weekly: number;
+  monthly: number;
+  annual: number;
+}
+
+/** Project a weekly cost into weekly/monthly/annual figures. Additive helper. */
+export function projectCost(weekly_cost: number): CostProjection {
+  return {
+    weekly: weekly_cost,
+    monthly: weekly_cost * WEEKS_PER_MONTH,
+    annual: weekly_cost * WEEKS_PER_YEAR,
+  };
+}
+
+/** Scale a weekly cost to the chosen view. */
+export function costForView(weekly_cost: number, view: CostView): number {
+  if (view === "monthly") return weekly_cost * WEEKS_PER_MONTH;
+  if (view === "annual") return weekly_cost * WEEKS_PER_YEAR;
+  return weekly_cost;
+}
+
+export function costViewSuffix(view: CostView): string {
+  if (view === "monthly") return "/mo";
+  if (view === "annual") return "/yr";
+  return "/wk";
+}
+
+export function costViewLabel(view: CostView): string {
+  if (view === "monthly") return "Monthly cost";
+  if (view === "annual") return "Annual cost";
+  return "Weekly cost";
+}
+
+/**
+ * Break-even analysis: weeks until cumulative API spend exceeds cumulative
+ * self-host spend including a one-time setup/migration cost.
+ *
+ *   cumulative_api(w)      = api_weekly * w
+ *   cumulative_selfhost(w) = setup_cost + selfhost_weekly * w
+ *
+ * Solve for the smallest integer w where cumulative_api >= cumulative_selfhost.
+ *   w >= setup_cost / (api_weekly - selfhost_weekly)
+ *
+ * Returns null if self-hosting is never cheaper than the API at this weekly
+ * rate (i.e. selfhost_weekly >= api_weekly) or if the break-even exceeds
+ * `cap_weeks` (default 520 = 10 years).
+ */
+export function breakEvenWeeks(
+  api_weekly: number,
+  selfhost_weekly: number,
+  setup_cost: number,
+  cap_weeks = 520
+): number | null {
+  if (!Number.isFinite(api_weekly) || !Number.isFinite(selfhost_weekly)) return null;
+  if (!Number.isFinite(setup_cost) || setup_cost < 0) return null;
+  const weekly_savings = api_weekly - selfhost_weekly;
+  if (weekly_savings <= 0) return null;
+  if (setup_cost === 0) return 0;
+  const weeks = Math.ceil(setup_cost / weekly_savings);
+  if (weeks > cap_weeks) return null;
+  return weeks;
+}
+
 export function weeklyApiCost(
   pricing: Pricing,
   queries_per_week: number,

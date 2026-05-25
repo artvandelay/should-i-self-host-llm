@@ -15,7 +15,11 @@ import {
   QUANT_LABEL,
   KNOWN_MODELS,
   recommendTiers,
+  costForView,
+  costViewSuffix,
+  breakEvenWeeks,
   type ConfigResult,
+  type CostView,
   type Pattern,
   type Quant,
   type Vendor,
@@ -185,14 +189,19 @@ function TierCard({
   tier,
   apiCost,
   badge,
+  view,
 }: {
   tier: ConfigResult;
   apiCost: number;
   badge?: { label: string; color: "indigo" | "green" } | null;
+  view: CostView;
 }) {
   const weekly = tier.weekly_cost_with_ft ?? tier.weekly_cost;
   const savings = apiCost - weekly;
   const savings_pct = apiCost > 0 ? (savings / apiCost) * 100 : 0;
+  const viewedCost = costForView(weekly, view);
+  const viewedSavings = costForView(savings, view);
+  const suffix = costViewSuffix(view);
   const ringClass =
     badge?.color === "green"
       ? "border-emerald-400 bg-emerald-50/40 ring-2 ring-emerald-200"
@@ -222,11 +231,11 @@ function TierCard({
         </div>
         <div className="text-right">
           <div className="text-2xl font-bold text-slate-900">
-            {fmtCurrency(weekly)}
-            <span className="text-sm font-normal text-slate-500">/wk</span>
+            {fmtCurrency(viewedCost)}
+            <span className="text-sm font-normal text-slate-500">{suffix}</span>
           </div>
           <div className="text-sm text-emerald-700 font-medium">
-            saves {fmtCurrency(savings)} ({fmt(savings_pct, 0)}%)
+            saves {fmtCurrency(viewedSavings)} ({fmt(savings_pct, 0)}%)
           </div>
         </div>
       </div>
@@ -255,7 +264,7 @@ function TierCard({
         </div>
         {tier.ft_weekly !== undefined && tier.ft_weekly > 0 && (
           <div className="col-span-2 text-slate-500">
-            includes {fmtCurrency(tier.ft_weekly)}/wk fine-tuning amortization
+            includes {fmtCurrency(costForView(tier.ft_weekly, view))}{suffix} fine-tuning amortization
           </div>
         )}
       </div>
@@ -362,6 +371,17 @@ export default function App() {
   const [quant_pref, setQuantPref] = useUrlState<Quant>("q", "fp16");
   const [vendor, setVendor] = useUrlState<Vendor>("v", "runpod");
   const [show_all_tiers, setShowAllTiers] = useState(false);
+  const [cost_view, setCostView] = useState<CostView>(() => {
+    if (typeof window === "undefined") return "weekly";
+    const stored = localStorage.getItem("cost_view");
+    if (stored === "weekly" || stored === "monthly" || stored === "annual") return stored;
+    return "weekly";
+  });
+  const updateCostView = (v: CostView) => {
+    setCostView(v);
+    if (typeof window !== "undefined") localStorage.setItem("cost_view", v);
+  };
+  const [setup_cost, setSetupCost] = useState<number>(5000);
   const [dismissedBannerFp, setDismissedBannerFp] = useState<string | null>(
     () => (typeof window !== "undefined" ? localStorage.getItem("dismissed_banner_fp") : null)
   );
@@ -715,8 +735,31 @@ export default function App() {
                   {result.tiers.length} self-host {result.tiers.length === 1 ? "option" : "options"} fit under
                   your API budget
                 </h2>
-                <div className="text-sm text-slate-600">
-                  API cost: <span className="font-semibold text-slate-900">{fmtCurrency(result.api_cost)}/wk</span>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <div className="inline-flex rounded-md border border-slate-300 bg-slate-50 p-0.5 text-xs">
+                    {(["weekly", "monthly", "annual"] as CostView[]).map((v) => (
+                      <button
+                        key={v}
+                        type="button"
+                        onClick={() => updateCostView(v)}
+                        aria-pressed={cost_view === v}
+                        className={`px-2.5 py-1 rounded transition-colors ${
+                          cost_view === v
+                            ? "bg-white text-indigo-700 font-semibold shadow-sm border border-indigo-200"
+                            : "text-slate-600 hover:text-slate-900"
+                        }`}
+                      >
+                        {v.charAt(0).toUpperCase() + v.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="text-sm text-slate-600">
+                    API cost:{" "}
+                    <span className="font-semibold text-slate-900">
+                      {fmtCurrency(costForView(result.api_cost, cost_view))}
+                      {costViewSuffix(cost_view)}
+                    </span>
+                  </div>
                 </div>
               </div>
               <p className="text-sm text-slate-600 mb-2 flex items-start gap-1.5">
@@ -734,7 +777,7 @@ export default function App() {
                 hourly rates are approximate — verify with your vendor before quoting.
               </p>
 
-              <CostSizeChart result={result} />
+              <CostSizeChart result={result} view={cost_view} />
 
               <div className="space-y-3">
                 {largest && (
@@ -742,6 +785,7 @@ export default function App() {
                     tier={largest}
                     apiCost={result.api_cost}
                     badge={{ label: "Largest that fits", color: "green" }}
+                    view={cost_view}
                   />
                 )}
                 {graded.map((g) => (
@@ -750,10 +794,17 @@ export default function App() {
                     tier={g.tier}
                     apiCost={result.api_cost}
                     badge={{ label: g.label, color: "indigo" }}
+                    view={cost_view}
                   />
                 ))}
                 {(show_all_tiers ? otherTiers : otherTiers.slice(0, 2)).map((tier) => (
-                  <TierCard key={`${tier.arch}-${tier.params_b}`} tier={tier} apiCost={result.api_cost} badge={null} />
+                  <TierCard
+                    key={`${tier.arch}-${tier.params_b}`}
+                    tier={tier}
+                    apiCost={result.api_cost}
+                    badge={null}
+                    view={cost_view}
+                  />
                 ))}
               </div>
               <div className="mt-4 flex justify-end">
@@ -786,6 +837,76 @@ export default function App() {
                 </button>
               )}
             </div>
+
+            {largest && (
+              <div className="mb-3">
+                <Expander title="Break-even analysis (setup cost payback)">
+                  {(() => {
+                    const selfhostWeekly = largest.weekly_cost_with_ft ?? largest.weekly_cost;
+                    const weeks = breakEvenWeeks(result.api_cost, selfhostWeekly, setup_cost);
+                    const weeklySavings = result.api_cost - selfhostWeekly;
+                    return (
+                      <div className="space-y-3">
+                        <p className="text-sm text-slate-600">
+                          One-time costs (engineer ramp-up, infra setup, migration, evals) often
+                          dominate the first months of self-hosting. Enter an estimate to see
+                          when cumulative API spend overtakes cumulative self-host spend for the{" "}
+                          <strong>largest-that-fits</strong> pick (~{largest.params_b}B{" "}
+                          {largest.arch === "moe" ? "MoE" : "dense"}).
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <NumberInput
+                            label="One-time setup / migration cost ($)"
+                            value={setup_cost}
+                            onChange={setSetupCost}
+                            step={500}
+                            hint="Engineering, infra, evals, on-call ramp-up"
+                          />
+                          <div className="flex flex-col justify-end">
+                            <div className="text-xs text-slate-500 mb-1">Weekly savings vs API</div>
+                            <div className="font-mono text-sm text-slate-800">
+                              {weeklySavings > 0
+                                ? `${fmtCurrency(weeklySavings)}/wk (${fmtCurrency(
+                                    costForView(weeklySavings, cost_view)
+                                  )}${costViewSuffix(cost_view)})`
+                                : "$0 (self-host is not cheaper at this volume)"}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="rounded-md border border-indigo-200 bg-indigo-50/60 px-4 py-3">
+                          {weeks === null ? (
+                            <div className="text-sm text-slate-800">
+                              {weeklySavings <= 0
+                                ? "Self-host is not cheaper than the API at this workload — break-even never happens."
+                                : "Never within 10 years at this setup cost."}
+                            </div>
+                          ) : (
+                            <div className="text-sm text-slate-800">
+                              Self-hosting pays back in{" "}
+                              <span className="font-semibold text-indigo-700">
+                                ~{weeks} {weeks === 1 ? "week" : "weeks"}
+                              </span>
+                              {weeks >= 4 && (
+                                <span className="text-slate-600">
+                                  {" "}(~{(weeks / (52 / 12)).toFixed(1)} months
+                                  {weeks >= 52 ? `, ~${(weeks / 52).toFixed(1)} years` : ""})
+                                </span>
+                              )}
+                              .
+                            </div>
+                          )}
+                          <div className="text-xs text-slate-500 mt-1">
+                            Capped at 520 weeks (10 years). Assumes weekly costs stay flat — real
+                            workloads grow, prices change, and ongoing engineering effort is not
+                            included.
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </Expander>
+              </div>
+            )}
 
             <Expander title="Show the math (derivation)">
               <Derivation

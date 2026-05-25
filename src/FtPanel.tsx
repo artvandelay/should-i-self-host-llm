@@ -46,8 +46,11 @@ export function FtPanel({
   const [epochs, setEpochs] = useState(3);
   const [prepCost, setPrepCost] = useState(0);
   const [experimentsMultiplier, setExperimentsMultiplier] = useState(2.5);
-  // "" sentinel = auto (let engine pick from FT VRAM footprint)
-  const [clusterOverride, setClusterOverride] = useState<"" | "1.0" | "1.3" | "1.6">("");
+  // "auto" lets the engine pick from VRAM footprint; otherwise the chosen
+  // multiplier is passed through as an override.
+  const [clusterOverhead, setClusterOverhead] = useState<"auto" | "1.0" | "1.3" | "1.6">(
+    "auto"
+  );
 
   const ftInputs = useMemo(
     () => ({
@@ -57,9 +60,17 @@ export function FtPanel({
       epochs,
       prep_cost_usd: prepCost,
       experiments_multiplier: experimentsMultiplier,
-      cluster_overhead: clusterOverride === "" ? undefined : Number(clusterOverride),
+      cluster_overhead: clusterOverhead === "auto" ? undefined : Number(clusterOverhead),
     }),
-    [numExamples, tokensPerExample, method, epochs, prepCost, experimentsMultiplier, clusterOverride]
+    [
+      numExamples,
+      tokensPerExample,
+      method,
+      epochs,
+      prepCost,
+      experimentsMultiplier,
+      clusterOverhead,
+    ]
   );
 
   const capex = useMemo(
@@ -213,21 +224,23 @@ export function FtPanel({
             Cluster overhead
           </label>
           <select
-            value={clusterOverride}
-            onChange={(e) => setClusterOverride(e.target.value as "" | "1.0" | "1.3" | "1.6")}
+            value={clusterOverhead}
+            onChange={(e) =>
+              setClusterOverhead(e.target.value as "auto" | "1.0" | "1.3" | "1.6")
+            }
             className={inputClass}
           >
-            <option value="">
-              Auto ({fmt(capex.cluster_overhead, 2)}× · {capex.cluster_topology})
+            <option value="auto">
+              Auto ({fmt(capex.cluster_overhead, 2)}× — {capex.cluster_topology},{" "}
+              {fmtInt(capex.ft_vram_gb)} GB FT VRAM)
             </option>
-            <option value="1.0">1.0× (single GPU)</option>
-            <option value="1.3">1.3× (multi-GPU, NVLink)</option>
-            <option value="1.6">1.6× (multi-node)</option>
+            <option value="1.0">1.0× — single GPU</option>
+            <option value="1.3">1.3× — multi-GPU NVLink node</option>
+            <option value="1.6">1.6× — multi-node</option>
           </select>
           <span className="text-[10px] text-slate-500 mt-1">
-            Comms cost grows with cluster size. Auto picks from the
-            estimated VRAM footprint (~{fmt(capex.ft_vram_gb, 0)} GB for
-            this workload).
+            Extra wall-clock time for gradient sync across GPUs. Auto picks
+            from VRAM footprint.
           </span>
         </div>
       </div>
@@ -339,17 +352,18 @@ export function FtPanel({
       </div>
 
       <p className="text-[10px] text-slate-400 leading-relaxed">
-        Compute estimates use {FT_METHODS.lora.citation}; {FT_METHODS.qlora.citation};{" "}
-        {FT_METHODS.full.citation}. Training FLOPs use the Kaplan 6N rule (2N fwd + 4N
-        bwd). LoRA/QLoRA use ~⅔ of full-FT FLOPs — the backward pass still propagates
-        through frozen base weights, so PEFT methods save memory, not compute (EU AI
-        Act SageMaker formula; CE-LoRA arxiv 2502.01378). H100 BF16 throughput assumes
-        30% sustained MFU for fine-tuning workloads, with per-method penalties (QLoRA
-        dequantization tax). Anchored to QLoRA paper's Guanaco-65B 24-hour benchmark.
-        Quality impact of fine-tuning is not estimated — compare Arena ELO of base vs
-        fine-tuned models separately. Cost shown is for an N× campaign
-        (HP sweeps + failed runs); the single-run lower bound is shown in the
-        breakdown above. Prep cost is treated as one-time and is not multiplied.
+        Anchored to the QLoRA paper's Guanaco-65B 24-hour benchmark. Cost is
+        for the full campaign (multiplier above); 1-run cost shown in the
+        breakdown. Quality impact of fine-tuning is not modeled — check Arena
+        ELO of base vs tuned models separately.{" "}
+        <a
+          href="https://github.com/artvandelay/should-i-self-host-llm/blob/main/FT_ASSUMPTIONS.md"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-slate-500 underline hover:text-slate-700"
+        >
+          Full assumptions & citations →
+        </a>
       </p>
     </div>
   );

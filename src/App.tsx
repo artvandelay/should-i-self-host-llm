@@ -805,7 +805,7 @@ export default function App() {
                 value={min_elo}
                 onChange={setMinElo}
                 step={10}
-                hint="0 = off. Drops self-host candidates whose nearest known model is below this LMArena ELO. Models with no ELO are kept."
+                hint="0 = off. Filters out candidates below this LMArena ELO. For reference: GPT-4o ≈ 1280, Llama-3.1-70B ≈ 1190, Mistral-7B ≈ 1070."
               />
             </div>
           </Expander>
@@ -819,13 +819,12 @@ export default function App() {
               <div>
                 <h3 className="text-lg font-semibold text-amber-900">Stick with the API</h3>
                 <p className="text-amber-800 mt-1">
-                  At this volume ({fmtInt(queries_per_week)} queries/week, {fmtCurrency(result.api_cost)}/wk on
-                  the API), no self-host config beats the API price — even the smallest models on the cheapest
-                  GPUs cost more than you'd pay the API directly.
+                  At {fmtInt(queries_per_week)} queries/week ({fmtCurrency(result.api_cost)}/wk on the API),
+                  even the smallest self-host setup costs more than the API.
                 </p>
                 <p className="text-amber-800 mt-2 text-sm">
-                  Self-hosting starts winning at higher volumes. Try increasing queries/week or output tokens
-                  to see the crossover.
+                  Self-hosting wins at higher volumes. Bump queries/week or output tokens
+                  to find your crossover.
                 </p>
               </div>
             </div>
@@ -870,10 +869,9 @@ export default function App() {
                   </div>
                 </div>
               </div>
-              <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-3 py-2 mb-4 mt-2">
-                <strong>Note:</strong> Compute only (inference + any fine-tuning you estimate per card).
-                Engineering time — serving infra, evals, monitoring, on-call — is not included. GPU hourly
-                rates are approximate; verify with your vendor before quoting.
+              <p className="text-xs text-slate-500 mb-4 mt-2">
+                Compute only. Engineering time (infra, evals, on-call) not included.
+                Verify GPU rates with your vendor before quoting.
               </p>
 
               <CostSizeChart result={result} view={cost_view} />

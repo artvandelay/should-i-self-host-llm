@@ -33,6 +33,7 @@ import { ApiCombobox } from "./ApiCombobox";
 import { CostSizeChart } from "./CostSizeChart";
 import { Presets, type PresetValues } from "./Presets";
 import { ExportMenu } from "./ExportMenu";
+import { TIER_LABEL, QUALITY_TIERS_SOURCE_URL } from "./qualityTiers";
 // @ts-expect-error - Vite handles SVG imports as asset URLs at build time
 import logoUrl from "./logo.svg";
 
@@ -190,11 +191,13 @@ function TierCard({
   apiCost,
   badge,
   view,
+  qualityNote,
 }: {
   tier: ConfigResult;
   apiCost: number;
-  badge?: { label: string; color: "indigo" | "green" } | null;
+  badge?: { label: string; color: "indigo" | "green" | "teal" } | null;
   view: CostView;
+  qualityNote?: React.ReactNode;
 }) {
   const weekly = tier.weekly_cost_with_ft ?? tier.weekly_cost;
   const savings = apiCost - weekly;
@@ -207,9 +210,13 @@ function TierCard({
       ? "border-emerald-400 bg-emerald-50/40 ring-2 ring-emerald-200"
       : badge?.color === "indigo"
       ? "border-indigo-400 bg-indigo-50/40 ring-2 ring-indigo-200"
+      : badge?.color === "teal"
+      ? "border-teal-400 bg-teal-50/40 ring-2 ring-teal-200"
       : "border-slate-200 bg-white";
   const badgeText =
-    badge?.color === "green" ? "text-emerald-700" : "text-indigo-700";
+    badge?.color === "green" ? "text-emerald-700"
+    : badge?.color === "teal" ? "text-teal-700"
+    : "text-indigo-700";
 
   return (
     <div className={`border rounded-lg p-4 ${ringClass}`}>
@@ -268,6 +275,12 @@ function TierCard({
           </div>
         )}
       </div>
+
+      {qualityNote && (
+        <div className="mt-3 text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded px-2.5 py-1.5">
+          {qualityNote}
+        </div>
+      )}
 
       {tier.saturated && (
         <div className="mt-3 flex items-start gap-2 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded px-2.5 py-1.5">
@@ -511,9 +524,18 @@ export default function App() {
 
   const largest = result.largest;
   const graded = result.gradedTiers;
+  const comparable = result.comparableQuality;
+  // Only show the comparable card when it is *different* from `largest`.
+  const showComparable =
+    comparable &&
+    largest &&
+    `${comparable.tier.arch}-${comparable.tier.params_b}` !==
+      `${largest.arch}-${largest.params_b}`;
 
   const featuredKeys = new Set<string>();
   if (largest) featuredKeys.add(`${largest.arch}-${largest.params_b}`);
+  if (showComparable && comparable)
+    featuredKeys.add(`${comparable.tier.arch}-${comparable.tier.params_b}`);
   for (const g of graded) featuredKeys.add(`${g.tier.arch}-${g.tier.params_b}`);
   const otherTiers = result.tiers.filter(
     (t) => !featuredKeys.has(`${t.arch}-${t.params_b}`)
@@ -786,6 +808,33 @@ export default function App() {
                     apiCost={result.api_cost}
                     badge={{ label: "Largest that fits", color: "green" }}
                     view={cost_view}
+                  />
+                )}
+                {showComparable && comparable && (
+                  <TierCard
+                    tier={comparable.tier}
+                    apiCost={result.api_cost}
+                    badge={{ label: "Comparable quality", color: "teal" }}
+                    view={cost_view}
+                    qualityNote={
+                      <span>
+                        <strong>{TIER_LABEL[comparable.modelTier]}</strong> open-weight model — same coarse tier as{" "}
+                        <strong>{TIER_LABEL[comparable.apiTier ?? comparable.floor]}</strong> API target
+                        {comparable.floor !== comparable.apiTier && (
+                          <> (no exact-tier model fit your budget; this is one tier below)</>
+                        )}
+                        . Quality tiers based on public benchmarks;{" "}
+                        <a
+                          href={QUALITY_TIERS_SOURCE_URL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-teal-700 hover:text-teal-900 underline"
+                        >
+                          see source
+                        </a>
+                        .
+                      </span>
+                    }
                   />
                 )}
                 {graded.map((g) => (

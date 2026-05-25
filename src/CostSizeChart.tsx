@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import type { ConfigResult, CostView, RecommendResult } from "./engine";
 import { costForView, costViewLabel, costViewSuffix } from "./engine";
+import { TIER_RANK, type QualityTier } from "./qualityTiers";
 
 interface ChartPoint {
   params_b: number;
@@ -19,8 +20,9 @@ interface ChartPoint {
   arch: "dense" | "moe";
   gpu: string;
   savings_pct: number;
-  highlight: "largest" | "graded" | null;
+  highlight: "largest" | "comparable" | "graded" | null;
   active_params_b: number;
+  quality_tier: QualityTier | null;
 }
 
 function toPoint(
@@ -38,6 +40,7 @@ function toPoint(
     savings_pct,
     highlight,
     active_params_b: c.active_params_b,
+    quality_tier: c.quality_tier ?? null,
   };
 }
 
@@ -53,6 +56,23 @@ function CustomDot(props: any) {
     return (
       <g>
         <circle cx={cx} cy={cy} r={r + 5} fill="none" stroke="#10b981" strokeWidth={2.5} />
+        {isDense ? (
+          <circle cx={cx} cy={cy} r={r} fill={baseFill} stroke={baseStroke} strokeWidth={1} />
+        ) : (
+          <polygon
+            points={`${cx},${cy - r} ${cx - r},${cy + r} ${cx + r},${cy + r}`}
+            fill={baseFill}
+            stroke={baseStroke}
+            strokeWidth={1}
+          />
+        )}
+      </g>
+    );
+  }
+  if (payload.highlight === "comparable") {
+    return (
+      <g>
+        <circle cx={cx} cy={cy} r={r + 5} fill="none" stroke="#0d9488" strokeWidth={2.5} />
         {isDense ? (
           <circle cx={cx} cy={cy} r={r} fill={baseFill} stroke={baseStroke} strokeWidth={1} />
         ) : (
@@ -83,8 +103,15 @@ function CustomDot(props: any) {
       </g>
     );
   }
+  // Subtle quality-tier hint: higher tiers render at higher opacity so the
+  // eye can track the "comparable-quality" region of the chart without losing
+  // the dense/MoE shape distinction.
+  const tierOpacity =
+    payload.quality_tier
+      ? 0.4 + 0.15 * (TIER_RANK[payload.quality_tier as QualityTier] - 1)
+      : 0.6;
   if (isDense) {
-    return <circle cx={cx} cy={cy} r={r} fill={baseFill} stroke={baseStroke} strokeWidth={1} fillOpacity={0.7} />;
+    return <circle cx={cx} cy={cy} r={r} fill={baseFill} stroke={baseStroke} strokeWidth={1} fillOpacity={tierOpacity} />;
   }
   return (
     <polygon
@@ -92,7 +119,7 @@ function CustomDot(props: any) {
       fill={baseFill}
       stroke={baseStroke}
       strokeWidth={1}
-      fillOpacity={0.7}
+      fillOpacity={tierOpacity}
     />
   );
 }
@@ -115,10 +142,14 @@ function CustomTooltip({ active, payload, view }: any) {
 }
 
 export function CostSizeChart({ result, view = "weekly" }: { result: RecommendResult; view?: CostView }) {
-  const { api_cost, all_candidates, largest, gradedTiers } = result;
+  const { api_cost, all_candidates, largest, gradedTiers, comparableQuality } = result;
 
   const highlightKeys = new Map<string, ChartPoint["highlight"]>();
   if (largest) highlightKeys.set(`${largest.arch}-${largest.params_b}`, "largest");
+  if (comparableQuality) {
+    const k = `${comparableQuality.tier.arch}-${comparableQuality.tier.params_b}`;
+    if (!highlightKeys.has(k)) highlightKeys.set(k, "comparable");
+  }
   for (const g of gradedTiers) {
     const k = `${g.tier.arch}-${g.tier.params_b}`;
     if (!highlightKeys.has(k)) highlightKeys.set(k, "graded");

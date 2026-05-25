@@ -1,28 +1,29 @@
 /**
  * LMArena ELO matcher.
  *
- * Source of ELO data:
- *   https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard?name=text
+ * Source of ELO data: the official `lmarena-ai/leaderboard-dataset` on
+ * Hugging Face, published by the LMArena team themselves.
+ *   https://huggingface.co/datasets/lmarena-ai/leaderboard-dataset
  *
  * Why this source:
- *   - LMArena (formerly LMSYS Chatbot Arena) does NOT provide an official
- *     public API for the leaderboard. The closest official artifact is
- *     `lmarena/arena-catalog` on GitHub, but it only carries model metadata
- *     (pricing, license) — not the actual ELO scores; scores live in an
- *     internal `results.pkl` the LMArena team owns.
- *   - `api.wulong.dev/arena-ai-leaderboards` is a free, no-auth REST mirror
- *     backed by a daily-updated GitHub repo
- *     (https://github.com/oolong-tea-2026/arena-ai-leaderboards) that scrapes
- *     the public arena.ai leaderboard page and exposes it as structured JSON.
- *   - That repo covers the top ~30 text-arena entries — enough for every
- *     proprietary API we ship and for the headline open-weight models
- *     (GLM, Kimi, DeepSeek, etc). Smaller open-weight models that don't
- *     appear in the top 30 simply get no ELO; the app degrades gracefully.
+ *   - It is the authoritative leaderboard snapshot: same numbers shown on
+ *     lmarena.ai, published by the LMArena org. No scraping, no third party.
+ *   - We pull the `text` config, `latest` split, filtered to
+ *     `category == "overall"` — i.e. the main text-arena leaderboard at its
+ *     most recent publish date. Coverage is ~360 models per snapshot,
+ *     including ~200 open-weight models from 1B to 400B+, so the chart's
+ *     ELO colour-encoding and the "comparable quality" recommendation work
+ *     across the full self-host candidate range.
+ *   - Schema (from the dataset card):
+ *       model_name, organization, license, rating, rating_lower,
+ *       rating_upper, variance, vote_count, rank, category,
+ *       leaderboard_publish_date.
+ *     Ratings are Bradley-Terry scores on the same scale as Arena ELO
+ *     (style-control on by default since 2025-05-16).
  *
- * License/attribution: arena scores are derived from LMArena.ai user votes.
- * We credit LMArena (and the wulong.dev mirror) in the README. Re-publishing
- * the scores as a derived dataset is consistent with the source repo's MIT
- * license.
+ * License / attribution: scores are derived from LMArena.ai user votes;
+ * we credit LMArena in the README. Re-publishing snapshots as a derived
+ * dataset is consistent with the source dataset's license.
  */
 
 export interface EloEntry {

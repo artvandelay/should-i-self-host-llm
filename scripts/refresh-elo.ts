@@ -1,8 +1,12 @@
 /**
- * CLI script: pull LMArena (Chatbot Arena) ELO scores and write to src/elo.json.
+ * CLI script: pull LMArena leaderboard ratings and write to src/elo.json.
  *
- * Source: api.wulong.dev (free, no-auth mirror of arena.ai/leaderboard/text).
- * See src/eloMatch.ts for the rationale behind this source choice.
+ * Source: the official `lmarena-ai/leaderboard-dataset` on Hugging Face,
+ * published by the LMArena team. We fetch the `text` config, `latest`
+ * split, and keep only rows where `category == "overall"` — i.e. the main
+ * text-arena leaderboard at its most recent publish date.
+ *
+ * See src/eloMatch.ts for the rationale and schema.
  *
  * Run nightly via .github/workflows/refresh-prices.yml.
  */
@@ -10,6 +14,7 @@
 import { readFileSync, writeFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
+import { parquetReadObjects } from "hyparquet";
 import { matchElo, type EloEntry, type EloSnapshot } from "../src/eloMatch";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -20,36 +25,82 @@ const ELO_PATH = resolve(SRC, "elo.json");
 const PRICING_PATH = resolve(SRC, "pricing.json");
 const KNOWN_MODELS_PATH = resolve(SRC, "knownModels.json");
 
-const ARENA_URL =
-  process.env.ARENA_LEADERBOARD_URL ??
-  "https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard?name=text";
+const HF_DATASET = "lmarena-ai/leaderboard-dataset";
+const HF_CONFIG = "text";
+const HF_SPLIT = "latest";
+const SOURCE_URL = `https://huggingface.co/datasets/${HF_DATASET}`;
+// Direct parquet download from the HF resolve endpoint — one request,
+// no rate-limit issues with the /rows API.
+const PARQUET_URL =
+  `https://huggingface.co/datasets/${HF_DATASET}/resolve/main/` +
+  `${HF_CONFIG}/${HF_SPLIT}-00000-of-00001.parquet`;
 
-async function fetchArena(): Promise<EloSnapshot | null> {
+interface HfRow {
+  model_name: string;
+  organization: string;
+  license: string;
+  rating: number;
+  rating_lower?: number;
+  rating_upper?: number;
+  variance?: number;
+  vote_count: number;
+  rank: number;
+  category: string;
+  leaderboard_publish_date: string;
+}
+
+async function fetchParquet(): Promise<HfRow[]> {
+  const resp = await fetch(PARQUET_URL, {
+    headers: { "User-Agent": "Mozilla/5.0 (AI-PH-FT-calculation/1.0 refresh-elo)" },
+    signal: AbortSignal.timeout(60_000),
+  });
+  if (!resp.ok) {
+    throw new Error(`Parquet HTTP ${resp.status}`);
+  }
+  const buf = await resp.arrayBuffer();
+  console.log(`  Downloaded ${(buf.byteLength / 1024).toFixed(0)} KB of parquet`);
+  const rows = (await parquetReadObjects({ file: buf })) as unknown as HfRow[];
+  return rows;
+}
+
+async function fetchLeaderboard(): Promise<EloSnapshot | null> {
   try {
-    const resp = await fetch(ARENA_URL, {
-      headers: { "User-Agent": "Mozilla/5.0 (AI-PH-FT-calculation/1.0 refresh-elo)" },
-      signal: AbortSignal.timeout(30_000),
-    });
-    if (!resp.ok) {
-      console.error("Arena fetch HTTP", resp.status);
-      return null;
-    }
-    const data: any = await resp.json();
-    const entries: EloEntry[] = (data.models ?? []).map((m: any) => ({
-      model: m.model,
-      vendor: m.vendor,
-      license: m.license,
-      score: m.score,
-      rank: m.rank,
-      votes: m.votes,
-    }));
+    const all = await fetchParquet();
+    console.log(`  Parsed ${all.length} rows from parquet`);
+
+    // Keep only the main text-arena leaderboard (overall category).
+    const overall = all.filter((r) => r.category === "overall");
+    // Lock to the single most recent publish date (the "latest" split
+    // sometimes contains a small trailing snapshot of the prior date).
+    const latestDate = overall
+      .map((r) => r.leaderboard_publish_date)
+      .sort()
+      .at(-1)!;
+    const rows = overall.filter((r) => r.leaderboard_publish_date === latestDate);
+
+    const entries: EloEntry[] = rows
+      .sort((a, b) => a.rank - b.rank)
+      .map((r) => {
+        const isOpen = String(r.license).toLowerCase() !== "proprietary";
+        return {
+          // Arena uses lowercase, hyphenated model ids — matchElo already
+          // normalises, but keep the source form for traceability.
+          model: r.model_name,
+          vendor: r.organization,
+          license: isOpen ? "open" : "proprietary",
+          score: Math.round(r.rating),
+          rank: Math.round(r.rank),
+          votes: Math.round(r.vote_count),
+        };
+      });
+
     return {
-      last_updated: data.meta?.last_updated ?? new Date().toISOString().slice(0, 10),
-      source: data.meta?.source_url ?? ARENA_URL,
+      last_updated: latestDate,
+      source: SOURCE_URL,
       entries,
     };
   } catch (e) {
-    console.error("Arena fetch failed:", e);
+    console.error("LMArena fetch failed:", e);
     return null;
   }
 }
@@ -87,7 +138,9 @@ function auditMatches(snapshot: EloSnapshot) {
   }
   const orphanArena = snapshot.entries.filter((e) => !matchedArenaIds.has(e.model));
 
+  const openCount = snapshot.entries.filter((e) => e.license === "open").length;
   console.log(`\nArena ELO match audit:`);
+  console.log(`  Snapshot: ${snapshot.entries.length} entries (${openCount} open-weight) on ${snapshot.last_updated}`);
   console.log(`  APIs:   ${apiMatched}/${apiLabels.length} matched`);
   console.log(`  Models: ${modelMatched}/${known.length} matched`);
   console.log(`  Unmatched arena entries (no API/model carries them): ${orphanArena.length}`);
@@ -103,13 +156,13 @@ function auditMatches(snapshot: EloSnapshot) {
 }
 
 async function main() {
-  console.log(`Fetching LMArena leaderboard from ${ARENA_URL} …`);
-  const snap = await fetchArena();
-  if (!snap) {
-    console.error("Arena fetch failed; leaving existing elo.json untouched.");
+  console.log(`Fetching LMArena leaderboard from ${SOURCE_URL} (${HF_CONFIG}/${HF_SPLIT}, category=overall)…`);
+  const snap = await fetchLeaderboard();
+  if (!snap || snap.entries.length === 0) {
+    console.error("LMArena fetch failed or empty; leaving existing elo.json untouched.");
     process.exit(1);
   }
-  console.log(`Fetched ${snap.entries.length} arena entries (last_updated=${snap.last_updated}).`);
+  console.log(`Fetched ${snap.entries.length} arena entries (publish_date=${snap.last_updated}).`);
 
   writeFileSync(ELO_PATH, JSON.stringify(snap, null, 2) + "\n");
   console.log(`Wrote ${ELO_PATH}`);

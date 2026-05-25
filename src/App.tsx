@@ -27,6 +27,8 @@ import { useLiveData } from "./useLiveData";
 import type { ClosedApi, KnownModel } from "./modelsDev";
 import { ApiCombobox } from "./ApiCombobox";
 import { CostSizeChart } from "./CostSizeChart";
+import { Presets, type PresetValues } from "./Presets";
+import { ExportMenu } from "./ExportMenu";
 // @ts-expect-error - Vite handles SVG imports as asset URLs at build time
 import logoUrl from "./logo.svg";
 
@@ -597,6 +599,17 @@ export default function App() {
           </div>
         </header>
 
+        {/* Presets */}
+        <Presets
+          current={{ queries_per_week, input_tokens, output_tokens, pattern }}
+          onApply={(p: PresetValues) => {
+            setQpw(p.queries_per_week);
+            setInTok(p.input_tokens);
+            setOutTok(p.output_tokens);
+            setPattern(p.pattern);
+          }}
+        />
+
         {/* Inputs */}
         <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-5 mb-5">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-4">
@@ -742,6 +755,23 @@ export default function App() {
                 {(show_all_tiers ? otherTiers : otherTiers.slice(0, 2)).map((tier) => (
                   <TierCard key={`${tier.arch}-${tier.params_b}`} tier={tier} apiCost={result.api_cost} badge={null} />
                 ))}
+              </div>
+              <div className="mt-4 flex justify-end">
+                <ExportMenu
+                  inputs={{
+                    queries_per_week,
+                    input_tokens,
+                    output_tokens,
+                    api_key: resolvedApiKey,
+                    api_label: livePricingApis[resolvedApiKey]?.label ?? resolvedApiKey,
+                    api_input_per_1m: effectiveApiRates.input_per_1m,
+                    api_output_per_1m: effectiveApiRates.output_per_1m,
+                    pattern,
+                    quant_pref,
+                    vendor,
+                  }}
+                  result={result}
+                />
               </div>
               {otherTiers.length > 2 && (
                 <button

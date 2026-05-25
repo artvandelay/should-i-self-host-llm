@@ -381,7 +381,7 @@ export function FtPanel({
         breakdown. Quality impact of fine-tuning is not modeled — check Arena
         ELO of base vs tuned models separately.{" "}
         <a
-          href="https://github.com/artvandelay/should-i-self-host-llm/blob/main/FT_ASSUMPTIONS.md"
+          href="https://github.com/artvandelay/should-i-self-host-llm/blob/main/src/ft/ASSUMPTIONS.md"
           target="_blank"
           rel="noopener noreferrer"
           className="text-slate-500 underline hover:text-slate-700"

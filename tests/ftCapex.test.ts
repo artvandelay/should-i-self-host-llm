@@ -11,12 +11,33 @@ const baseInputs = {
 };
 
 describe("computeFtCapex", () => {
-  it("qlora < lora < full for same 70B workload 100k examples", () => {
+  it("lora < qlora < full wall-clock for same 70B workload 100k examples", () => {
+    // LoRA and QLoRA do the same FLOPs (~2/3 of full FT — backward through
+    // frozen base weights still dominates). But QLoRA pays a dequantization
+    // tax (~45% slower per-step than LoRA on real hardware, per TildAlice
+    // benchmarks). QLoRA's win is memory (fits on smaller GPU), not speed.
     const qlora = computeFtCapex(70, { ...baseInputs, method: "qlora" });
     const lora = computeFtCapex(70, { ...baseInputs, method: "lora" });
     const full = computeFtCapex(70, { ...baseInputs, method: "full" });
-    expect(qlora.gpu_cost_usd).toBeLessThan(lora.gpu_cost_usd);
-    expect(lora.gpu_cost_usd).toBeLessThan(full.gpu_cost_usd);
+    expect(lora.gpu_cost_usd).toBeLessThan(qlora.gpu_cost_usd);
+    expect(qlora.gpu_cost_usd).toBeLessThan(full.gpu_cost_usd);
+  });
+
+  it("Guanaco-65B QLoRA anchor: ~24 hours on single pro GPU equivalent", () => {
+    // QLoRA paper (Dettmers et al. 2023) trained Guanaco-65B in 24h on a
+    // single 48GB pro GPU (~150 TFLOPS BF16). Dataset OASST1: ~10k examples,
+    // ~500 tokens/ex, ~3 epochs. Our engine assumes a single H100 (~3x faster
+    // than that pro GPU), so we expect ~5-15 GPU-hours on H100 — within 3x
+    // of the paper's anchor when scaled to H100 throughput.
+    const r = computeFtCapex(65, {
+      num_examples: 10_000,
+      tokens_per_example: 500,
+      method: "qlora",
+      epochs: 3,
+      prep_cost_usd: 0,
+    });
+    expect(r.gpu_hours).toBeGreaterThan(2);
+    expect(r.gpu_hours).toBeLessThan(20);
   });
 
   it("prep_cost_usd added to total", () => {

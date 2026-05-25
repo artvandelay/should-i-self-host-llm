@@ -280,9 +280,13 @@ export function computeFtCapex(params_b: number, inputs: FtInputs): FtCapexResul
   const prep = clampNonNeg(inputs.prep_cost_usd);
   const params = clampNonNeg(params_b) * 1e9;
   const total_tokens = num * tok * epochs;
+  const spec = FT_METHODS[inputs.method];
   const full_flops = FLOPS_PER_TOKEN_PER_PARAM * params * total_tokens;
-  const method_flops = full_flops * FT_METHODS[inputs.method].computeMultiplier;
-  const seconds = method_flops / H100_FP16_FLOPS_PER_SEC;
+  const method_flops = full_flops * spec.computeMultiplier;
+  // Effective throughput = H100 baseline (BF16 × 30% MFU) × per-method
+  // MFU penalty. QLoRA's mfuPenalty captures the dequantization tax.
+  const effective_flops_per_sec = H100_FP16_FLOPS_PER_SEC * spec.mfuPenalty;
+  const seconds = method_flops / effective_flops_per_sec;
   const hours = seconds / 3600;
   const h100Row = PRICING.gpus.find((g) => /h100|h200/i.test(g.name));
   const cheapestRate = h100Row

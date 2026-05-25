@@ -3,6 +3,8 @@ import { describe, it, expect } from "vitest";
 import {
   computeFtCapex,
   cumulativeProjection,
+  ftVramGb,
+  pickClusterOverhead,
   pickFtGpu,
   WEEKS_PER_MONTH,
   type Pricing,
@@ -103,6 +105,55 @@ describe("experiments_multiplier", () => {
     const single = computeFtCapex(70, { ...baseInputs, experiments_multiplier: 1 });
     const tripled = computeFtCapex(70, { ...baseInputs, experiments_multiplier: 3 });
     expect(tripled.single_run_gpu_cost_usd).toBeCloseTo(single.single_run_gpu_cost_usd, 6);
+  });
+});
+
+describe("cluster overhead", () => {
+  it("ftVramGb hits the right ballpark for 70B", () => {
+    expect(ftVramGb(70, "qlora")).toBeGreaterThan(35); // ≈ 43 GB
+    expect(ftVramGb(70, "qlora")).toBeLessThan(60);
+    expect(ftVramGb(70, "lora")).toBeGreaterThan(60);  // ≈ 78 GB
+    expect(ftVramGb(70, "lora")).toBeLessThan(120);
+    expect(ftVramGb(70, "full")).toBeGreaterThan(800); // ≈ 988 GB
+  });
+
+  it("pickClusterOverhead boundaries with default 80GB/8-per-node", () => {
+    expect(pickClusterOverhead(40).multiplier).toBe(1.0);     // fits 1 H100
+    expect(pickClusterOverhead(40).topology).toBe("single-gpu");
+    expect(pickClusterOverhead(200).multiplier).toBe(1.3);    // multi-GPU
+    expect(pickClusterOverhead(200).topology).toBe("multi-gpu");
+    expect(pickClusterOverhead(2000).multiplier).toBe(1.6);   // multi-node
+    expect(pickClusterOverhead(2000).topology).toBe("multi-node");
+  });
+
+  it("pickClusterOverhead respects future GPU sizing (MI300X 192GB)", () => {
+    // 150GB fits in a single MI300X — should be single-gpu, not multi-gpu.
+    expect(pickClusterOverhead(150, 192, 8).topology).toBe("single-gpu");
+  });
+
+  it("pickClusterOverhead respects GB200 NVL36 (36 per node)", () => {
+    // 1000GB on 8-per-node H100 is multi-node; on 36-per-node GB200 it's
+    // still intra-node multi-GPU.
+    expect(pickClusterOverhead(1000, 80, 8).topology).toBe("multi-node");
+    expect(pickClusterOverhead(1000, 192, 36).topology).toBe("multi-gpu");
+  });
+
+  it("user override beats auto-pick", () => {
+    const auto = computeFtCapex(7, { ...baseInputs, method: "lora" }); // tiny → auto 1.0×
+    const forced = computeFtCapex(7, {
+      ...baseInputs,
+      method: "lora",
+      cluster_overhead: 1.6,
+    });
+    expect(auto.cluster_overhead).toBe(1.0);
+    expect(forced.cluster_overhead).toBe(1.6);
+    expect(forced.gpu_cost_usd).toBeCloseTo(auto.gpu_cost_usd * 1.6, 6);
+  });
+
+  it("70B full-FT auto-picks multi-node (~988 GB > one node)", () => {
+    const r = computeFtCapex(70, { ...baseInputs, method: "full" });
+    expect(r.cluster_topology).toBe("multi-node");
+    expect(r.cluster_overhead).toBe(1.6);
   });
 });
 

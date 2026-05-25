@@ -298,6 +298,14 @@ export interface FtInputs {
    * range for production work. Default: 2.5.
    */
   experiments_multiplier: number;
+  /**
+   * Cluster overhead multiplier — accounts for inter-GPU and inter-node
+   * communication cost (gradient sync, sharded backward). When omitted
+   * (undefined), the engine auto-picks based on whether the FT workload
+   * fits in a single H100 (1.0×), multi-GPU NVLink node (1.3×), or
+   * needs multi-node (1.6×). Pass a number to override.
+   */
+  cluster_overhead?: number;
 }
 
 export interface FtCapexResult {
@@ -309,6 +317,12 @@ export interface FtCapexResult {
   single_run_gpu_cost_usd: number;
   /** Effective multiplier applied (after clamping to >= 1.0). */
   experiments_multiplier: number;
+  /** Effective cluster-overhead multiplier (auto-picked or user override). */
+  cluster_overhead: number;
+  /** Topology label the cluster_overhead corresponds to. */
+  cluster_topology: "single-gpu" | "multi-gpu" | "multi-node";
+  /** Rough VRAM footprint of the FT workload, GB (used for topology pick). */
+  ft_vram_gb: number;
 }
 
 export interface CumulativePoint {
@@ -321,6 +335,48 @@ export interface CumulativeProjection {
   points: CumulativePoint[];
   crossover_month: number | null;
   horizon_months: number;
+}
+
+/**
+ * Rough VRAM needed to *fine-tune* a model of `params_b` billion params with
+ * the given method. Much larger than inference VRAM because of activations,
+ * gradients, and optimizer state.
+ *
+ * Bytes-per-param calibrated against published 70B numbers
+ * (TildAlice / channel.tel):
+ *   - full FT  (BF16 weights 2 + grads 2 + FP32 Adam m+v 8 + acts 2)  ≈ 14 B/p
+ *   - LoRA     (BF16 frozen weights + small adapter state + acts)     ≈ 1.0 B/p
+ *   - QLoRA    (4-bit frozen weights + tiny adapter state + acts)     ≈ 0.5 B/p
+ *
+ * Yields: 70B QLoRA ≈ 43 GB ✓; 70B LoRA ≈ 78 GB ✓; 70B full ≈ 988 GB ✓.
+ */
+export function ftVramGb(params_b: number, method: FtMethod): number {
+  const bpp = method === "full" ? 14 : method === "lora" ? 1.0 : 0.5;
+  return Math.max(0, params_b) * bpp + 8; // +8 GB constant overhead
+}
+
+/**
+ * Pick a cluster-overhead multiplier from the FT VRAM footprint, sized to the
+ * actual training GPU's per-unit VRAM and node size.
+ *   ft_vram ≤ single_gpu_vram                      → 1.0× (single GPU)
+ *   ft_vram ≤ single_gpu_vram × gpus_per_node      → 1.3× (intra-node NVLink)
+ *   ft_vram > that                                 → 1.6× (multi-node IB)
+ *
+ * Defaults to 80 GB / 8 GPUs per node — sane for H100/H200/B200 SXM — but
+ * the actual numbers come from the GpuRow so a future MI300X (192 GB) or
+ * GB200 NVL36 (36 GPUs/node) just works.
+ */
+export function pickClusterOverhead(
+  ft_vram_gb: number,
+  single_gpu_vram_gb = 80,
+  gpus_per_node = 8
+): { multiplier: number; topology: "single-gpu" | "multi-gpu" | "multi-node" } {
+  const node_vram = single_gpu_vram_gb * gpus_per_node;
+  if (ft_vram_gb <= single_gpu_vram_gb)
+    return { multiplier: 1.0, topology: "single-gpu" };
+  if (ft_vram_gb <= node_vram)
+    return { multiplier: 1.3, topology: "multi-gpu" };
+  return { multiplier: 1.6, topology: "multi-node" };
 }
 
 /**
@@ -371,7 +427,19 @@ export function computeFtCapex(params_b: number, inputs: FtInputs): FtCapexResul
   const effective_flops_per_sec =
     peak_tflops * 1e12 * BASELINE_MFU * spec.mfuPenalty;
   const seconds = method_flops / effective_flops_per_sec;
-  const hours = seconds / 3600;
+  const single_gpu_hours = seconds / 3600;
+  // Cluster overhead: user override wins; otherwise auto-pick from FT VRAM.
+  const ft_vram_gb = ftVramGb(params_b, inputs.method);
+  const auto = pickClusterOverhead(
+    ft_vram_gb,
+    ftGpu?.single_gpu_vram_gb ?? ftGpu?.vram_gb ?? 80,
+    ftGpu?.gpus_per_node ?? 8
+  );
+  const cluster_overhead = clampNonNeg(
+    inputs.cluster_overhead ?? auto.multiplier,
+    auto.multiplier
+  );
+  const hours = single_gpu_hours * cluster_overhead;
   const single_run_gpu_cost = hours * cheapestRate;
   // Experiments multiplier: clamp UP to 1.0 (values below 1 are non-physical;
   // there's no such thing as "less than one run"). Applies to gpu_hours AND
@@ -388,6 +456,9 @@ export function computeFtCapex(params_b: number, inputs: FtInputs): FtCapexResul
     method: inputs.method,
     single_run_gpu_cost_usd: single_run_gpu_cost,
     experiments_multiplier: xm,
+    cluster_overhead,
+    cluster_topology: auto.topology,
+    ft_vram_gb,
   };
 }
 

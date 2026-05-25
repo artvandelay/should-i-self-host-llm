@@ -46,6 +46,8 @@ export function FtPanel({
   const [epochs, setEpochs] = useState(3);
   const [prepCost, setPrepCost] = useState(0);
   const [experimentsMultiplier, setExperimentsMultiplier] = useState(2.5);
+  // "" sentinel = auto (let engine pick from FT VRAM footprint)
+  const [clusterOverride, setClusterOverride] = useState<"" | "1.0" | "1.3" | "1.6">("");
 
   const ftInputs = useMemo(
     () => ({
@@ -55,8 +57,9 @@ export function FtPanel({
       epochs,
       prep_cost_usd: prepCost,
       experiments_multiplier: experimentsMultiplier,
+      cluster_overhead: clusterOverride === "" ? undefined : Number(clusterOverride),
     }),
-    [numExamples, tokensPerExample, method, epochs, prepCost, experimentsMultiplier]
+    [numExamples, tokensPerExample, method, epochs, prepCost, experimentsMultiplier, clusterOverride]
   );
 
   const capex = useMemo(
@@ -203,6 +206,28 @@ export function FtPanel({
           <span className="text-[10px] text-slate-500 mt-1">
             Most teams run 2–3 attempts before one sticks. 1× is the
             theoretical floor.
+          </span>
+        </div>
+        <div className="flex flex-col sm:col-span-2">
+          <label className="text-xs font-medium text-slate-700 mb-1">
+            Cluster overhead
+          </label>
+          <select
+            value={clusterOverride}
+            onChange={(e) => setClusterOverride(e.target.value as "" | "1.0" | "1.3" | "1.6")}
+            className={inputClass}
+          >
+            <option value="">
+              Auto ({fmt(capex.cluster_overhead, 2)}× · {capex.cluster_topology})
+            </option>
+            <option value="1.0">1.0× (single GPU)</option>
+            <option value="1.3">1.3× (multi-GPU, NVLink)</option>
+            <option value="1.6">1.6× (multi-node)</option>
+          </select>
+          <span className="text-[10px] text-slate-500 mt-1">
+            Comms cost grows with cluster size. Auto picks from the
+            estimated VRAM footprint (~{fmt(capex.ft_vram_gb, 0)} GB for
+            this workload).
           </span>
         </div>
       </div>

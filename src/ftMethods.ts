@@ -32,7 +32,11 @@ export const FT_METHODS: Record<FtMethod, FtMethodSpec> = {
   },
 };
 
-/** Forward-pass FLOPs per token per parameter (Kaplan scaling). */
+/**
+ * Training FLOPs per token per parameter (Kaplan 6N rule):
+ * 2N forward + 4N backward = 6N. This is the standard Chinchilla/Kaplan
+ * training-compute approximation, not the forward-only inference cost.
+ */
 export const FLOPS_PER_TOKEN_PER_PARAM = 6;
 
 /** H100 FP16 peak throughput × 40% MFU (typical sustained utilization). */

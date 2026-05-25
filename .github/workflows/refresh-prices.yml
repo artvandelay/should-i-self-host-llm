@@ -1,0 +1,29 @@
+name: Refresh Prices
+
+on:
+  schedule:
+    - cron: "0 3 * * *"      # daily at 3am UTC
+  workflow_dispatch: {}       # manual trigger from GitHub UI
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - name: Run refresh script
+        run: npx tsx scripts/refresh-prices.ts
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+
+      - name: Commit updated JSONs
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: refresh prices from models.dev + Firecrawl"
+          file_pattern: "src/pricing.json src/knownModels.json"

@@ -7,6 +7,12 @@ import {
   TIER_RANK,
   type QualityTier,
 } from "./qualityTiers";
+import {
+  FT_METHODS,
+  FLOPS_PER_TOKEN_PER_PARAM,
+  H100_FP16_FLOPS_PER_SEC,
+  type FtMethod,
+} from "./ftMethods";
 
 // =============================================================================
 // TYPES
@@ -238,6 +244,74 @@ export function breakEvenWeeks(
   const weeks = Math.ceil(setup_cost / weekly_savings);
   if (weeks > cap_weeks) return null;
   return weeks;
+}
+
+export interface FtInputs {
+  num_examples: number;
+  tokens_per_example: number;
+  method: FtMethod;
+  epochs: number;
+  prep_cost_usd: number;
+}
+
+export interface FtCapexResult {
+  gpu_hours: number;
+  gpu_cost_usd: number;
+  total_capex_usd: number;
+  method: FtMethod;
+}
+
+export interface CumulativePoint {
+  month: number;
+  api_cumulative: number;
+  selfhost_cumulative: number;
+}
+
+export interface CumulativeProjection {
+  points: CumulativePoint[];
+  crossover_month: number | null;
+  horizon_months: number;
+}
+
+export function computeFtCapex(params_b: number, inputs: FtInputs): FtCapexResult {
+  const num = clampNonNeg(inputs.num_examples);
+  const tok = clampNonNeg(inputs.tokens_per_example);
+  const epochs = clampNonNeg(inputs.epochs);
+  const prep = clampNonNeg(inputs.prep_cost_usd);
+  const params = clampNonNeg(params_b) * 1e9;
+  const total_tokens = num * tok * epochs;
+  const full_flops = FLOPS_PER_TOKEN_PER_PARAM * params * total_tokens;
+  const method_flops = full_flops * FT_METHODS[inputs.method].computeMultiplier;
+  const seconds = method_flops / H100_FP16_FLOPS_PER_SEC;
+  const hours = seconds / 3600;
+  const h100Row = PRICING.gpus.find((g) => /h100|h200/i.test(g.name));
+  const cheapestRate = h100Row
+    ? Math.min(h100Row.modal_per_hr, h100Row.lambda_per_hr, h100Row.runpod_per_hr)
+    : 4.0;
+  const gpu_cost = hours * cheapestRate;
+  return { gpu_hours: hours, gpu_cost_usd: gpu_cost, total_capex_usd: gpu_cost + prep, method: inputs.method };
+}
+
+export function cumulativeProjection(
+  api_weekly: number,
+  selfhost_weekly: number,
+  capex_usd: number,
+  horizon_months = 24
+): CumulativeProjection {
+  const apiW = clampNonNeg(api_weekly);
+  const shW = clampNonNeg(selfhost_weekly);
+  const cap = clampNonNeg(capex_usd);
+  const horizon = Math.max(1, Math.floor(horizon_months));
+  const points: CumulativePoint[] = [];
+  let crossover: number | null = null;
+  for (let m = 0; m <= horizon; m++) {
+    const weeks = m * WEEKS_PER_MONTH;
+    const api_cum = apiW * weeks;
+    const sh_cum = shW * weeks + cap;
+    points.push({ month: m, api_cumulative: api_cum, selfhost_cumulative: sh_cum });
+    if (crossover === null && m > 0 && sh_cum <= api_cum) crossover = m;
+  }
+  return { points, crossover_month: crossover, horizon_months: horizon };
 }
 
 export function weeklyApiCost(

@@ -33,6 +33,14 @@ Three data lanes keep the calculator current:
    APIs/models, scrapes GPU provider pages via Firecrawl, writes updated
    pricing.json and knownModels.json, commits back. Your deploy host
    picks up the change and rebuilds automatically.
+
+4. LMARENA ELO (bundled, refreshed nightly)
+   scripts/refresh-elo.ts pulls the LMArena leaderboard from the
+   api.wulong.dev mirror and writes src/elo.json. The same nightly Action
+   runs both refresh scripts. ELO is matched into both closed APIs and
+   open-weight models with a version-strict fuzzy matcher; unmatched
+   entries degrade gracefully (the UI shows "no LMArena score for this
+   size class" rather than guessing).
 ```
 
 ## Modeling assumptions
@@ -83,9 +91,13 @@ Name: `FIRECRAWL_API_KEY`. The app works without it (GPU prices stay at their la
 │   ├── main.tsx                          # React entry point
 │   ├── index.css                         # Tailwind base
 │   ├── pricing.json                      # GPU tiers + API rates (bundled)
-│   └── knownModels.json                  # Open-weight model catalog (bundled)
+│   ├── knownModels.json                  # Open-weight model catalog (bundled)
+│   ├── elo.json                          # LMArena ELO snapshot (bundled)
+│   └── eloMatch.ts                       # Version-strict ELO matcher
+├── scripts/refresh-elo.ts                # Node CLI: pull LMArena ELO
 ├── tests/
-│   └── modelsDev.test.ts                 # Vitest tests for modelsDev.ts
+│   ├── modelsDev.test.ts                 # Vitest tests for modelsDev.ts
+│   └── elo.test.ts                       # Vitest tests for eloMatch.ts
 └── README.md
 ```
 
@@ -94,6 +106,7 @@ Name: `FIRECRAWL_API_KEY`. The app works without it (GPU prices stay at their la
 - **[models.dev](https://models.dev)** — the open, community-maintained database of LLM specs and pricing that powers this calculator's API rates and open-weight catalog. Huge thanks to the maintainers; without their work this tool would be a stale spreadsheet.
 - **[Firecrawl](https://firecrawl.dev)** — used to refresh GPU hourly rates from cloud provider pricing pages.
 - **[Hugging Face](https://huggingface.co)** — fallback for resolving model parameter counts.
+- **[LMArena](https://lmarena.ai/leaderboard)** (formerly LMSYS Chatbot Arena) — Arena ELO scores that power the "Minimum quality" filter and the cost-vs-quality view. LMArena does not publish an official API; we read the daily-updated mirror at [api.wulong.dev/arena-ai-leaderboards](https://api.wulong.dev/arena-ai-leaderboards) (source repo: [oolong-tea-2026/arena-ai-leaderboards](https://github.com/oolong-tea-2026/arena-ai-leaderboards)). All ELO scores remain the work of LMArena users and the LMArena team.
 
 ## Maintainer
 

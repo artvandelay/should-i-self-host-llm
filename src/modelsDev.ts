@@ -29,6 +29,10 @@ export interface ClosedApi {
   input_per_1m: number;
   output_per_1m: number;
   last_seen: string;
+  /** LMArena ELO score, attached at runtime by useLiveData. */
+  elo?: number;
+  /** LMArena leaderboard rank at last refresh. */
+  eloRank?: number;
 }
 
 export interface OpenWeightModel {
@@ -50,6 +54,10 @@ export interface KnownModel {
   manual?: boolean;
   /** Computed family (e.g. "llama", "qwen"). Used for deprecation. */
   family?: string;
+  /** LMArena ELO score, attached at runtime by useLiveData. */
+  elo?: number;
+  /** LMArena leaderboard rank at last refresh. */
+  eloRank?: number;
 }
 
 export type ParamsMethod = "regex_moe" | "regex" | "hf" | "unknown";

@@ -31,10 +31,11 @@ const knownModels: KnownModel[] = [
   { name: "Llama 3.1 70B Instruct", params_b: 70.0, arch: "dense", active_b: undefined, source: "seed", last_seen: "seed" },
   { name: "Llama 3.1 405B Instruct", params_b: 405.0, arch: "dense", active_b: undefined, source: "seed", last_seen: "seed" },
   { name: "Mixtral 8x22B", params_b: 140.0, arch: "moe", active_b: 39.0, source: "seed", last_seen: "seed" },
-  { name: "DeepSeek V3", params_b: 671.0, arch: "moe", active_b: 37.0, source: "seed", last_seen: "seed" },
+  // Carries an ELO so we can assert it propagates through to ConfigResult
+  { name: "DeepSeek V3", params_b: 671.0, arch: "moe", active_b: 37.0, source: "seed", last_seen: "seed", elo: 1380, eloRank: 7 },
   { name: "Gemma 2 2B Instruct", params_b: 2.0, arch: "dense", active_b: undefined, source: "seed", last_seen: "seed" },
-  { name: "Qwen3 30B A3B", params_b: 30.0, arch: "moe", active_b: 3.0, source: "seed", last_seen: "seed" },
-  { name: "Qwen3 235B A22B", params_b: 235.0, arch: "moe", active_b: 22.0, source: "seed", last_seen: "seed" },
+  { name: "Qwen3 30B A3B", params_b: 30.0, arch: "moe", active_b: 3.0, source: "seed", last_seen: "seed", elo: 1310 },
+  { name: "Qwen3 235B A22B", params_b: 235.0, arch: "moe", active_b: 22.0, source: "seed", last_seen: "seed", elo: 1360 },
   { name: "Qwen3 Coder 480B A35B", params_b: 480.0, arch: "moe", active_b: 35.0, source: "seed", last_seen: "seed" },
 ];
 
@@ -124,6 +125,40 @@ describe("sweep smoke", () => {
       const savings = (r.api_cost - w) / r.api_cost;
       expect(savings).toBeGreaterThanOrEqual(g.savingsFloor);
     }
+  });
+
+  it("-> ELO propagates from KnownModel to ConfigResult.elo / eloRank", () => {
+    const r = recommendTiers(makeArgs({ queries_per_week: 200_000, input_tokens: 1500, output_tokens: 500 }));
+    // Qwen3 235B A22B carries elo 1360 in our seed and fits on a GH200 at int4.
+    const qwenCandidates = r.all_candidates.filter((c) => c.arch === "moe" && c.params_b === 235);
+    expect(qwenCandidates.length).toBeGreaterThan(0);
+    expect(qwenCandidates[0].elo).toBe(1360);
+
+    // Models without elo in the seed produce undefined; that's expected.
+    const llama70 = r.all_candidates.find((c) => c.arch === "dense" && c.params_b === 70);
+    expect(llama70?.elo).toBeUndefined();
+  });
+
+  it("-> min_elo filter drops candidates below the floor and keeps unscored", () => {
+    // Floor of 1350 should drop Qwen3 30B A3B (elo 1310) but keep Qwen3 235B (1360) and DeepSeek V3 (1380).
+    // Models WITHOUT an elo (Llama, Mixtral, Coder 480B) must still be kept (no data != bad).
+    const r = recommendTiers(
+      makeArgs({
+        queries_per_week: 1_200_000,
+        input_tokens: 4000,
+        output_tokens: 1200,
+        min_elo: 1350,
+      })
+    );
+    for (const t of r.tiers) {
+      // Either no elo, or >= 1350.
+      if (t.elo != null) expect(t.elo).toBeGreaterThanOrEqual(1350);
+    }
+    // Without the filter, the Qwen3 30B A3B tier should be present somewhere; with the filter it must be absent.
+    const hasFilteredOut = r.tiers.some(
+      (t) => t.arch === "moe" && t.params_b === 30 && t.elo === 1310
+    );
+    expect(hasFilteredOut).toBe(false);
   });
 
   it("-> reject patterns: knownModels must NOT contain banned model families", () => {

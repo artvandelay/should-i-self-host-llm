@@ -27,6 +27,10 @@ export interface ApiRow {
   label: string;
   input_per_1m: number;
   output_per_1m: number;
+  /** LMArena ELO score, when a match exists (see src/eloMatch.ts). */
+  elo?: number;
+  /** Rank within the LMArena text leaderboard at last refresh. */
+  eloRank?: number;
 }
 
 export interface Pricing {
@@ -53,6 +57,10 @@ export interface KnownModel {
   source?: string;
   last_seen?: string;
   family?: string;
+  /** LMArena ELO score, when a match exists (see src/eloMatch.ts). */
+  elo?: number;
+  /** Rank within the LMArena text leaderboard at last refresh. */
+  eloRank?: number;
 }
 
 // Bundled known models loaded from JSON at build time.
@@ -215,6 +223,10 @@ export interface ConfigResult {
   /** added by recommendTiers() */
   ft_weekly?: number;
   weekly_cost_with_ft?: number;
+  /** LMArena ELO of `nearest_named`, when known. */
+  elo?: number;
+  /** Rank within LMArena text leaderboard at last refresh. */
+  eloRank?: number;
 }
 
 export function evaluateConfig(args: EvalArgs): ConfigResult | null {
@@ -308,6 +320,8 @@ export function evaluateConfig(args: EvalArgs): ConfigResult | null {
   const named = nearestModelInList(params_b, arch, args.knownModels ?? KNOWN_MODELS);
 
   return {
+    elo: named?.elo,
+    eloRank: named?.eloRank,
     params_b,
     active_params_b,
     arch,
@@ -346,6 +360,12 @@ export interface RecommendArgs {
   ft_cost: number;
   ft_weeks: number;
   knownModels?: KnownModel[];
+  /**
+   * Optional quality floor: drop self-host candidates whose nearest known
+   * model has ELO below this. Models with no ELO are always kept (we don't
+   * silently hide models just because LMArena hasn't ranked them).
+   */
+  min_elo?: number;
 }
 
 export interface GradedTier {
@@ -499,9 +519,15 @@ export function recommendTiers(args: RecommendArgs): RecommendResult {
     c.weekly_cost_with_ft = c.weekly_cost + ft_weekly;
   }
 
-  const affordable = candidates.filter(
-    (c) => (c.weekly_cost_with_ft ?? c.weekly_cost) <= api_cost
-  );
+  const min_elo = args.min_elo ?? 0;
+  const affordable = candidates.filter((c) => {
+    const fits = (c.weekly_cost_with_ft ?? c.weekly_cost) <= api_cost;
+    if (!fits) return false;
+    // Quality floor: models WITH an ELO must clear the floor; models
+    // without an ELO are kept (no data != bad).
+    if (min_elo > 0 && c.elo != null && c.elo < min_elo) return false;
+    return true;
+  });
   affordable.sort((a, b) => b.params_b - a.params_b);
 
   const largest = affordable[0] ?? null;

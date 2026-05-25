@@ -291,9 +291,14 @@ export function FtPanel({
 
       <p className="text-[10px] text-slate-400 leading-relaxed">
         Compute estimates use {FT_METHODS.lora.citation}; {FT_METHODS.qlora.citation};{" "}
-        {FT_METHODS.full.citation}. H100 throughput assumes 40% MFU. Quality impact of
-        fine-tuning is not estimated — compare Arena ELO of base vs fine-tuned models
-        separately.
+        {FT_METHODS.full.citation}. Training FLOPs use the Kaplan 6N rule (2N fwd + 4N
+        bwd). LoRA/QLoRA use ~⅔ of full-FT FLOPs — the backward pass still propagates
+        through frozen base weights, so PEFT methods save memory, not compute (EU AI
+        Act SageMaker formula; CE-LoRA arxiv 2502.01378). H100 BF16 throughput assumes
+        30% sustained MFU for fine-tuning workloads, with per-method penalties (QLoRA
+        dequantization tax). Anchored to QLoRA paper's Guanaco-65B 24-hour benchmark.
+        Quality impact of fine-tuning is not estimated — compare Arena ELO of base vs
+        fine-tuned models separately.
       </p>
     </div>
   );

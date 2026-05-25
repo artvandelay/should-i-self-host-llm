@@ -114,6 +114,20 @@ export function vramRequired(params_b: number, quant: Quant, overhead_gb = 4): n
   return params_b * QUANT_BYTES[quant] + overhead_gb;
 }
 
+/**
+ * Heuristic VRAM overhead (KV cache + activations buffer) that scales with
+ * model size. Calibrated for ~4-8K context, 1-4 concurrent requests.
+ * For MoE, callers should pass `active_params_b` -- KV cache scales with
+ * active params, not total.
+ */
+export function scaledOverhead(active_params_b: number): number {
+  if (active_params_b <= 13) return 4;
+  if (active_params_b <= 34) return 8;
+  if (active_params_b <= 80) return 12;
+  if (active_params_b <= 200) return 18;
+  return 24;
+}
+
 // Conservative throughput estimate: H100-class hardware does ~120 tok/s
 // per 8B active params on an 80GB unit; scales linearly with GPU count.
 export function throughputTokensPerSec(active_params_b: number, vram_gb: number): number {
@@ -183,6 +197,8 @@ export interface ConfigResult {
   gpu_price_per_hr: number;
   vram_needed_gb: number;
   vram_available_gb: number;
+  /** Overhead actually used in vram math (max of user input + size-scaled floor). */
+  effective_overhead_gb: number;
   billing_mode: BillingOption["mode"];
   billing_label: string;
   billed_hours: number;
@@ -215,7 +231,10 @@ export function evaluateConfig(args: EvalArgs): ConfigResult | null {
     overhead_gb = 4,
   } = args;
 
-  const vram_needed = vramRequired(params_b, quant, overhead_gb);
+  // Effective overhead: scales with active params, with the user-supplied value as a floor.
+  // Lets users with measured KV-cache numbers raise the bar; never silently lowers it.
+  const effective_overhead = Math.max(overhead_gb, scaledOverhead(active_params_b));
+  const vram_needed = vramRequired(params_b, quant, effective_overhead);
   const gpu = pickCheapestGpu(pricing, vram_needed, vendor);
   if (!gpu) return null;
 
@@ -296,6 +315,7 @@ export function evaluateConfig(args: EvalArgs): ConfigResult | null {
     gpu_price_per_hr: price_per_hr,
     vram_needed_gb: vram_needed,
     vram_available_gb: gpu.vram_gb,
+    effective_overhead_gb: effective_overhead,
     billing_mode: cheapest.mode,
     billing_label: cheapest.label,
     billed_hours: cheapest.billed_hours,

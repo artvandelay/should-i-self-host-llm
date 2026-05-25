@@ -314,7 +314,10 @@ function Derivation({
         <span className="font-semibold">{QUANT_LABEL[top.quant]}</span>
       </div>
       <div>
-        5. VRAM required = {top.params_b}B × {QUANT_BYTES[top.quant]} B/param + {inputs.overhead_gb} GB overhead ={" "}
+        5. VRAM required = {top.params_b}B × {QUANT_BYTES[top.quant]} B/param + {top.effective_overhead_gb} GB overhead
+        {top.effective_overhead_gb !== inputs.overhead_gb && (
+          <span className="text-slate-500"> (auto-scaled from {inputs.overhead_gb} GB based on model size)</span>
+        )} ={" "}
         <span className="font-semibold">{fmt(top.vram_needed_gb, 1)} GB</span>
       </div>
       <div>
@@ -642,6 +645,11 @@ export default function App() {
         {/* Advanced */}
         <div className="mb-5 space-y-2">
           <Expander title="Advanced settings">
+            <p className="text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded px-3 py-2 mb-4">
+              These defaults work for typical workloads. The engine auto-scales VRAM overhead with
+              model size (4 GB for ≤13B, up to 24 GB for 200B+) — your value here is the floor.
+              Override with measured numbers if you have them.
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <Select<Vendor>
                 label="Cloud GPU vendor"
@@ -653,7 +661,7 @@ export default function App() {
                   { value: "modal", label: "Modal" },
                 ]}
               />
-              <NumberInput label="VRAM overhead (GB)" value={overhead_gb} onChange={setOverheadGb} step={1} hint="KV cache + activations buffer" />
+              <NumberInput label="VRAM overhead floor (GB)" value={overhead_gb} onChange={setOverheadGb} step={1} hint="KV cache + activations. Engine auto-scales above this." />
               <NumberInput label="Cold-start penalty (sec)" value={cold_start_sec} onChange={setColdStartSec} step={5} hint="For scale-to-zero mode" />
               <NumberInput label="Min model size (B params)" value={min_params_b} onChange={setMinParamsB} step={1} hint="Filter out tiny models even if cheaper. 0 = no floor." />
               <NumberInput label="One-time fine-tuning cost ($)" value={ft_cost} onChange={setFtCost} step={100} hint="Added amortized to weekly cost" />

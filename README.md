@@ -35,6 +35,17 @@ Three data lanes keep the calculator current:
    picks up the change and rebuilds automatically.
 ```
 
+## Modeling assumptions
+
+The engine optimises for honest defaults that approximate measured behaviour without forcing every user to fill in 20 fields:
+
+- **VRAM overhead** auto-scales with active model size (4 GB for ≤ 13B, 8 GB for 14–34B, 12 GB for 35–80B, 18 GB for 81–200B, 24 GB for 200B+). For MoE models the active-params count drives the tier, since KV cache scales with active params, not total. The Advanced settings "VRAM overhead floor" is the **minimum** — raise it if you have a measured KV-cache figure for your context length and concurrency.
+- **Cold-start penalty** defaults to 30s and only matters under `cold_per_query` and `bursty` traffic patterns. Override per your vendor (Modal ~15–30s, Runpod serverless ~30–90s).
+- **Throughput estimate** is calibrated to H100-class hardware: ~120 tok/s per 8B active params on an 80GB unit, scaling linearly with GPU count.
+- **Inference only.** Engineering time, evals, monitoring, on-call, and any fine-tuning compute beyond what you enter in Advanced are **not** included. Use the one-time fine-tuning cost field to amortise that yourself.
+
+The math is shown step-by-step under "Show the math" so every recommendation is auditable.
+
 ## Updating GPU prices
 
 GPU rates are scraped via Firecrawl. To run locally:

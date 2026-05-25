@@ -1,0 +1,86 @@
+import { describe, it, expect } from "vitest";
+
+import { computeFtCapex, cumulativeProjection, WEEKS_PER_MONTH } from "../src/engine";
+
+const baseInputs = {
+  num_examples: 100_000,
+  tokens_per_example: 1000,
+  method: "lora" as const,
+  epochs: 3,
+  prep_cost_usd: 0,
+};
+
+describe("computeFtCapex", () => {
+  it("qlora < lora < full for same 70B workload 100k examples", () => {
+    const qlora = computeFtCapex(70, { ...baseInputs, method: "qlora" });
+    const lora = computeFtCapex(70, { ...baseInputs, method: "lora" });
+    const full = computeFtCapex(70, { ...baseInputs, method: "full" });
+    expect(qlora.gpu_cost_usd).toBeLessThan(lora.gpu_cost_usd);
+    expect(lora.gpu_cost_usd).toBeLessThan(full.gpu_cost_usd);
+  });
+
+  it("prep_cost_usd added to total", () => {
+    const noPrep = computeFtCapex(70, { ...baseInputs, prep_cost_usd: 0 });
+    const withPrep = computeFtCapex(70, { ...baseInputs, prep_cost_usd: 5000 });
+    expect(withPrep.total_capex_usd).toBe(noPrep.total_capex_usd + 5000);
+    expect(withPrep.gpu_cost_usd).toBe(noPrep.gpu_cost_usd);
+  });
+
+  it("NaN/negative inputs clamp to 0", () => {
+    const r = computeFtCapex(NaN, {
+      num_examples: -100,
+      tokens_per_example: NaN,
+      method: "lora",
+      epochs: -2,
+      prep_cost_usd: -500,
+    });
+    expect(r.gpu_hours).toBe(0);
+    expect(r.gpu_cost_usd).toBe(0);
+    expect(r.total_capex_usd).toBe(0);
+  });
+
+  it("doubles examples doubles gpu cost", () => {
+    const single = computeFtCapex(70, { ...baseInputs, num_examples: 50_000 });
+    const doubled = computeFtCapex(70, { ...baseInputs, num_examples: 100_000 });
+    expect(doubled.gpu_cost_usd).toBeCloseTo(single.gpu_cost_usd * 2, 6);
+  });
+});
+
+describe("cumulativeProjection", () => {
+  it("points.length = horizon+1", () => {
+    const proj = cumulativeProjection(100, 50, 1000, 24);
+    expect(proj.points.length).toBe(25);
+    expect(proj.horizon_months).toBe(24);
+  });
+
+  it("month 0: api=0, selfhost=capex", () => {
+    const proj = cumulativeProjection(500, 200, 8000, 12);
+    expect(proj.points[0]).toEqual({
+      month: 0,
+      api_cumulative: 0,
+      selfhost_cumulative: 8000,
+    });
+  });
+
+  it("crossover detected when api=1000, sh=100, capex=10000", () => {
+    const proj = cumulativeProjection(1000, 100, 10_000, 24);
+    expect(proj.crossover_month).not.toBeNull();
+    const m = proj.crossover_month!;
+    const weeks = m * WEEKS_PER_MONTH;
+    expect(100 * weeks + 10_000).toBeLessThanOrEqual(1000 * weeks);
+    if (m > 1) {
+      const prevWeeks = (m - 1) * WEEKS_PER_MONTH;
+      expect(100 * prevWeeks + 10_000).toBeGreaterThan(1000 * prevWeeks);
+    }
+  });
+
+  it("null crossover when api=100, sh=100", () => {
+    const proj = cumulativeProjection(100, 100, 5000, 24);
+    expect(proj.crossover_month).toBeNull();
+  });
+
+  it("null crossover when capex huge", () => {
+    const proj = cumulativeProjection(200, 100, 10_000_000, 24);
+    expect(proj.crossover_month).toBeNull();
+  });
+});

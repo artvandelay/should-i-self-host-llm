@@ -15,7 +15,11 @@ import {
   QUANT_LABEL,
   KNOWN_MODELS,
   recommendTiers,
+  costForView,
+  costViewSuffix,
+  breakEvenWeeks,
   type ConfigResult,
+  type CostView,
   type Pattern,
   type Quant,
   type Vendor,
@@ -27,6 +31,10 @@ import { useLiveData } from "./useLiveData";
 import type { ClosedApi, KnownModel } from "./modelsDev";
 import { ApiCombobox } from "./ApiCombobox";
 import { CostSizeChart } from "./CostSizeChart";
+import { FtPanel } from "./FtPanel";
+import { Presets, type PresetValues } from "./Presets";
+import { ExportMenu } from "./ExportMenu";
+import { TIER_LABEL, QUALITY_TIERS_SOURCE_URL } from "./qualityTiers";
 // @ts-expect-error - Vite handles SVG imports as asset URLs at build time
 import logoUrl from "./logo.svg";
 
@@ -183,22 +191,38 @@ function TierCard({
   tier,
   apiCost,
   badge,
+  view,
+  qualityNote,
+  apiElo,
+  apiLabel,
 }: {
   tier: ConfigResult;
   apiCost: number;
-  badge?: { label: string; color: "indigo" | "green" } | null;
+  badge?: { label: string; color: "indigo" | "green" | "teal" } | null;
+  view: CostView;
+  qualityNote?: React.ReactNode;
+  apiElo?: number;
+  apiLabel?: string;
 }) {
   const weekly = tier.weekly_cost_with_ft ?? tier.weekly_cost;
+  const [ftOpen, setFtOpen] = useState(false);
   const savings = apiCost - weekly;
   const savings_pct = apiCost > 0 ? (savings / apiCost) * 100 : 0;
+  const viewedCost = costForView(weekly, view);
+  const viewedSavings = costForView(savings, view);
+  const suffix = costViewSuffix(view);
   const ringClass =
     badge?.color === "green"
       ? "border-emerald-400 bg-emerald-50/40 ring-2 ring-emerald-200"
       : badge?.color === "indigo"
       ? "border-indigo-400 bg-indigo-50/40 ring-2 ring-indigo-200"
+      : badge?.color === "teal"
+      ? "border-teal-400 bg-teal-50/40 ring-2 ring-teal-200"
       : "border-slate-200 bg-white";
   const badgeText =
-    badge?.color === "green" ? "text-emerald-700" : "text-indigo-700";
+    badge?.color === "green" ? "text-emerald-700"
+    : badge?.color === "teal" ? "text-teal-700"
+    : "text-indigo-700";
 
   return (
     <div className={`border rounded-lg p-4 ${ringClass}`}>
@@ -217,14 +241,37 @@ function TierCard({
               </span>
             )}
           </div>
+          <div className="mt-0.5 text-xs">
+            {tier.elo != null ? (
+              <span className="text-slate-700">
+                Arena ELO <span className="font-semibold">{tier.elo}</span>
+                {tier.eloRank != null && (
+                  <span className="text-slate-400"> (#{tier.eloRank})</span>
+                )}
+                {apiElo != null && (() => {
+                  const delta = tier.elo! - apiElo;
+                  const cls =
+                    delta >= 0 ? "text-emerald-700" : delta >= -30 ? "text-amber-700" : "text-rose-700";
+                  const sign = delta > 0 ? "+" : "";
+                  return (
+                    <span className={`ml-1 ${cls}`}>
+                      ({sign}{delta} vs {apiLabel ?? "API"})
+                    </span>
+                  );
+                })()}
+              </span>
+            ) : (
+              <span className="text-slate-400">No LMArena score for this size class</span>
+            )}
+          </div>
         </div>
         <div className="text-right">
           <div className="text-2xl font-bold text-slate-900">
-            {fmtCurrency(weekly)}
-            <span className="text-sm font-normal text-slate-500">/wk</span>
+            {fmtCurrency(viewedCost)}
+            <span className="text-sm font-normal text-slate-500">{suffix}</span>
           </div>
           <div className="text-sm text-emerald-700 font-medium">
-            saves {fmtCurrency(savings)} ({fmt(savings_pct, 0)}%)
+            saves {fmtCurrency(viewedSavings)} ({fmt(savings_pct, 0)}%)
           </div>
         </div>
       </div>
@@ -253,10 +300,16 @@ function TierCard({
         </div>
         {tier.ft_weekly !== undefined && tier.ft_weekly > 0 && (
           <div className="col-span-2 text-slate-500">
-            includes {fmtCurrency(tier.ft_weekly)}/wk fine-tuning amortization
+            includes {fmtCurrency(costForView(tier.ft_weekly, view))}{suffix} fine-tuning amortization
           </div>
         )}
       </div>
+
+      {qualityNote && (
+        <div className="mt-3 text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded px-2.5 py-1.5">
+          {qualityNote}
+        </div>
+      )}
 
       {tier.saturated && (
         <div className="mt-3 flex items-start gap-2 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded px-2.5 py-1.5">
@@ -268,6 +321,23 @@ function TierCard({
           </span>
         </div>
       )}
+
+      <div className="mt-3 border-t border-slate-200 pt-2">
+        <button
+          onClick={() => setFtOpen((v) => !v)}
+          className="text-xs font-medium text-indigo-700 hover:text-indigo-900 inline-flex items-center gap-1"
+        >
+          {ftOpen ? "− Hide" : "+ Estimate"} fine-tuning cost
+        </button>
+        {ftOpen && (
+          <FtPanel
+            params_b={tier.params_b}
+            apiWeeklyCost={apiCost}
+            selfhostWeeklyCost={weekly}
+            view={view}
+          />
+        )}
+      </div>
     </div>
   );
 }
@@ -360,6 +430,17 @@ export default function App() {
   const [quant_pref, setQuantPref] = useUrlState<Quant>("q", "fp16");
   const [vendor, setVendor] = useUrlState<Vendor>("v", "runpod");
   const [show_all_tiers, setShowAllTiers] = useState(false);
+  const [cost_view, setCostView] = useState<CostView>(() => {
+    if (typeof window === "undefined") return "weekly";
+    const stored = localStorage.getItem("cost_view");
+    if (stored === "weekly" || stored === "monthly" || stored === "annual") return stored;
+    return "weekly";
+  });
+  const updateCostView = (v: CostView) => {
+    setCostView(v);
+    if (typeof window !== "undefined") localStorage.setItem("cost_view", v);
+  };
+  const [setup_cost, setSetupCost] = useState<number>(5000);
   const [dismissedBannerFp, setDismissedBannerFp] = useState<string | null>(
     () => (typeof window !== "undefined" ? localStorage.getItem("dismissed_banner_fp") : null)
   );
@@ -368,8 +449,14 @@ export default function App() {
   const [overhead_gb, setOverheadGb] = useUrlState<number>("oh", 4);
   const [cold_start_sec, setColdStartSec] = useUrlState<number>("cs", 30);
   const [min_params_b, setMinParamsB] = useUrlState<number>("mp", 0);
-  const [ft_cost, setFtCost] = useUrlState<number>("ft", 0);
-  const [ft_weeks, setFtWeeks] = useUrlState<number>("fw", 52);
+  // Lump-sum "one-time fine-tuning cost" was removed from Advanced settings;
+  // per-card fine-tuning estimators provide the same number, derived from
+  // training params (LoRA/QLoRA/full FT) instead of a free-form dollar input.
+  // Engine still accepts ft_cost/ft_weeks, so we pin them at 0 here.
+  const ft_cost = 0;
+  const ft_weeks = 52;
+  // Quality floor (LMArena ELO). 0 = off.
+  const [min_elo, setMinElo] = useUrlState<number>("me", 0);
 
   // Live data from models.dev
   const bundledApis: ClosedApi[] = Object.entries(PRICING.apis)
@@ -438,6 +525,7 @@ export default function App() {
         ft_cost,
         ft_weeks,
         knownModels: knownModels as EngineKnownModel[],
+        min_elo,
       }),
     [
       activePricing,
@@ -456,6 +544,7 @@ export default function App() {
       cold_start_sec,
       ft_cost,
       ft_weeks,
+      min_elo,
     ]
   );
 
@@ -487,11 +576,29 @@ export default function App() {
       ? { input_per_1m: api_input_override, output_per_1m: api_output_override }
       : livePricingApis[resolvedApiKey] ?? { input_per_1m: 1, output_per_1m: 3 };
 
+  // Look up the ELO of the currently-selected API by matching against the
+  // live ClosedApi list (which carries elo attached by useLiveData).
+  const selectedApi = liveApis.find(
+    (a) => a.label === livePricingApis[resolvedApiKey]?.label
+  );
+  const apiElo = selectedApi?.elo;
+  const apiLabelShort =
+    selectedApi?.label ?? livePricingApis[resolvedApiKey]?.label ?? "API";
+
   const largest = result.largest;
   const graded = result.gradedTiers;
+  const comparable = result.comparableQuality;
+  // Only show the comparable card when it is *different* from `largest`.
+  const showComparable =
+    comparable &&
+    largest &&
+    `${comparable.tier.arch}-${comparable.tier.params_b}` !==
+      `${largest.arch}-${largest.params_b}`;
 
   const featuredKeys = new Set<string>();
   if (largest) featuredKeys.add(`${largest.arch}-${largest.params_b}`);
+  if (showComparable && comparable)
+    featuredKeys.add(`${comparable.tier.arch}-${comparable.tier.params_b}`);
   for (const g of graded) featuredKeys.add(`${g.tier.arch}-${g.tier.params_b}`);
   const otherTiers = result.tiers.filter(
     (t) => !featuredKeys.has(`${t.arch}-${t.params_b}`)
@@ -597,6 +704,17 @@ export default function App() {
           </div>
         </header>
 
+        {/* Presets */}
+        <Presets
+          current={{ queries_per_week, input_tokens, output_tokens, pattern }}
+          onApply={(p: PresetValues) => {
+            setQpw(p.queries_per_week);
+            setInTok(p.input_tokens);
+            setOutTok(p.output_tokens);
+            setPattern(p.pattern);
+          }}
+        />
+
         {/* Inputs */}
         <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-5 mb-5">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-4">
@@ -669,8 +787,13 @@ export default function App() {
               <NumberInput label="VRAM overhead floor (GB)" value={overhead_gb} onChange={setOverheadGb} step={1} hint="KV cache + activations. Engine auto-scales above this." />
               <NumberInput label="Cold-start penalty (sec)" value={cold_start_sec} onChange={setColdStartSec} step={5} hint="For scale-to-zero mode" />
               <NumberInput label="Min model size (B params)" value={min_params_b} onChange={setMinParamsB} step={1} hint="Filter out tiny models even if cheaper. 0 = no floor." />
-              <NumberInput label="One-time fine-tuning cost ($)" value={ft_cost} onChange={setFtCost} step={100} hint="Added amortized to weekly cost" />
-              <NumberInput label="Amortize over (weeks)" value={ft_weeks} onChange={setFtWeeks} step={1} min={1} hint="How long the fine-tune is in service" />
+              <NumberInput
+                label="Minimum quality (Arena ELO)"
+                value={min_elo}
+                onChange={setMinElo}
+                step={10}
+                hint="0 = off. Drops self-host candidates whose nearest known model is below this LMArena ELO. Models with no ELO are kept."
+              />
             </div>
           </Expander>
         </div>
@@ -702,33 +825,84 @@ export default function App() {
                   {result.tiers.length} self-host {result.tiers.length === 1 ? "option" : "options"} fit under
                   your API budget
                 </h2>
-                <div className="text-sm text-slate-600">
-                  API cost: <span className="font-semibold text-slate-900">{fmtCurrency(result.api_cost)}/wk</span>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <div className="inline-flex rounded-md border border-slate-300 bg-slate-50 p-0.5 text-xs">
+                    {(["weekly", "monthly", "annual"] as CostView[]).map((v) => (
+                      <button
+                        key={v}
+                        type="button"
+                        onClick={() => updateCostView(v)}
+                        aria-pressed={cost_view === v}
+                        className={`px-2.5 py-1 rounded transition-colors ${
+                          cost_view === v
+                            ? "bg-white text-indigo-700 font-semibold shadow-sm border border-indigo-200"
+                            : "text-slate-600 hover:text-slate-900"
+                        }`}
+                      >
+                        {v.charAt(0).toUpperCase() + v.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="text-sm text-slate-600">
+                    API cost:{" "}
+                    <span className="font-semibold text-slate-900">
+                      {fmtCurrency(costForView(result.api_cost, cost_view))}
+                      {costViewSuffix(cost_view)}
+                    </span>
+                    {apiElo != null && (
+                      <span className="ml-2 text-slate-500">
+                        · Arena ELO <span className="font-semibold text-slate-700">{apiElo}</span>
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
-              <p className="text-sm text-slate-600 mb-2 flex items-start gap-1.5">
-                <Info className="w-4 h-4 mt-0.5 flex-shrink-0 text-slate-400" />
-                <span>
-                  The chart plots weekly cost vs model size (log-log) for every candidate; the red dashed line
-                  is the API price. We highlight the <strong>largest</strong> model that fits (green ring) and
-                  up to three <strong>savings-banded</strong> picks — the largest model at each of 80%+, 50%+,
-                  and 20%+ savings (indigo rings) — so you can see the cost/capability trade-off at a glance.
-                </span>
-              </p>
-              <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-3 py-2 mb-4">
-                <strong>Note:</strong> Inference costs only. Engineering time (serving infra, evals, monitoring,
-                on-call) and any fine-tuning compute beyond what you enter in Advanced are not included. GPU
-                hourly rates are approximate — verify with your vendor before quoting.
+              <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-3 py-2 mb-4 mt-2">
+                <strong>Note:</strong> Compute only (inference + any fine-tuning you estimate per card).
+                Engineering time — serving infra, evals, monitoring, on-call — is not included. GPU hourly
+                rates are approximate; verify with your vendor before quoting.
               </p>
 
-              <CostSizeChart result={result} />
+              <CostSizeChart result={result} view={cost_view} />
 
               <div className="space-y-3">
                 {largest && (
                   <TierCard
                     tier={largest}
                     apiCost={result.api_cost}
+                    apiElo={apiElo}
+                    apiLabel={apiLabelShort}
                     badge={{ label: "Largest that fits", color: "green" }}
+                    view={cost_view}
+                  />
+                )}
+                {showComparable && comparable && (
+                  <TierCard
+                    tier={comparable.tier}
+                    apiCost={result.api_cost}
+                    apiElo={apiElo}
+                    apiLabel={apiLabelShort}
+                    badge={{ label: "Comparable quality", color: "teal" }}
+                    view={cost_view}
+                    qualityNote={
+                      <span>
+                        <strong>{TIER_LABEL[comparable.modelTier]}</strong> open-weight model — same coarse tier as{" "}
+                        <strong>{TIER_LABEL[comparable.apiTier ?? comparable.floor]}</strong> API target
+                        {comparable.floor !== comparable.apiTier && (
+                          <> (no exact-tier model fit your budget; this is one tier below)</>
+                        )}
+                        . Quality tiers based on public benchmarks;{" "}
+                        <a
+                          href={QUALITY_TIERS_SOURCE_URL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-teal-700 hover:text-teal-900 underline"
+                        >
+                          see source
+                        </a>
+                        .
+                      </span>
+                    }
                   />
                 )}
                 {graded.map((g) => (
@@ -736,12 +910,40 @@ export default function App() {
                     key={`graded-${g.tier.arch}-${g.tier.params_b}`}
                     tier={g.tier}
                     apiCost={result.api_cost}
+                    apiElo={apiElo}
+                    apiLabel={apiLabelShort}
                     badge={{ label: g.label, color: "indigo" }}
+                    view={cost_view}
                   />
                 ))}
                 {(show_all_tiers ? otherTiers : otherTiers.slice(0, 2)).map((tier) => (
-                  <TierCard key={`${tier.arch}-${tier.params_b}`} tier={tier} apiCost={result.api_cost} badge={null} />
+                  <TierCard
+                    key={`${tier.arch}-${tier.params_b}`}
+                    tier={tier}
+                    apiCost={result.api_cost}
+                    apiElo={apiElo}
+                    apiLabel={apiLabelShort}
+                    badge={null}
+                    view={cost_view}
+                  />
                 ))}
+              </div>
+              <div className="mt-4 flex justify-end">
+                <ExportMenu
+                  inputs={{
+                    queries_per_week,
+                    input_tokens,
+                    output_tokens,
+                    api_key: resolvedApiKey,
+                    api_label: livePricingApis[resolvedApiKey]?.label ?? resolvedApiKey,
+                    api_input_per_1m: effectiveApiRates.input_per_1m,
+                    api_output_per_1m: effectiveApiRates.output_per_1m,
+                    pattern,
+                    quant_pref,
+                    vendor,
+                  }}
+                  result={result}
+                />
               </div>
               {otherTiers.length > 2 && (
                 <button
@@ -756,6 +958,76 @@ export default function App() {
                 </button>
               )}
             </div>
+
+            {largest && (
+              <div className="mb-3">
+                <Expander title="Break-even analysis (setup cost payback)">
+                  {(() => {
+                    const selfhostWeekly = largest.weekly_cost_with_ft ?? largest.weekly_cost;
+                    const weeks = breakEvenWeeks(result.api_cost, selfhostWeekly, setup_cost);
+                    const weeklySavings = result.api_cost - selfhostWeekly;
+                    return (
+                      <div className="space-y-3">
+                        <p className="text-sm text-slate-600">
+                          One-time costs (engineer ramp-up, infra setup, migration, evals) often
+                          dominate the first months of self-hosting. Enter an estimate to see
+                          when cumulative API spend overtakes cumulative self-host spend for the{" "}
+                          <strong>largest-that-fits</strong> pick (~{largest.params_b}B{" "}
+                          {largest.arch === "moe" ? "MoE" : "dense"}).
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <NumberInput
+                            label="One-time setup / migration cost ($)"
+                            value={setup_cost}
+                            onChange={setSetupCost}
+                            step={500}
+                            hint="Engineering, infra, evals, on-call ramp-up"
+                          />
+                          <div className="flex flex-col justify-end">
+                            <div className="text-xs text-slate-500 mb-1">Weekly savings vs API</div>
+                            <div className="font-mono text-sm text-slate-800">
+                              {weeklySavings > 0
+                                ? `${fmtCurrency(weeklySavings)}/wk (${fmtCurrency(
+                                    costForView(weeklySavings, cost_view)
+                                  )}${costViewSuffix(cost_view)})`
+                                : "$0 (self-host is not cheaper at this volume)"}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="rounded-md border border-indigo-200 bg-indigo-50/60 px-4 py-3">
+                          {weeks === null ? (
+                            <div className="text-sm text-slate-800">
+                              {weeklySavings <= 0
+                                ? "Self-host is not cheaper than the API at this workload — break-even never happens."
+                                : "Never within 10 years at this setup cost."}
+                            </div>
+                          ) : (
+                            <div className="text-sm text-slate-800">
+                              Self-hosting pays back in{" "}
+                              <span className="font-semibold text-indigo-700">
+                                ~{weeks} {weeks === 1 ? "week" : "weeks"}
+                              </span>
+                              {weeks >= 4 && (
+                                <span className="text-slate-600">
+                                  {" "}(~{(weeks / (52 / 12)).toFixed(1)} months
+                                  {weeks >= 52 ? `, ~${(weeks / 52).toFixed(1)} years` : ""})
+                                </span>
+                              )}
+                              .
+                            </div>
+                          )}
+                          <div className="text-xs text-slate-500 mt-1">
+                            Capped at 520 weeks (10 years). Assumes weekly costs stay flat — real
+                            workloads grow, prices change, and ongoing engineering effort is not
+                            included.
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </Expander>
+              </div>
+            )}
 
             <Expander title="Show the math (derivation)">
               <Derivation
@@ -777,6 +1049,9 @@ export default function App() {
             {status.models === "live" ? "live" : status.models === "loading" ? "loading..." : "cached"}
             {" | "}
             <span className="font-medium">GPUs:</span> {status.gpus}
+            {" | "}
+            <span className="font-medium">Arena ELO:</span> LMArena{" "}
+            {status.elo}{status.eloLastUpdated ? ` (${status.eloLastUpdated})` : ""}
           </div>
           <div>
             Bundled prices last updated: <span className="font-mono">{PRICING.last_updated}</span>{" · "}

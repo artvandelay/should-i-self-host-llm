@@ -1,5 +1,18 @@
 import pricingJson from "./pricing.json";
 import knownModelsJson from "./knownModels.json";
+import {
+  tierFor,
+  tierFromSize,
+  tierMinusOne,
+  TIER_RANK,
+  type QualityTier,
+} from "./qualityTiers";
+import {
+  FT_METHODS,
+  FLOPS_PER_TOKEN_PER_PARAM,
+  H100_FP16_FLOPS_PER_SEC,
+  type FtMethod,
+} from "./ftMethods";
 
 // =============================================================================
 // TYPES
@@ -27,6 +40,10 @@ export interface ApiRow {
   label: string;
   input_per_1m: number;
   output_per_1m: number;
+  /** LMArena ELO score, when a match exists (see src/eloMatch.ts). */
+  elo?: number;
+  /** Rank within the LMArena text leaderboard at last refresh. */
+  eloRank?: number;
 }
 
 export interface Pricing {
@@ -53,6 +70,10 @@ export interface KnownModel {
   source?: string;
   last_seen?: string;
   family?: string;
+  /** LMArena ELO score, when a match exists (see src/eloMatch.ts). */
+  elo?: number;
+  /** Rank within the LMArena text leaderboard at last refresh. */
+  eloRank?: number;
 }
 
 // Bundled known models loaded from JSON at build time.
@@ -151,6 +172,148 @@ export function pickCheapestGpu(
   );
 }
 
+// =============================================================================
+// COST PROJECTIONS — derive monthly / annual from any weekly cost
+// =============================================================================
+
+/** Average weeks per month: 52 / 12 ≈ 4.345. Used so monthly × 12 ≈ annual. */
+export const WEEKS_PER_MONTH = 52 / 12;
+export const WEEKS_PER_YEAR = 52;
+
+export type CostView = "weekly" | "monthly" | "annual";
+
+export interface CostProjection {
+  weekly: number;
+  monthly: number;
+  annual: number;
+}
+
+/** Project a weekly cost into weekly/monthly/annual figures. Additive helper. */
+export function projectCost(weekly_cost: number): CostProjection {
+  return {
+    weekly: weekly_cost,
+    monthly: weekly_cost * WEEKS_PER_MONTH,
+    annual: weekly_cost * WEEKS_PER_YEAR,
+  };
+}
+
+/** Scale a weekly cost to the chosen view. */
+export function costForView(weekly_cost: number, view: CostView): number {
+  if (view === "monthly") return weekly_cost * WEEKS_PER_MONTH;
+  if (view === "annual") return weekly_cost * WEEKS_PER_YEAR;
+  return weekly_cost;
+}
+
+export function costViewSuffix(view: CostView): string {
+  if (view === "monthly") return "/mo";
+  if (view === "annual") return "/yr";
+  return "/wk";
+}
+
+export function costViewLabel(view: CostView): string {
+  if (view === "monthly") return "Monthly cost";
+  if (view === "annual") return "Annual cost";
+  return "Weekly cost";
+}
+
+/**
+ * Break-even analysis: weeks until cumulative API spend exceeds cumulative
+ * self-host spend including a one-time setup/migration cost.
+ *
+ *   cumulative_api(w)      = api_weekly * w
+ *   cumulative_selfhost(w) = setup_cost + selfhost_weekly * w
+ *
+ * Solve for the smallest integer w where cumulative_api >= cumulative_selfhost.
+ *   w >= setup_cost / (api_weekly - selfhost_weekly)
+ *
+ * Returns null if self-hosting is never cheaper than the API at this weekly
+ * rate (i.e. selfhost_weekly >= api_weekly) or if the break-even exceeds
+ * `cap_weeks` (default 520 = 10 years).
+ */
+export function breakEvenWeeks(
+  api_weekly: number,
+  selfhost_weekly: number,
+  setup_cost: number,
+  cap_weeks = 520
+): number | null {
+  if (!Number.isFinite(api_weekly) || !Number.isFinite(selfhost_weekly)) return null;
+  if (!Number.isFinite(setup_cost) || setup_cost < 0) return null;
+  const weekly_savings = api_weekly - selfhost_weekly;
+  if (weekly_savings <= 0) return null;
+  if (setup_cost === 0) return 0;
+  const weeks = Math.ceil(setup_cost / weekly_savings);
+  if (weeks > cap_weeks) return null;
+  return weeks;
+}
+
+export interface FtInputs {
+  num_examples: number;
+  tokens_per_example: number;
+  method: FtMethod;
+  epochs: number;
+  prep_cost_usd: number;
+}
+
+export interface FtCapexResult {
+  gpu_hours: number;
+  gpu_cost_usd: number;
+  total_capex_usd: number;
+  method: FtMethod;
+}
+
+export interface CumulativePoint {
+  month: number;
+  api_cumulative: number;
+  selfhost_cumulative: number;
+}
+
+export interface CumulativeProjection {
+  points: CumulativePoint[];
+  crossover_month: number | null;
+  horizon_months: number;
+}
+
+export function computeFtCapex(params_b: number, inputs: FtInputs): FtCapexResult {
+  const num = clampNonNeg(inputs.num_examples);
+  const tok = clampNonNeg(inputs.tokens_per_example);
+  const epochs = clampNonNeg(inputs.epochs);
+  const prep = clampNonNeg(inputs.prep_cost_usd);
+  const params = clampNonNeg(params_b) * 1e9;
+  const total_tokens = num * tok * epochs;
+  const full_flops = FLOPS_PER_TOKEN_PER_PARAM * params * total_tokens;
+  const method_flops = full_flops * FT_METHODS[inputs.method].computeMultiplier;
+  const seconds = method_flops / H100_FP16_FLOPS_PER_SEC;
+  const hours = seconds / 3600;
+  const h100Row = PRICING.gpus.find((g) => /h100|h200/i.test(g.name));
+  const cheapestRate = h100Row
+    ? Math.min(h100Row.modal_per_hr, h100Row.lambda_per_hr, h100Row.runpod_per_hr)
+    : 4.0;
+  const gpu_cost = hours * cheapestRate;
+  return { gpu_hours: hours, gpu_cost_usd: gpu_cost, total_capex_usd: gpu_cost + prep, method: inputs.method };
+}
+
+export function cumulativeProjection(
+  api_weekly: number,
+  selfhost_weekly: number,
+  capex_usd: number,
+  horizon_months = 24
+): CumulativeProjection {
+  const apiW = clampNonNeg(api_weekly);
+  const shW = clampNonNeg(selfhost_weekly);
+  const cap = clampNonNeg(capex_usd);
+  const horizon = Math.max(1, Math.floor(horizon_months));
+  const points: CumulativePoint[] = [];
+  let crossover: number | null = null;
+  for (let m = 0; m <= horizon; m++) {
+    const weeks = m * WEEKS_PER_MONTH;
+    const api_cum = apiW * weeks;
+    const sh_cum = shW * weeks + cap;
+    points.push({ month: m, api_cumulative: api_cum, selfhost_cumulative: sh_cum });
+    if (crossover === null && m > 0 && sh_cum <= api_cum) crossover = m;
+  }
+  return { points, crossover_month: crossover, horizon_months: horizon };
+}
+
 export function weeklyApiCost(
   pricing: Pricing,
   queries_per_week: number,
@@ -194,6 +357,8 @@ export interface ConfigResult {
   active_params_b: number;
   arch: Arch;
   quant: Quant;
+  /** Coarse quality tier for the named open-weight model (if known). */
+  quality_tier?: QualityTier | null;
   gpu: string;
   gpu_price_per_hr: number;
   vram_needed_gb: number;
@@ -215,6 +380,10 @@ export interface ConfigResult {
   /** added by recommendTiers() */
   ft_weekly?: number;
   weekly_cost_with_ft?: number;
+  /** LMArena ELO of `nearest_named`, when known. */
+  elo?: number;
+  /** Rank within LMArena text leaderboard at last refresh. */
+  eloRank?: number;
 }
 
 export function evaluateConfig(args: EvalArgs): ConfigResult | null {
@@ -306,12 +475,16 @@ export function evaluateConfig(args: EvalArgs): ConfigResult | null {
     b.weekly_cost < min.weekly_cost ? b : min
   );
   const named = nearestModelInList(params_b, arch, args.knownModels ?? KNOWN_MODELS);
+  const quality_tier = named ? tierFor(named.name) ?? tierFromSize(params_b, named.active_b ?? null) : tierFromSize(params_b, active_params_b);
 
   return {
+    elo: named?.elo,
+    eloRank: named?.eloRank,
     params_b,
     active_params_b,
     arch,
     quant,
+    quality_tier,
     gpu: gpu.name,
     gpu_price_per_hr: price_per_hr,
     vram_needed_gb: vram_needed,
@@ -346,6 +519,12 @@ export interface RecommendArgs {
   ft_cost: number;
   ft_weeks: number;
   knownModels?: KnownModel[];
+  /**
+   * Optional quality floor: drop self-host candidates whose nearest known
+   * model has ELO below this. Models with no ELO are always kept (we don't
+   * silently hide models just because LMArena hasn't ranked them).
+   */
+  min_elo?: number;
 }
 
 export interface GradedTier {
@@ -354,11 +533,27 @@ export interface GradedTier {
   tier: ConfigResult;
 }
 
+export interface ComparableQualityPick {
+  tier: ConfigResult;
+  /** Tier of the API model we're comparing against (best-effort lookup). */
+  apiTier: QualityTier | null;
+  /** Tier of the picked open-weight model. */
+  modelTier: QualityTier;
+  /** Floor used to filter — apiTier or one tier below if nothing fits. */
+  floor: QualityTier;
+}
+
 export interface RecommendResult {
   api_cost: number;
   tiers: ConfigResult[];
   largest: ConfigResult | null;
   gradedTiers: GradedTier[];
+  /**
+   * Cheapest open-weight model whose curated quality tier matches the
+   * selected API model (or one tier below if no exact match fits the budget).
+   * Null when we have no quality info for the API or nothing comparable fits.
+   */
+  comparableQuality: ComparableQualityPick | null;
   all_candidates: ConfigResult[];
 }
 
@@ -499,18 +694,80 @@ export function recommendTiers(args: RecommendArgs): RecommendResult {
     c.weekly_cost_with_ft = c.weekly_cost + ft_weekly;
   }
 
-  const affordable = candidates.filter(
-    (c) => (c.weekly_cost_with_ft ?? c.weekly_cost) <= api_cost
-  );
+  const min_elo = args.min_elo ?? 0;
+  const affordable = candidates.filter((c) => {
+    const fits = (c.weekly_cost_with_ft ?? c.weekly_cost) <= api_cost;
+    if (!fits) return false;
+    // Quality floor: models WITH an ELO must clear the floor; models
+    // without an ELO are kept (no data != bad).
+    if (min_elo > 0 && c.elo != null && c.elo < min_elo) return false;
+    return true;
+  });
   affordable.sort((a, b) => b.params_b - a.params_b);
 
   const largest = affordable[0] ?? null;
+
+  const comparableQuality = pickComparableQuality(affordable, pricing, api_key, api_override, largest);
 
   return {
     api_cost,
     tiers: affordable,
     largest,
     gradedTiers: pickGradedTiers(affordable, api_cost, largest),
+    comparableQuality,
     all_candidates: candidates,
   };
+}
+
+/**
+ * Pick the cheapest affordable open-weight model whose quality tier is at
+ * least as high as the API model's tier. If nothing matches the exact tier,
+ * fall back one tier (e.g. frontier API → look for strong open-weight).
+ *
+ * Returns null when:
+ *   - we don't recognize the API model's tier (curated list miss), OR
+ *   - no affordable candidate clears the floor.
+ */
+function pickComparableQuality(
+  affordable: ConfigResult[],
+  pricing: Pricing,
+  api_key: string,
+  api_override: { input_per_1m: number; output_per_1m: number } | undefined,
+  largest: ConfigResult | null
+): ComparableQualityPick | null {
+  if (api_override) return null; // custom rates -> no quality signal
+  const apiRow = pricing.apis[api_key];
+  if (!apiRow) return null;
+  const apiTier = tierFor(apiRow.label);
+  if (!apiTier) return null;
+  const apiRank = TIER_RANK[apiTier];
+
+  // Try exact tier first; fall back to one step below.
+  const floors: QualityTier[] = [apiTier, tierMinusOne(apiTier)];
+  for (const floor of floors) {
+    const floorRank = TIER_RANK[floor];
+    const eligible = affordable.filter(
+      (c) => c.quality_tier && TIER_RANK[c.quality_tier] >= floorRank && TIER_RANK[c.quality_tier] <= apiRank
+    );
+    if (!eligible.length) continue;
+    // Cheapest weekly cost wins; tie-break by larger params (more headroom).
+    const cheapest = eligible.reduce((best, c) => {
+      const bw = best.weekly_cost_with_ft ?? best.weekly_cost;
+      const cw = c.weekly_cost_with_ft ?? c.weekly_cost;
+      if (cw < bw) return c;
+      if (cw === bw && c.params_b > best.params_b) return c;
+      return best;
+    });
+    // If this is just the same pick as `largest`, skip on the first floor pass
+    // so we don't surface a duplicate card. UI will hide on equality anyway.
+    return {
+      tier: cheapest,
+      apiTier,
+      modelTier: cheapest.quality_tier as QualityTier,
+      floor,
+    };
+  }
+  // Suppress unused-largest warning in some builds.
+  void largest;
+  return null;
 }

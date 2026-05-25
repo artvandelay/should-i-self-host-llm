@@ -10,7 +10,9 @@ import {
   ReferenceLine,
   Legend,
 } from "recharts";
-import type { ConfigResult, RecommendResult } from "./engine";
+import type { ConfigResult, CostView, RecommendResult } from "./engine";
+import { costForView, costViewLabel, costViewSuffix } from "./engine";
+import { TIER_RANK, type QualityTier } from "./qualityTiers";
 
 interface ChartPoint {
   params_b: number;
@@ -18,8 +20,10 @@ interface ChartPoint {
   arch: "dense" | "moe";
   gpu: string;
   savings_pct: number;
-  highlight: "largest" | "graded" | null;
+  highlight: "largest" | "comparable" | "graded" | null;
   active_params_b: number;
+  quality_tier: QualityTier | null;
+  elo?: number;
 }
 
 function toPoint(
@@ -37,21 +41,62 @@ function toPoint(
     savings_pct,
     highlight,
     active_params_b: c.active_params_b,
+    quality_tier: c.quality_tier ?? null,
+    elo: c.elo,
   };
+}
+
+/**
+ * Map ELO to fill colour intensity. Higher ELO -> more saturated.
+ * We pick the per-arch hue then darken with ELO. Models with no ELO
+ * render at the dim end so the chart still shows them but with a
+ * visual hint that the quality signal is missing.
+ */
+function eloFill(arch: "dense" | "moe", elo?: number): { fill: string; stroke: string } {
+  // Anchor: 1300 -> dim, 1500 -> bright. Clamp.
+  const t = elo == null ? 0 : Math.max(0, Math.min(1, (elo - 1300) / 200));
+  if (arch === "dense") {
+    // Indigo scale: #c7d2fe (light) -> #312e81 (dark)
+    const light = [199, 210, 254];
+    const dark = [67, 56, 202]; // indigo-700
+    const fill = light.map((c, i) => Math.round(c + (dark[i] - c) * t));
+    return { fill: `rgb(${fill.join(",")})`, stroke: `rgb(49,46,129)` };
+  }
+  // Sky scale: #bae6fd -> #0c4a6e
+  const light = [186, 230, 253];
+  const dark = [14, 165, 233]; // sky-500
+  const fill = light.map((c, i) => Math.round(c + (dark[i] - c) * t));
+  return { fill: `rgb(${fill.join(",")})`, stroke: `rgb(3,105,161)` };
 }
 
 function CustomDot(props: any) {
   const { cx, cy, payload } = props;
   if (cx == null || cy == null) return null;
   const isDense = payload.arch === "dense";
-  const baseFill = isDense ? "#6366f1" : "#0ea5e9";
-  const baseStroke = isDense ? "#4338ca" : "#0369a1";
+  const { fill: baseFill, stroke: baseStroke } = eloFill(payload.arch, payload.elo);
   const r = 5;
 
   if (payload.highlight === "largest") {
     return (
       <g>
         <circle cx={cx} cy={cy} r={r + 5} fill="none" stroke="#10b981" strokeWidth={2.5} />
+        {isDense ? (
+          <circle cx={cx} cy={cy} r={r} fill={baseFill} stroke={baseStroke} strokeWidth={1} />
+        ) : (
+          <polygon
+            points={`${cx},${cy - r} ${cx - r},${cy + r} ${cx + r},${cy + r}`}
+            fill={baseFill}
+            stroke={baseStroke}
+            strokeWidth={1}
+          />
+        )}
+      </g>
+    );
+  }
+  if (payload.highlight === "comparable") {
+    return (
+      <g>
+        <circle cx={cx} cy={cy} r={r + 5} fill="none" stroke="#0d9488" strokeWidth={2.5} />
         {isDense ? (
           <circle cx={cx} cy={cy} r={r} fill={baseFill} stroke={baseStroke} strokeWidth={1} />
         ) : (
@@ -82,8 +127,15 @@ function CustomDot(props: any) {
       </g>
     );
   }
+  // Subtle quality-tier hint: higher tiers render at higher opacity so the
+  // eye can track the "comparable-quality" region of the chart without losing
+  // the dense/MoE shape distinction.
+  const tierOpacity =
+    payload.quality_tier
+      ? 0.4 + 0.15 * (TIER_RANK[payload.quality_tier as QualityTier] - 1)
+      : 0.6;
   if (isDense) {
-    return <circle cx={cx} cy={cy} r={r} fill={baseFill} stroke={baseStroke} strokeWidth={1} fillOpacity={0.7} />;
+    return <circle cx={cx} cy={cy} r={r} fill={baseFill} stroke={baseStroke} strokeWidth={1} fillOpacity={tierOpacity} />;
   }
   return (
     <polygon
@@ -91,31 +143,42 @@ function CustomDot(props: any) {
       fill={baseFill}
       stroke={baseStroke}
       strokeWidth={1}
-      fillOpacity={0.7}
+      fillOpacity={tierOpacity}
     />
   );
 }
 
-function CustomTooltip({ active, payload }: any) {
+function CustomTooltip({ active, payload, view }: any) {
   if (!active || !payload || !payload.length) return null;
   const p = payload[0].payload as ChartPoint;
+  const v: CostView = view ?? "weekly";
+  const scaled = costForView(p.weekly_cost, v);
   return (
     <div className="bg-white border border-slate-300 rounded shadow-md px-2.5 py-1.5 text-xs">
       <div className="font-semibold text-slate-900">
         ~{p.params_b}B {p.arch === "moe" ? `MoE (${p.active_params_b}B active)` : "dense"}
       </div>
-      <div className="text-slate-700">${p.weekly_cost.toFixed(2)}/wk</div>
+      <div className="text-slate-700">${scaled.toFixed(2)}{costViewSuffix(v)}</div>
       <div className="text-emerald-700">saves {p.savings_pct.toFixed(0)}%</div>
       <div className="text-slate-500">{p.gpu}</div>
+      {p.elo != null ? (
+        <div className="text-slate-600 mt-0.5">Arena ELO {p.elo}</div>
+      ) : (
+        <div className="text-slate-400 mt-0.5">No Arena ELO</div>
+      )}
     </div>
   );
 }
 
-export function CostSizeChart({ result }: { result: RecommendResult }) {
-  const { api_cost, all_candidates, largest, gradedTiers } = result;
+export function CostSizeChart({ result, view = "weekly" }: { result: RecommendResult; view?: CostView }) {
+  const { api_cost, all_candidates, largest, gradedTiers, comparableQuality } = result;
 
   const highlightKeys = new Map<string, ChartPoint["highlight"]>();
   if (largest) highlightKeys.set(`${largest.arch}-${largest.params_b}`, "largest");
+  if (comparableQuality) {
+    const k = `${comparableQuality.tier.arch}-${comparableQuality.tier.params_b}`;
+    if (!highlightKeys.has(k)) highlightKeys.set(k, "comparable");
+  }
   for (const g of gradedTiers) {
     const k = `${g.tier.arch}-${g.tier.params_b}`;
     if (!highlightKeys.has(k)) highlightKeys.set(k, "graded");
@@ -155,19 +218,22 @@ export function CostSizeChart({ result }: { result: RecommendResult }) {
             name="Weekly cost"
             scale="log"
             domain={[yMin, yMax]}
-            tickFormatter={(v) => `$${v < 1 ? v.toFixed(2) : v < 100 ? v.toFixed(0) : v >= 1000 ? `${(v / 1000).toFixed(1)}k` : v.toFixed(0)}`}
-            label={{ value: "Weekly cost (log)", angle: -90, position: "insideLeft", fontSize: 12, fill: "#64748b" }}
+            tickFormatter={(val) => {
+              const v = costForView(val, view);
+              return `$${v < 1 ? v.toFixed(2) : v < 100 ? v.toFixed(0) : v >= 1000 ? `${(v / 1000).toFixed(1)}k` : v.toFixed(0)}`;
+            }}
+            label={{ value: `${costViewLabel(view)} (log)`, angle: -90, position: "insideLeft", fontSize: 12, fill: "#64748b" }}
             stroke="#94a3b8"
             tick={{ fontSize: 11 }}
           />
           <ZAxis range={[60, 60]} />
-          <Tooltip content={<CustomTooltip />} cursor={{ strokeDasharray: "3 3" }} />
+          <Tooltip content={<CustomTooltip view={view} />} cursor={{ strokeDasharray: "3 3" }} />
           <Legend verticalAlign="top" height={28} iconSize={10} wrapperStyle={{ fontSize: 12 }} />
           <ReferenceLine
             y={api_cost}
             stroke="#dc2626"
             strokeDasharray="5 5"
-            label={{ value: `API cost $${api_cost.toFixed(2)}/wk`, position: "insideTopRight", fontSize: 11, fill: "#dc2626" }}
+            label={{ value: `API cost $${costForView(api_cost, view).toFixed(2)}${costViewSuffix(view)}`, position: "insideTopRight", fontSize: 11, fill: "#dc2626" }}
           />
           <Scatter name="Dense" data={densePoints} shape={<CustomDot />} fill="#6366f1" />
           <Scatter name="MoE" data={moePoints} shape={<CustomDot />} fill="#0ea5e9" />

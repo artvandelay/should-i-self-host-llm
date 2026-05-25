@@ -123,7 +123,7 @@ describe("MoE: compute uses active params, VRAM uses total", () => {
   });
 
   it("MoE total drives VRAM/cluster overhead, not active", () => {
-    // 397B total → ~207 GB FT VRAM (QLoRA) → multi-gpu (1.3x), even though
+    // 397B total → ~207 GB FT VRAM (QLoRA) → multi-gpu (1.35x), even though
     // active is small. Pass method=qlora for the realistic case.
     const moe = computeFtCapex(
       17,
@@ -133,8 +133,9 @@ describe("MoE: compute uses active params, VRAM uses total", () => {
     const dense17 = computeFtCapex(17, { ...baseInputs, method: "qlora" });
     expect(moe.cluster_topology).toBe("multi-gpu");
     expect(dense17.cluster_topology).toBe("single-gpu");
-    // Same FLOPs but MoE pays the 1.3x comms tax.
-    expect(moe.gpu_cost_usd).toBeCloseTo(dense17.gpu_cost_usd * 1.3, 4);
+    // Same FLOPs but MoE pays the multi-gpu vs single-gpu overhead delta
+    // (1.35 / 1.10 ≈ 1.227× more wall-clock).
+    expect(moe.gpu_cost_usd).toBeCloseTo(dense17.gpu_cost_usd * (1.35 / 1.10), 4);
   });
 
   it("omitting total_params_b falls back to dense behavior", () => {
@@ -155,11 +156,17 @@ describe("cluster overhead", () => {
   });
 
   it("pickClusterOverhead boundaries with default 80GB/8-per-node", () => {
-    expect(pickClusterOverhead(40).multiplier).toBe(1.0);     // fits 1 H100
+    // Updated 2026: floors moved to 1.10 / 1.35 / 1.70 to acknowledge that
+    // even single-GPU runs don't hit 100% utilization (kernel launches,
+    // dataloader stalls). Node boundary has a 15% tolerance so workloads
+    // like Mixtral-47B full-FT (~666 GB) still classify as multi-gpu, not
+    // multi-node.
+    expect(pickClusterOverhead(40).multiplier).toBe(1.10);    // fits 1 H100
     expect(pickClusterOverhead(40).topology).toBe("single-gpu");
-    expect(pickClusterOverhead(200).multiplier).toBe(1.3);    // multi-GPU
+    expect(pickClusterOverhead(200).multiplier).toBe(1.35);   // multi-GPU
     expect(pickClusterOverhead(200).topology).toBe("multi-gpu");
-    expect(pickClusterOverhead(2000).multiplier).toBe(1.6);   // multi-node
+    expect(pickClusterOverhead(666).topology).toBe("multi-gpu");  // tolerance: Mixtral-47B full
+    expect(pickClusterOverhead(2000).multiplier).toBe(1.70);  // multi-node
     expect(pickClusterOverhead(2000).topology).toBe("multi-node");
   });
 
@@ -176,21 +183,21 @@ describe("cluster overhead", () => {
   });
 
   it("user override beats auto-pick", () => {
-    const auto = computeFtCapex(7, { ...baseInputs, method: "lora" }); // tiny → auto 1.0×
+    const auto = computeFtCapex(7, { ...baseInputs, method: "lora" }); // tiny → auto 1.10×
     const forced = computeFtCapex(7, {
       ...baseInputs,
       method: "lora",
-      cluster_overhead: 1.6,
+      cluster_overhead: 1.70,
     });
-    expect(auto.cluster_overhead).toBe(1.0);
-    expect(forced.cluster_overhead).toBe(1.6);
-    expect(forced.gpu_cost_usd).toBeCloseTo(auto.gpu_cost_usd * 1.6, 6);
+    expect(auto.cluster_overhead).toBe(1.10);
+    expect(forced.cluster_overhead).toBe(1.70);
+    expect(forced.gpu_cost_usd).toBeCloseTo(auto.gpu_cost_usd * (1.70 / 1.10), 6);
   });
 
   it("70B full-FT auto-picks multi-node (~988 GB > one node)", () => {
     const r = computeFtCapex(70, { ...baseInputs, method: "full" });
     expect(r.cluster_topology).toBe("multi-node");
-    expect(r.cluster_overhead).toBe(1.6);
+    expect(r.cluster_overhead).toBe(1.70);
   });
 });
 

@@ -19,7 +19,7 @@ methods.ts, hardware.ts, cost.ts, index.ts); UI: `src/FtPanel.tsx`.
   experts that fire do work. VRAM footprint and cluster overhead still use
   total params (all experts load into memory).
 - It does estimate experiments/failed-runs (`experiments_multiplier`, default
-  2.5×) and multi-GPU comms overhead (auto-picked `1.0× / 1.3× / 1.6×` from
+  2.5×) and cluster utilization overhead (auto-picked `1.10× / 1.35× / 1.70×` from
   the FT VRAM footprint). It does **not** estimate dataset prep cost,
   engineering salary, evaluation runs, or any quality delta.
 - **Headline assumption that surprises most people:** PEFT (LoRA / QLoRA) saves
@@ -81,13 +81,15 @@ cost = (6 × params × tokens × method_multiplier)
 | QLoRA MFU penalty | 0.70 |
 | Effective FLOPS/sec | 989e12 × 0.30 × 0.70 = **2.08 × 10¹⁴ FLOPS** |
 | Seconds | 9.65e19 / 2.08e14 ≈ **464,500 sec** |
-| **GPU-hours** | ≈ **129 h** |
+| Single-GPU hours (compute only) | ≈ **129 h** |
+| Cluster overhead (auto: single-gpu) | **1.10×** |
+| **GPU-hours (after overhead)** | ≈ **142 h** |
 | Cheapest H100 (Runpod) | $2.90/hr |
-| **GPU $-cost** | ≈ **$374** |
+| **GPU $-cost** | ≈ **$412** |
 | `prep_cost_usd` | $0 (user-supplied) |
-| **Total capex — 1× (single successful run, theoretical floor)** | **$374** |
+| **Total capex — 1× (single successful run, theoretical floor)** | **$412** |
 | Experiments multiplier (default) | **2.5×** |
-| **Total capex — 2.5× (default campaign: HP sweeps + failed runs)** | **$935** |
+| **Total capex — 2.5× (default campaign: HP sweeps + failed runs)** | **$1,029** |
 
 The 2.5× default reflects the reality that production fine-tuning campaigns
 rarely succeed on the first run. Hyperparameter sweeps, early-stopped failures,
@@ -101,7 +103,7 @@ visible in the panel breakdown so the multiplier's impact is transparent.
 
 For comparison: at Fireworks' published [LoRA SFT pricing](https://fireworks.ai/pricing)
 ($3.00 per 1M training tokens for the 16.1B–80B band), the same 300M-token job
-would cost **$900** end-to-end on their managed service. The ~2.4× gap is the
+would cost **$900** end-to-end on their managed service. The ~2.2× gap is the
 vendor's margin + multi-tenant overhead + included hosting. See §5 for more
 back-solves.
 
@@ -121,7 +123,7 @@ back-solves.
 | 8 | H100 BF16 peak | **989 TFLOPS** | NVIDIA H100 datasheet (sparsity off) | HIGH | N |
 | 9 | Baseline MFU | **30%** | [stevengong notes on MFU](https://stevengong.co/notes/Model-FLOPs-Utilization); [technolynx training-efficiency post](https://www.technolynx.com/post/model-flops-utilization-training-efficiency) — FT recipes typically 25–35%, pretraining at scale 40–50% | MED | **Y** — well-tuned single-node FT with FlashAttention / fused kernels can hit 40%+; conservatively low for power users. |
 | 10 | GPU = single H100 at cheapest vendor | **Runpod H100 80GB @ $2.90/hr** | `src/pricing.json` (refreshed via BYOK Firecrawl script) | HIGH | N |
-| 11 | Multi-GPU / multi-node cluster overhead | **Auto-picked from FT VRAM footprint**, sized to the actual training GPU's `single_gpu_vram_gb × gpus_per_node` (from `pricing.json`). With today's H100 (80 GB, 8/node): ≤80 GB → 1.0×, ≤640 GB → 1.3×, >640 GB → 1.6×. Drops in unchanged for B200, MI300X (192 GB), GB200 NVL36, etc. User can override via the UI. | Industry rule-of-thumb; FSDP/DeepSpeed all-reduce typically eats 20–50% of wall clock; intra-node NVLink ≈ 1.3×, inter-node IB ≈ 1.6× | MED | N — first-class input. |
+| 11 | Cluster utilization overhead | **Auto-picked from FT VRAM footprint**, sized to the actual training GPU's `single_gpu_vram_gb × gpus_per_node` (from `pricing.json`). With today's H100 (80 GB, 8/node): ≤80 GB → **1.10×** (single-gpu — even one card doesn't get 100% MFU; kernel-launch and dataloader stalls cost ~10%), ≤640 GB × 1.15 tolerance → **1.35×** (intra-node NVLink + NCCL all-reduce), > that → **1.70×** (multi-node Infiniband). Drops in unchanged for B200, MI300X (192 GB), GB200 NVL36, etc. User can override via the UI. The 1.15× tolerance band on the node boundary keeps workloads like Mixtral 8x7B full-FT (~666 GB) classified intra-node where they actually run, instead of false-positiving onto IB. | Industry rule-of-thumb; FSDP/DeepSpeed all-reduce typically eats 20–50% of wall clock; intra-node NVLink ≈ 1.3–1.4×, inter-node IB ≈ 1.6–1.8×; single-GPU non-compute overhead 5–10% | MED | N — first-class input. |
 | 19 | Training GPU choice & peak TFLOPS | **Picked from `pricing.json` by best $/TFLOP-hr**: any row with `bf16_tflops > 0` is eligible; the one with the lowest `min(modal,lambda,runpod) / bf16_tflops` wins. H100 (989 TFLOPS @ $2.9/hr → $2.93/TFLOP-hr) beats A100 ($5.13/TFLOP-hr) today. A hypothetical B200 (2250 TFLOPS @ $5/hr → $2.22) would automatically take over. Falls back to 989 TFLOPS / $4/hr if the config has nothing tagged. | NVIDIA datasheets; AMD MI300X spec | HIGH | N — config-driven. |
 | 20 | Vendor coverage | Hard-coded to Modal / Lambda / Runpod (`Vendor` union + parallel `${vendor}_per_hr` fields). Adding Together / Fireworks / CoreWeave / AWS requires editing the type union AND every JSON row AND the refresh script. **Out of scope by design** — three vendors give us a defensible "cheapest of three" floor; exhaustive vendor coverage isn't the goal. | Project decision | HIGH | N — scope-limited. |
 | 21 | Inference throughput formula | **Aggregate** throughput with continuous batching, not single-stream decode. Anchor: `960 tok/s per 8B active per H100-equivalent unit` × `batchingMultiplier(active_params_b)` (10× for ≤4B, 6× for ≤16B, 3× for ≤40B, 2× for ≤80B, 1.5× for >80B). Scales linearly by `bf16_tflops / 989` for new hardware. Batching multipliers reflect KV-cache headroom — small-active MoE models get the biggest wins. Calibrated against published vLLM/TGI numbers at ~2–4K context. | vLLM / TGI / SGLang benchmarks; KV-cache slot math | MED | N — first-class. |
@@ -146,7 +148,9 @@ back-solves.
   `active_b` value in our catalog are skipped entirely rather than quoted
   with a misleading dense-equivalent number.
 - **Multi-GPU / multi-node overhead is modeled** via `pickClusterOverhead`
-  (1.0× / 1.3× / 1.6×). It captures comms tax, not "you need N GPUs" —
+  (1.10× / 1.35× / 1.70×). It captures both NCCL comms tax AND the
+  single-GPU non-compute floor (kernel launch, dataloader, HtoD). Not
+  "you need N GPUs" —
   workloads whose FT VRAM exceeds the largest catalog SKU still get a
   dollar number, with the caveat that the cluster is implied. A
   feasibility guard for "this won't fit anywhere we know about" is a
@@ -193,7 +197,7 @@ our engine produce in GPU $ for the same workload?
 | Vendor | Model band | $ / 1M training tokens (LoRA) | Our engine $ for 300M tokens | Vendor / Us | Source |
 |---|---|---|---|---|---|
 | **Fireworks** | up to 16B | $0.50 → $150 | 16B LoRA = **$72** | **2.1×** | [fireworks.ai/pricing](https://fireworks.ai/pricing) |
-| **Fireworks** | 16.1B – 80B | $3.00 → $900 | 80B QLoRA = **$374** | **2.4×** | same |
+| **Fireworks** | 16.1B – 80B | $3.00 → $900 | 80B QLoRA = **$412** | **2.2×** | same |
 | **Fireworks** | 80B – 300B | $6.00 → $1,800 | 235B-A22B QLoRA (MoE, active drives FLOPs) = **~$103** single run, ~$334 default campaign (2.5× + cluster) | **5–17×** | same — vendor charges by total-param band; we now charge by active. MoE FT looks much cheaper on raw hardware than vendor pricing reflects. |
 | **Fireworks** | >300B | $10.00 → $3,000 | 405B (dense) QLoRA = **$1,895** | **1.6×** | same |
 | **Together** | 70B–100B LoRA | $2.90 → $870 | 80B LoRA = **$454** | **1.9×** | [eesel breakdown of Together pricing](https://www.eesel.ai/blog/together-ai-pricing) |
@@ -279,7 +283,7 @@ These are the calls we'd like you to make before we polish the panel further.
    under `describe("MoE: compute uses active params, VRAM uses total")`.
 
 8. **Should we surface the headline vendor-margin observation in the UI?**
-   E.g. "Our $374 estimate is what you'd pay running this yourself on
+   E.g. "Our $412 estimate is what you'd pay running this yourself on
    Runpod. Managed vendors (Together / Fireworks) would charge **~$700–$900**
    for the same job." This is a useful trust-builder and a "vs API" anchor —
    but adds a chunk of explanatory text to an already-dense panel.

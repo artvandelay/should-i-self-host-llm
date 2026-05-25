@@ -127,10 +127,15 @@ export function computeFtCost(
         : "pickClusterOverhead auto",
   });
 
+  // Topology label tracks the EFFECTIVE overhead so user overrides surface
+  // honestly (forcing 1.7× on a tiny model reads "multi-node", not "single").
+  // Thresholds sit at the midpoints between the canonical overhead values
+  // (1.10 / 1.35 / 1.70) so an exact match lands in the right bucket and
+  // freeform user values round to the nearest topology.
   const cluster_topology: "single-gpu" | "multi-gpu" | "multi-node" =
-    cluster_overhead <= 1.0
+    cluster_overhead < 1.225
       ? "single-gpu"
-      : cluster_overhead <= 1.3
+      : cluster_overhead < 1.525
         ? "multi-gpu"
         : "multi-node";
 

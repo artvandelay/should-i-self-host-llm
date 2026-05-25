@@ -69,17 +69,19 @@ describe("sweep smoke", () => {
       expect(t.weekly_cost_with_ft ?? t.weekly_cost).toBeLessThanOrEqual(r.api_cost);
     }
     expect(r.largest).not.toBeNull();
-    expect(r.cheapest).not.toBeNull();
   });
 
-  it("-> low-traffic startup SaaS => cheapest saves >80%, no models below knownModels floor", () => {
+  it("-> low-traffic startup SaaS => some tier saves >80%, no models below knownModels floor", () => {
     const r = recommendTiers(makeArgs({ queries_per_week: 5_000, ft_weeks: 6, ft_cost: 900 }));
     expect(r.api_cost).toBeGreaterThan(0);
-    expect(r.cheapest).not.toBeNull();
-    const cost = r.cheapest!.weekly_cost_with_ft ?? r.cheapest!.weekly_cost;
-    const savings = r.api_cost - cost;
-    const savings_pct = (savings / r.api_cost) * 100;
-    expect(savings_pct).toBeGreaterThan(80);
+    // At least one affordable tier should clear 80% savings.
+    const bestSavingsPct = Math.max(
+      ...r.tiers.map((t) => {
+        const w = t.weekly_cost_with_ft ?? t.weekly_cost;
+        return ((r.api_cost - w) / r.api_cost) * 100;
+      })
+    );
+    expect(bestSavingsPct).toBeGreaterThan(80);
 
     // Density: no buckets below 1B because min_params_b=1 and knownModels starts at 1B
     for (const t of r.all_candidates) {
@@ -87,14 +89,41 @@ describe("sweep smoke", () => {
     }
   });
 
-  it("-> agency post-FT => cheapest under 300/wk", () => {
+  it("-> agency post-FT => some tier under 300/wk", () => {
     const r = recommendTiers(
       makeArgs({ queries_per_week: 40_000, input_tokens: 1200, output_tokens: 800, ft_cost: 0, ft_weeks: 0 })
     );
     expect(r.api_cost).toBeGreaterThan(0);
-    expect(r.cheapest).not.toBeNull();
-    const cost = r.cheapest!.weekly_cost_with_ft ?? r.cheapest!.weekly_cost;
-    expect(cost).toBeLessThanOrEqual(300);
+    const minCost = Math.min(
+      ...r.tiers.map((t) => t.weekly_cost_with_ft ?? t.weekly_cost)
+    );
+    expect(minCost).toBeLessThanOrEqual(300);
+  });
+
+  it("-> gradedTiers: distinct from largest, meet savings floor, ordered by descending floor", () => {
+    const r = recommendTiers(makeArgs({ queries_per_week: 200_000, input_tokens: 1500, output_tokens: 500 }));
+    expect(r.largest).not.toBeNull();
+    const largest = r.largest!;
+    const largestKey = `${largest.arch}-${largest.params_b}`;
+
+    // Ordered by descending savings floor.
+    for (let i = 1; i < r.gradedTiers.length; i++) {
+      expect(r.gradedTiers[i - 1].savingsFloor).toBeGreaterThan(r.gradedTiers[i].savingsFloor);
+    }
+
+    const seen = new Set<string>();
+    for (const g of r.gradedTiers) {
+      const key = `${g.tier.arch}-${g.tier.params_b}`;
+      // Distinct from largest.
+      expect(key).not.toBe(largestKey);
+      // Distinct from other graded picks.
+      expect(seen.has(key)).toBe(false);
+      seen.add(key);
+      // Savings actually meets the band's floor.
+      const w = g.tier.weekly_cost_with_ft ?? g.tier.weekly_cost;
+      const savings = (r.api_cost - w) / r.api_cost;
+      expect(savings).toBeGreaterThanOrEqual(g.savingsFloor);
+    }
   });
 
   it("-> reject patterns: knownModels must NOT contain banned model families", () => {

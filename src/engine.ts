@@ -348,12 +348,48 @@ export interface RecommendArgs {
   knownModels?: KnownModel[];
 }
 
+export interface GradedTier {
+  label: string;
+  savingsFloor: number;
+  tier: ConfigResult;
+}
+
 export interface RecommendResult {
   api_cost: number;
   tiers: ConfigResult[];
-  cheapest: ConfigResult | null;
   largest: ConfigResult | null;
+  gradedTiers: GradedTier[];
   all_candidates: ConfigResult[];
+}
+
+const SAVINGS_BANDS = [
+  { label: "80%+ savings", floor: 0.80 },
+  { label: "50%+ savings", floor: 0.50 },
+  { label: "20%+ savings", floor: 0.20 },
+];
+
+function pickGradedTiers(
+  affordable: ConfigResult[],
+  api_cost: number,
+  largest: ConfigResult | null
+): GradedTier[] {
+  if (api_cost <= 0 || !largest) return [];
+  const picks: GradedTier[] = [];
+  const seen = new Set<string>();
+  for (const band of SAVINGS_BANDS) {
+    const eligible = affordable.filter((c) => {
+      const w = c.weekly_cost_with_ft ?? c.weekly_cost;
+      return (api_cost - w) / api_cost >= band.floor;
+    });
+    if (!eligible.length) continue;
+    const pick = eligible.reduce((a, b) => (b.params_b > a.params_b ? b : a));
+    const key = `${pick.arch}-${pick.params_b}`;
+    if (key === `${largest.arch}-${largest.params_b}`) continue;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    picks.push({ label: band.label, savingsFloor: band.floor, tier: pick });
+  }
+  return picks;
 }
 
 /** Derive DENSE_SIZES and MOE_SIZES from the model list dynamically.
@@ -460,21 +496,13 @@ export function recommendTiers(args: RecommendArgs): RecommendResult {
   );
   affordable.sort((a, b) => b.params_b - a.params_b);
 
-  const cheapest =
-    affordable.length === 0
-      ? null
-      : affordable.reduce((min, c) =>
-          (c.weekly_cost_with_ft ?? c.weekly_cost) <
-          (min.weekly_cost_with_ft ?? min.weekly_cost)
-            ? c
-            : min
-        );
+  const largest = affordable[0] ?? null;
 
   return {
     api_cost,
     tiers: affordable,
-    largest: affordable[0] ?? null,
-    cheapest,
+    largest,
+    gradedTiers: pickGradedTiers(affordable, api_cost, largest),
     all_candidates: candidates,
   };
 }

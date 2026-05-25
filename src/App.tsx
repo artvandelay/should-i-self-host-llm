@@ -26,6 +26,7 @@ import { useUrlState } from "./useUrlState";
 import { useLiveData } from "./useLiveData";
 import type { ClosedApi, KnownModel } from "./modelsDev";
 import { ApiCombobox } from "./ApiCombobox";
+import { CostSizeChart } from "./CostSizeChart";
 
 // =============================================================================
 // FORMATTING
@@ -485,14 +486,13 @@ export default function App() {
       : livePricingApis[resolvedApiKey] ?? { input_per_1m: 1, output_per_1m: 3 };
 
   const largest = result.largest;
-  const cheapest = result.cheapest;
-  const showCheapestSeparately =
-    cheapest && largest && cheapest.params_b !== largest.params_b;
+  const graded = result.gradedTiers;
 
+  const featuredKeys = new Set<string>();
+  if (largest) featuredKeys.add(`${largest.arch}-${largest.params_b}`);
+  for (const g of graded) featuredKeys.add(`${g.tier.arch}-${g.tier.params_b}`);
   const otherTiers = result.tiers.filter(
-    (t) =>
-      !(largest && t.params_b === largest.params_b && t.arch === largest.arch) &&
-      !(showCheapestSeparately && cheapest && t.params_b === cheapest.params_b && t.arch === cheapest.arch)
+    (t) => !featuredKeys.has(`${t.arch}-${t.params_b}`)
   );
 
   const [copied, setCopied] = useState(false);
@@ -698,9 +698,10 @@ export default function App() {
               <p className="text-sm text-slate-600 mb-2 flex items-start gap-1.5">
                 <Info className="w-4 h-4 mt-0.5 flex-shrink-0 text-slate-400" />
                 <span>
-                  We highlight the <strong>largest</strong> model that still fits the budget (best quality you
-                  can afford to host) and, separately, the <strong>cheapest</strong> tier (lowest weekly cost).
-                  All listed tiers cost ≤ the API.
+                  The chart plots weekly cost vs model size (log-log) for every candidate; the red dashed line
+                  is the API price. We highlight the <strong>largest</strong> model that fits (green ring) and
+                  up to three <strong>savings-banded</strong> picks — the largest model at each of 80%+, 50%+,
+                  and 20%+ savings (indigo rings) — so you can see the cost/capability trade-off at a glance.
                 </span>
               </p>
               <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-3 py-2 mb-4">
@@ -709,21 +710,24 @@ export default function App() {
                 hourly rates are approximate — verify with your vendor before quoting.
               </p>
 
+              <CostSizeChart result={result} />
+
               <div className="space-y-3">
                 {largest && (
                   <TierCard
                     tier={largest}
                     apiCost={result.api_cost}
-                    badge={{ label: "Largest that fits", color: "indigo" }}
+                    badge={{ label: "Largest that fits", color: "green" }}
                   />
                 )}
-                {showCheapestSeparately && cheapest && (
+                {graded.map((g) => (
                   <TierCard
-                    tier={cheapest}
+                    key={`graded-${g.tier.arch}-${g.tier.params_b}`}
+                    tier={g.tier}
                     apiCost={result.api_cost}
-                    badge={{ label: "Cheapest tier", color: "green" }}
+                    badge={{ label: g.label, color: "indigo" }}
                   />
-                )}
+                ))}
                 {(show_all_tiers ? otherTiers : otherTiers.slice(0, 2)).map((tier) => (
                   <TierCard key={`${tier.arch}-${tier.params_b}`} tier={tier} apiCost={result.api_cost} badge={null} />
                 ))}

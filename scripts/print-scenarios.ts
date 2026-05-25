@@ -37,8 +37,10 @@ function scenario(name: string, args: Parameters<typeof recommendTiers>[0]) {
   console.log(`\n=== ${name} ===`);
   console.log(`API cost: ${fmt$(r.api_cost)}/wk`);
   console.log(`Candidates: ${r.all_candidates.length}`);
-  console.log(`Cheapest: ${r.cheapest?.params_b ?? "N/A"}B ${r.cheapest?.arch}  ${fmt$(r.cheapest?.weekly_cost_with_ft ?? r.cheapest?.weekly_cost ?? 0)}/wk`);
   console.log(`Largest : ${r.largest?.params_b ?? "N/A"}B ${r.largest?.arch}  ${fmt$(r.largest?.weekly_cost_with_ft ?? r.largest?.weekly_cost ?? 0)}/wk`);
+  for (const g of r.gradedTiers) {
+    console.log(`Graded  : [${g.label}] ${g.tier.params_b}B ${g.tier.arch}  ${fmt$(g.tier.weekly_cost_with_ft ?? g.tier.weekly_cost)}/wk`);
+  }
   // Show first 10 candidates for 
   console.log("Top candidates by size:");
   const sorted = [...r.all_candidates].sort((a, b) => a.params_b - b.params_b);

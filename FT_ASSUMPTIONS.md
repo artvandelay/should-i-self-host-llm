@@ -4,8 +4,9 @@ A reader-facing companion to the FT cost panel. You should be able to read this
 without opening any code. If any assumption here looks wrong for your workload,
 treat the FT panel's output as a rough order-of-magnitude estimate, not a quote.
 
-Last updated: 2026-05-26. Engine code: `src/ftMethods.ts`, `src/engine.ts`
-(`computeFtCapex`), `src/FtPanel.tsx`.
+Last updated: 2026-05-26 (post-MoE-fix). Engine code: `src/ftMethods.ts`,
+`src/engine.ts` (`computeFtCapex`, `ftVramGb`, `pickClusterOverhead`,
+`pickFtGpu`), `src/FtPanel.tsx`.
 
 ---
 
@@ -14,8 +15,14 @@ Last updated: 2026-05-26. Engine code: `src/ftMethods.ts`, `src/engine.ts`
 - The calculator estimates **GPU $-cost and wall-clock GPU-hours** to fine-tune
   an open-weight model of size `params_b` on `num_examples × tokens_per_example
   × epochs` tokens, given the chosen method (LoRA / QLoRA / full FT).
-- It does **not** estimate dataset prep, eng salary, evaluation runs, failed
-  experiments, multi-node communication overhead, or any quality delta.
+- For **MoE** models (Mixtral, DeepSeek, Qwen-A-series, Llama-4-Scout, etc.),
+  compute FLOPs scale with **active params per token**, not total — only the
+  experts that fire do work. VRAM footprint and cluster overhead still use
+  total params (all experts load into memory).
+- It does estimate experiments/failed-runs (`experiments_multiplier`, default
+  2.5×) and multi-GPU comms overhead (auto-picked `1.0× / 1.3× / 1.6×` from
+  the FT VRAM footprint). It does **not** estimate dataset prep cost,
+  engineering salary, evaluation runs, or any quality delta.
 - **Headline assumption that surprises most people:** PEFT (LoRA / QLoRA) saves
   GPU **memory**, not GPU **compute**. The backward pass still propagates
   gradients through the frozen base weights, so LoRA/QLoRA only drop training
@@ -127,21 +134,24 @@ back-solves.
 | 15 | Data loading / preprocessing time | Not modeled | n/a | HIGH (cheap) | N |
 | 16 | Hyperparameter sweeps / failed runs | **User-controlled `experiments_multiplier`, default 2.5×** (clamped to ≥ 1.0). Applied to `gpu_hours` and `gpu_cost_usd`; NOT applied to `prep_cost_usd`. | First-class UI input; cross-checked against an internal Jio-Health-AI cost model that uses `effective_full_runs × early-stop_factor` netting to ~1.5–2.5×. | MED | N |
 | 17 | Quality impact of FT | Not estimated | n/a (panel disclaimer) | HIGH | N |
-| 18 | MoE handling | Treated as dense (uses `params_b` total, not active) | Engine code | MED | **Y** — for MoE FT, expert routing means active params dominate the matmul, so we likely over-estimate compute for things like Qwen3-235B-A22B. |
-| 19 | `prep_cost_usd` | User-supplied black box | UI input | HIGH | N (but see open question §6) |
+| 18 | MoE handling | **Compute uses active params per token; VRAM/cluster overhead use total.** `computeFtCapex(active_params_b, inputs, total_params_b)`. For dense models active == total so no-op. For MoE (Mixtral 8x7B = 47/12, DeepSeek-V3 = 671/37, Llama-4-Scout = 109/17), FT FLOPs are computed against active — only the experts that fire do work — matching how every real MoE FT recipe in the wild trains. | Mixtral / DeepSeek / Qwen-A-series papers; expert-routing convention | HIGH | N — first-class. |
+| 18b | `prep_cost_usd` | User-supplied black box | UI input | HIGH | N (but see open question §5) |
 
 ---
 
 ## 4. What's missing / known limitations
 
-- **MoE as dense.** A 235B-A22B model is billed at 235B's FLOPs in our math.
-  Real per-token FT compute is closer to the active-param count (22B here),
-  unless you're doing expert-router-tuning specifically. We probably
-  over-estimate cost for sparse MoE FT by ~3–10×.
-- **No multi-node sharding overhead.** Once you cross the single-H100
-  threshold (any full-FT above ~7B, or QLoRA above ~70B with long context),
-  FSDP/DeepSpeed comms eat 20–50% of wall clock — none of which we model.
-  Lyceum and others recommend NVLink-only nodes to bound this.
+- **MoE handled correctly (as of 2026-05-26).** FT compute uses active
+  params per token; VRAM and cluster overhead use total. Qwen3-235B-A22B
+  fine-tunes at ~22B-compute cost, not 235B. MoE models that lack an
+  `active_b` value in our catalog are skipped entirely rather than quoted
+  with a misleading dense-equivalent number.
+- **Multi-GPU / multi-node overhead is modeled** via `pickClusterOverhead`
+  (1.0× / 1.3× / 1.6×). It captures comms tax, not "you need N GPUs" —
+  workloads whose FT VRAM exceeds the largest catalog SKU still get a
+  dollar number, with the caveat that the cluster is implied. A
+  feasibility guard for "this won't fit anywhere we know about" is a
+  known TODO.
 - **No warmup / LR-schedule waste.** A linear warmup over 3–10% of steps does
   forward+backward passes that don't materially update weights; we count
   them at full speed.
@@ -185,8 +195,8 @@ our engine produce in GPU $ for the same workload?
 |---|---|---|---|---|---|
 | **Fireworks** | up to 16B | $0.50 → $150 | 16B LoRA = **$72** | **2.1×** | [fireworks.ai/pricing](https://fireworks.ai/pricing) |
 | **Fireworks** | 16.1B – 80B | $3.00 → $900 | 80B QLoRA = **$374** | **2.4×** | same |
-| **Fireworks** | 80B – 300B | $6.00 → $1,800 | 235B QLoRA = **$1,099** | **1.6×** | same |
-| **Fireworks** | >300B | $10.00 → $3,000 | 405B QLoRA = **$1,895** | **1.6×** | same |
+| **Fireworks** | 80B – 300B | $6.00 → $1,800 | 235B-A22B QLoRA (MoE, active drives FLOPs) = **~$103** single run, ~$334 default campaign (2.5× + cluster) | **5–17×** | same — vendor charges by total-param band; we now charge by active. MoE FT looks much cheaper on raw hardware than vendor pricing reflects. |
+| **Fireworks** | >300B | $10.00 → $3,000 | 405B (dense) QLoRA = **$1,895** | **1.6×** | same |
 | **Together** | 70B–100B LoRA | $2.90 → $870 | 80B LoRA = **$454** | **1.9×** | [eesel breakdown of Together pricing](https://www.eesel.ai/blog/together-ai-pricing) |
 | **Together** | 17B–69B LoRA | $1.50 → $450 | 70B LoRA = ~$397 (close-enough size) | **1.1×** | same |
 | **PricePerToken aggregate** | Llama 3.1 70B LoRA | $2.90 → $870 | $397–$454 | **1.9–2.2×** | [pricepertoken.com/fine-tuning](https://pricepertoken.com/fine-tuning) |
@@ -209,10 +219,14 @@ vendor prices sit ~2× above that, which is the right shape.
 - **Small-batch / short-context runs** at the 7B–13B scale: our 0.43h figure
   for Llama 3.1 8B is half what the practitioner [actually measured](https://medium.com/@velinxs/how-to-fine-tune-llms-for-under-20-step-by-step-c187a3059ca2),
   because real runs are dominated by setup + eval, not the math we model.
-- **Big-model multi-GPU runs**: we under-count by an unknown factor because
-  comms overhead is ignored.
-- **MoE total-vs-active**: we over-count for sparse MoE FT by a likely
-  3–10×.
+- **Big-model multi-GPU runs**: rough — we apply a flat 1.3× / 1.6× tax,
+  but real FSDP/DeepSpeed comms vary 1.05–1.8× depending on context length,
+  batch, network, and zero-stage. Documented; not currently tunable per-run
+  beyond the auto/override knob.
+- **MoE without `active_b` metadata**: a MoE model whose name doesn't match
+  our regex (`B-AYB` or `NxYB` Mixtral-style) is now skipped from the
+  catalog rather than quoted with total-param FLOPs. Bias is omission, not
+  over-statement.
 
 ---
 
@@ -257,11 +271,13 @@ These are the calls we'd like you to make before we polish the panel further.
    bring us closer to reality with almost no UI cost. Worth it, or not
    worth confusing users with an extra knob?
 
-7. **Should MoE FT use active params instead of total?** This is the single
-   biggest current accuracy gap. For inference we already handle MoE
-   correctly via `active_params_b`; FT compute should probably mirror that.
-   Decision: pass `active_params_b` into `computeFtCapex`, or document
-   the over-estimation and move on?
+7. **Should MoE FT use active params instead of total? — ✅ DONE.** As of
+   2026-05-26 `computeFtCapex(active_params_b, inputs, total_params_b)`
+   takes both, applying active to FLOPs and total to VRAM/cluster overhead.
+   `FtPanel` threads both fields. MoE without an `active_b` value is
+   skipped from the candidate set rather than silently quoted at
+   dense-equivalent cost. Pinned by tests in `tests/ftCapex.test.ts`
+   under `describe("MoE: compute uses active params, VRAM uses total")`.
 
 8. **Should we surface the headline vendor-margin observation in the UI?**
    E.g. "Our $374 estimate is what you'd pay running this yourself on
@@ -276,9 +292,11 @@ These are the calls we'd like you to make before we polish the panel further.
 Code:
 
 - `src/ftMethods.ts` — multipliers, constants, citations inline.
-- `src/engine.ts` — `computeFtCapex` (line 276+).
+- `src/engine.ts` — `computeFtCapex`, `ftVramGb`, `pickClusterOverhead`,
+  `pickFtGpu` (search the file for the function names; line numbers drift).
 - `src/FtPanel.tsx` — UI and footer disclaimer.
-- `tests/ftCapex.test.ts` — Guanaco-65B anchor test.
+- `tests/ftCapex.test.ts` — Guanaco-65B anchor; MoE active-vs-total split;
+  cluster-overhead boundaries; experiments-multiplier semantics.
 
 Public references (only those actively used above):
 

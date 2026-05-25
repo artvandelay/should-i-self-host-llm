@@ -10,7 +10,7 @@ import {
 import {
   FT_METHODS,
   FLOPS_PER_TOKEN_PER_PARAM,
-  H100_FP16_FLOPS_PER_SEC,
+  BASELINE_MFU,
   type FtMethod,
 } from "./ftMethods";
 
@@ -297,6 +297,31 @@ export interface CumulativeProjection {
   horizon_months: number;
 }
 
+/**
+ * Pick the best GPU row for fine-tuning from the pricing config: any row with
+ * `bf16_tflops > 0` is eligible. Among eligible rows, pick the one with the
+ * **best $/TFLOP-hr** — i.e. the most compute per dollar — using the cheapest
+ * of the three vendor rates as the price. That's the right metric for FT
+ * because total cost = FLOPs / (TFLOPs × MFU) × $/hr, and FLOPs is fixed by
+ * the workload; minimizing $/TFLOP minimizes total cost.
+ *
+ * (Multi-GPU rows like "8xH100 640GB" tend to lose this contest because their
+ * $/hr scales linearly with GPU count while TFLOPs stays per-unit in this
+ * field's interpretation — keep `bf16_tflops` per-single-GPU and the math
+ * works out. Cluster comms overhead is modeled separately.)
+ */
+export function pickFtGpu(pricing: Pricing): GpuRow | null {
+  const eligible = pricing.gpus.filter(
+    (g) => typeof g.bf16_tflops === "number" && g.bf16_tflops > 0
+  );
+  if (eligible.length === 0) return null;
+  const score = (g: GpuRow) => {
+    const rate = Math.min(g.modal_per_hr, g.lambda_per_hr, g.runpod_per_hr);
+    return rate / (g.bf16_tflops ?? 1); // $/TFLOP-hr — lower is better
+  };
+  return eligible.reduce((best, g) => (score(g) < score(best) ? g : best));
+}
+
 export function computeFtCapex(params_b: number, inputs: FtInputs): FtCapexResult {
   const num = clampNonNeg(inputs.num_examples);
   const tok = clampNonNeg(inputs.tokens_per_example);
@@ -307,15 +332,20 @@ export function computeFtCapex(params_b: number, inputs: FtInputs): FtCapexResul
   const spec = FT_METHODS[inputs.method];
   const full_flops = FLOPS_PER_TOKEN_PER_PARAM * params * total_tokens;
   const method_flops = full_flops * spec.computeMultiplier;
-  // Effective throughput = H100 baseline (BF16 × 30% MFU) × per-method
-  // MFU penalty. QLoRA's mfuPenalty captures the dequantization tax.
-  const effective_flops_per_sec = H100_FP16_FLOPS_PER_SEC * spec.mfuPenalty;
+  // Pick the training GPU from the pricing config (tagged with bf16_tflops).
+  // Fall back to a generic 989-TFLOPS / $4-hr H100 placeholder if the config
+  // has no tagged GPU — keeps the engine working with stale pricing files.
+  const ftGpu = pickFtGpu(PRICING);
+  const peak_tflops = ftGpu?.bf16_tflops ?? 989;
+  const cheapestRate = ftGpu
+    ? Math.min(ftGpu.modal_per_hr, ftGpu.lambda_per_hr, ftGpu.runpod_per_hr)
+    : 4.0;
+  // Effective throughput = peak BF16 × baseline 30% MFU × per-method MFU
+  // penalty. QLoRA's mfuPenalty captures the dequantization tax.
+  const effective_flops_per_sec =
+    peak_tflops * 1e12 * BASELINE_MFU * spec.mfuPenalty;
   const seconds = method_flops / effective_flops_per_sec;
   const hours = seconds / 3600;
-  const h100Row = PRICING.gpus.find((g) => /h100|h200/i.test(g.name));
-  const cheapestRate = h100Row
-    ? Math.min(h100Row.modal_per_hr, h100Row.lambda_per_hr, h100Row.runpod_per_hr)
-    : 4.0;
   const gpu_cost = hours * cheapestRate;
   return { gpu_hours: hours, gpu_cost_usd: gpu_cost, total_capex_usd: gpu_cost + prep, method: inputs.method };
 }

@@ -1,6 +1,12 @@
 import { describe, it, expect } from "vitest";
 
-import { computeFtCapex, cumulativeProjection, WEEKS_PER_MONTH } from "../src/engine";
+import {
+  computeFtCapex,
+  cumulativeProjection,
+  pickFtGpu,
+  WEEKS_PER_MONTH,
+  type Pricing,
+} from "../src/engine";
 
 const baseInputs = {
   num_examples: 100_000,
@@ -64,6 +70,77 @@ describe("computeFtCapex", () => {
     const single = computeFtCapex(70, { ...baseInputs, num_examples: 50_000 });
     const doubled = computeFtCapex(70, { ...baseInputs, num_examples: 100_000 });
     expect(doubled.gpu_cost_usd).toBeCloseTo(single.gpu_cost_usd * 2, 6);
+  });
+});
+
+describe("pickFtGpu", () => {
+  it("picks best $/TFLOP-hr, not smallest VRAM", () => {
+    // A100 ($1.6/hr / 312 TFLOPS) = $5.13/TFLOP-hr loses to
+    // H100 ($2.9/hr / 989 TFLOPS) = $2.93/TFLOP-hr.
+    const fakePricing: Pricing = {
+      last_updated: "test",
+      gpus: [
+        {
+          name: "A100 80GB",
+          vram_gb: 80,
+          modal_per_hr: 2.1,
+          lambda_per_hr: 1.85,
+          runpod_per_hr: 1.6,
+          bf16_tflops: 312,
+          single_gpu_vram_gb: 80,
+          gpus_per_node: 8,
+        },
+        {
+          name: "H100 80GB",
+          vram_gb: 80,
+          modal_per_hr: 4.2,
+          lambda_per_hr: 3.3,
+          runpod_per_hr: 2.9,
+          bf16_tflops: 989,
+          single_gpu_vram_gb: 80,
+          gpus_per_node: 8,
+        },
+      ],
+      apis: {},
+    };
+    expect(pickFtGpu(fakePricing)?.name).toBe("H100 80GB");
+  });
+
+  it("picks a hypothetical B200 over H100 when cheaper $/TFLOP-hr", () => {
+    const fakePricing: Pricing = {
+      last_updated: "test",
+      gpus: [
+        {
+          name: "H100 80GB",
+          vram_gb: 80,
+          modal_per_hr: 4.2,
+          lambda_per_hr: 3.3,
+          runpod_per_hr: 2.9,
+          bf16_tflops: 989,
+        },
+        {
+          name: "B200 192GB",
+          vram_gb: 192,
+          modal_per_hr: 6.0,
+          lambda_per_hr: 5.5,
+          runpod_per_hr: 5.0,
+          bf16_tflops: 2250,
+        },
+      ],
+      apis: {},
+    };
+    expect(pickFtGpu(fakePricing)?.name).toBe("B200 192GB");
+  });
+
+  it("returns null when no GPU is tagged for training", () => {
+    const fakePricing: Pricing = {
+      last_updated: "test",
+      gpus: [
+        { name: "L4 24GB", vram_gb: 24, modal_per_hr: 0.8, lambda_per_hr: 0.7, runpod_per_hr: 0.55 },
+      ],
+      apis: {},
+    };
+    expect(pickFtGpu(fakePricing)).toBeNull();
   });
 });
 

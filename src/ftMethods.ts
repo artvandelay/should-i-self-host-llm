@@ -71,5 +71,9 @@ export const FLOPS_PER_TOKEN_PER_PARAM = 6;
  */
 export const BASELINE_MFU = 0.3;
 
-/** H100 FP16 peak throughput × baseline MFU. */
+/**
+ * @deprecated Hard-coded H100 throughput. The FT engine now reads peak
+ * TFLOPS per-GPU from pricing.json and applies BASELINE_MFU at compute time.
+ * Kept exported only for any external import.
+ */
 export const H100_FP16_FLOPS_PER_SEC = 989e12 * BASELINE_MFU;

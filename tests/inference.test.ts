@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  batchingMultiplier,
   evaluateConfig,
   throughputTokensPerSec,
   type EvalArgs,
@@ -26,6 +27,47 @@ const baseArgs: Omit<EvalArgs, "params_b" | "active_params_b" | "arch"> = {
   pattern: "uniform",
   vendor: "runpod",
 };
+
+describe("batchingMultiplier", () => {
+  it("smaller-active models get bigger batching wins (KV-cache headroom)", () => {
+    expect(batchingMultiplier(3)).toBeGreaterThan(batchingMultiplier(13));
+    expect(batchingMultiplier(13)).toBeGreaterThan(batchingMultiplier(30));
+    expect(batchingMultiplier(30)).toBeGreaterThan(batchingMultiplier(70));
+    expect(batchingMultiplier(70)).toBeGreaterThan(batchingMultiplier(120));
+  });
+
+  it("tiny-active MoE benefits ~10x from continuous batching", () => {
+    expect(batchingMultiplier(3)).toBeGreaterThanOrEqual(8);
+  });
+
+  it("huge dense models barely benefit (>1x, <=2x)", () => {
+    expect(batchingMultiplier(120)).toBeGreaterThan(1);
+    expect(batchingMultiplier(120)).toBeLessThanOrEqual(2);
+  });
+});
+
+describe("throughputTokensPerSec — high-QPS sanity (regression for the 104-replica bug)", () => {
+  it("80B/3B-active MoE under 10M qpw needs <20 replicas, not >100", () => {
+    // Pre-batching-fix this scenario asked for 104 replicas of 4xH100,
+    // which is ~$200k/wk for serving an 80B-with-3B-active model — wildly
+    // overcosted because the formula used single-stream decode throughput
+    // instead of aggregate continuous-batching throughput.
+    const r = evaluateConfig({
+      pricing,
+      params_b: 80,
+      active_params_b: 3,
+      arch: "moe",
+      quant: "fp16",
+      queries_per_week: 10_000_000,
+      input_tokens: 3000,
+      output_tokens: 3000,
+      pattern: "uniform",
+      vendor: "runpod",
+    });
+    expect(r).not.toBeNull();
+    expect(r!.replicas_needed).toBeLessThan(20);
+  });
+});
 
 describe("throughputTokensPerSec — multi-GPU scaling", () => {
   it("8x80GB row reports ~8x the per-unit throughput", () => {

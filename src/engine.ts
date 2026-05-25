@@ -175,15 +175,24 @@ export function scaledOverhead(active_params_b: number): number {
 }
 
 /**
- * Conservative inference throughput estimate. Calibrated against
- * H100-class hardware (~120 tok/s per 8B active params on an 80 GB unit,
- * which corresponds to ~989 TFLOPS BF16 peak). When a `bf16_tflops` value
- * is provided we scale that anchor linearly with the GPU's actual peak
- * compute, so a future B200 (~2250 TFLOPS) or MI300X (~1307 TFLOPS) gets
- * a higher per-unit throughput automatically. Cross-GPU scaling stays
- * linear in raw VRAM ÷ single-unit VRAM — same heuristic as before.
+ * Aggregate inference throughput estimate (tokens/sec served across
+ * concurrent requests). Calibrated against H100-class hardware with a
+ * modern serving stack (vLLM / TGI / SGLang with continuous batching),
+ * not single-stream decode.
  *
- * For MoE: pass `active_params_b`, not total.
+ * Single-stream decode: ~120 tok/s per 8B active on H100 (anchor).
+ * With continuous batching, aggregate throughput is 2–20× higher because
+ * multiple concurrent requests share KV cache and amortize attention
+ * compute. The `batchingMultiplier` below approximates published vLLM
+ * benchmarks: smaller-active models leave more KV-cache headroom for
+ * concurrent slots, so batch wins are bigger.
+ *
+ * Cross-GPU scaling is linear in raw VRAM ÷ single-unit VRAM — a 4xH100
+ * row produces 4× one H100's throughput. Real tensor-parallel scaling is
+ * sub-linear (~3–3.5× for 4 GPUs), but the bigger error is single-stream
+ * vs batched, which dominates.
+ *
+ * For MoE: pass `active_params_b`, not total. Active drives the matmul.
  */
 export function throughputTokensPerSec(
   active_params_b: number,
@@ -194,7 +203,22 @@ export function throughputTokensPerSec(
   const gpu_units = Math.max(1, vram_gb / single_gpu_vram_gb);
   const tflops_scale = bf16_tflops ? bf16_tflops / 989 : 1;
   const base_per_unit = (960 * tflops_scale) / Math.max(active_params_b, 1);
-  return base_per_unit * gpu_units;
+  return base_per_unit * gpu_units * batchingMultiplier(active_params_b);
+}
+
+/**
+ * Continuous-batching throughput multiplier vs single-stream decode.
+ * Smaller-active models leave more KV-cache memory for concurrent slots,
+ * so batch wins are dramatically bigger. Numbers are conservative
+ * round-figures from published vLLM / TGI benchmarks on H100 80 GB at
+ * typical 2–4 K context lengths.
+ */
+export function batchingMultiplier(active_params_b: number): number {
+  if (active_params_b <= 4) return 10; // tiny MoE-active or small dense
+  if (active_params_b <= 16) return 6;
+  if (active_params_b <= 40) return 3;
+  if (active_params_b <= 80) return 2;
+  return 1.5; // >80B active: barely any KV-cache headroom for batching
 }
 
 export function pickCheapestGpu(

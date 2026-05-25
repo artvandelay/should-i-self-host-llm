@@ -52,6 +52,7 @@ export interface KnownModel {
   name: string;
   source?: string;
   last_seen?: string;
+  family?: string;
 }
 
 // Bundled known models loaded from JSON at build time.

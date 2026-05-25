@@ -58,36 +58,78 @@ const FIRST_PARTY = new Set([
   "tencent-tokenhub", "sarvam", "fireworks-ai",
 ]);
 
-// Text-LLM filter: reject embeddings, classifiers, vision-only, speech, bio, code-completion-only, image gen.
-// Use (?<![a-zA-Z])/(?![a-zA-Z]) instead of \b because model IDs mix letters and digits,
-// and digits count as word chars so \bguard\b fails on "Qwen3Guard".
-export const TEXT_LLM_REJECT_PATTERNS: RegExp[] = [
-  // embeddings & retrieval
-  /(?<![a-zA-Z])(embed|embedding|retriev|reranker|rerank|nemoretriever)(?![a-zA-Z])/i,
-  // safety classifiers
-  /(?<![a-zA-Z])(prompt[\s-]?guard|moderation|toxic)(?![a-zA-Z])/i,
-  /(?<![a-zA-Z])guard(?![a-zA-Z])/i,
-  // vision-only / OCR / VL
-  /(?<![a-zA-Z])(paddle[\s-]?ocr|ocr|vl)(?![a-zA-Z])/i,
-  // speech / audio
-  /(?<![a-zA-Z])(whisper|asr|tts|speech[\s-]?to[\s-]?text|text[\s-]?to[\s-]?speech)(?![a-zA-Z])/i,
-  // bio
-  /(?<![a-zA-Z])(esm[12]?|protein|biomed)(?![a-zA-Z])/i,
-  // code-completion-only (NOT general-capable like Qwen3 Coder)
-  /(?<![a-zA-Z])(codestral|devstral|prover[\s-]?v?\d)(?![a-zA-Z])/i,
-  // image / video gen
-  /(?<![a-zA-Z])(flux|sdxl|stable[\s-]?diffusion|imagen|wan[\s-]?gen)(?![a-zA-Z])/i,
-  // embedding families that slip through digit splitting
-  /(?<![a-zA-Z])e5(?![a-zA-Z])/i,
-  /(?<![a-zA-Z])gme(?![a-zA-Z])/i,
-  /(?<![a-zA-Z])osmosis(?![a-zA-Z])/i,
-  /(?<![a-zA-Z])structure(?![a-zA-Z])/i,
-];
+// Family-based filter — much simpler than regex whack-a-mole.
+// Any model whose family is in this blocklist is rejected immediately.
+const NON_LLM_FAMILIES = new Set([
+  "text-embedding", "cohere-embed", "bge",
+  "whisper", "speech-to-text", "text-to-speech",
+  "flux", "stable-diffusion",
+  "pixtral", "osmosis", "voxtral",
+  "codestral", "devstral",         // Mistral code-only models
+  "codellama",                     // code-only
+]);
 
-export function isTextLLM(name: string, modelId: string): boolean {
-  const haystack = `${name} ${modelId}`;
-  for (const re of TEXT_LLM_REJECT_PATTERNS) {
-    if (re.test(haystack)) return false;
+// A tiny fallback for the ~329 entries where models.dev has family: undefined
+// and the name still clearly indicates a non-LLM.
+// This list is short and rarely needs changes.
+const NON_LLM_NAME_WORDS = new Set([
+  "embedding", "embed", "retriever", "retrieval", "reranker", "rerank",
+  "guard", "moderation", "toxic", "content-safety", "safety",
+  "vision", "paddleocr", "ocr", "vl",
+  "whisper", "tts", "asr",
+  "flux", "sdxl", "stable-diffusion", "imagen",
+  "esm", "protein", "biomed",
+  "codellama", "pixtral",
+]);
+
+function deriveFamily(name: string, modelId: string, rawFamily?: string): string {
+  if (rawFamily) return rawFamily;
+  const tokens = (`${name} ${modelId}`.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean));
+  const families = new Map([
+    ["llama", ["llama", "l3"]],
+    ["qwen", ["qwen", "qwq"]],
+    ["gemma", ["gemma"]],
+    ["mistral", ["mistral", "mixtral", "magistral", "ministral"]],
+    ["phi", ["phi"]],
+    ["deepseek", ["deepseek"]],
+    ["kimi", ["kimi"]],
+    ["glm", ["glm"]],
+    ["nemotron", ["nemotron"]],
+    ["falcon", ["falcon"]],
+    ["yi", ["yi"]],
+    ["command", ["command", "command-r", "command-a"]],
+    ["internlm", ["internlm"]],
+    ["gpt-oss", ["gpt-oss"]],
+    ["hermes", ["hermes"]],
+    ["granite", ["granite"]],
+    ["olmo", ["olmo"]],
+    ["solar", ["solar"]],
+    ["baichuan", ["baichuan"]],
+    ["jais", ["jais"]],
+    ["mpt", ["mpt"]],
+    ["dbrx", ["dbrx"]],
+    ["openchat", ["openchat"]],
+    ["stablelm", ["stablelm"]],
+    ["jamba", ["jamba"]],
+  ]);
+  for (const [fam, aliases] of families) {
+    for (const alias of aliases) {
+      if (tokens.includes(alias)) return fam;
+    }
+  }
+  return "other";
+}
+
+function isTextLLM(name: string, modelId: string, rawFamily?: string): boolean {
+  const family = deriveFamily(name, modelId, rawFamily);
+  if (NON_LLM_FAMILIES.has(family)) return false;
+  const haystack = `${name} ${modelId}`.toLowerCase();
+  const tokens = haystack.split(/[^a-z0-9]+/).filter(Boolean);
+  for (const w of NON_LLM_NAME_WORDS) {
+    // exact-token match OR substring within a token (catches qwen3guard, etc.)
+    for (const t of tokens) {
+      if (t === w || t.includes(w)) return false;
+    }
   }
   return true;
 }
@@ -124,13 +166,13 @@ function extractOpenWeightModels(payload: ModelsDevPayload): OpenWeightModel[] {
       if (!model.open_weights) continue;
       if (seen.has(mid)) continue;
       seen.add(mid);
-      // Only text LLMs
-      if (!isTextLLM(model.name ?? mid, mid)) continue;
+      if (!isTextLLM(model.name ?? mid, mid, model.family)) continue;
       results.push({
         provider_id: pid,
         model_id: mid,
         name: model.name ?? mid,
         last_updated: model.last_updated ?? "unknown",
+        family: model.family,
       });
     }
   }
@@ -196,10 +238,40 @@ function mergeKnownModels(fresh: KnownModel[], cached: KnownModel[]): KnownModel
     const key = m.name.toLowerCase();
     const ex = map.get(key);
     map.set(key, ex
-      ? { ...m, active_b: ex.active_b ?? m.active_b, source: m.source, last_seen: m.last_seen ?? ex.last_seen }
+      ? { ...m, active_b: ex.active_b ?? m.active_b, family: m.family ?? ex.family, source: m.source, last_seen: m.last_seen ?? ex.last_seen }
       : m);
   }
   return [...map.values()].sort((a, b) => (a.params_b ?? Infinity) - (b.params_b ?? Infinity));
+}
+
+/**
+ * Deprecation: for every (family, size-in-B) bucket, keep only the newest
+ * model by last_seen. This eliminates stale versions like Llama 3.1 when
+ * Llama 4 is present.
+ */
+function deprecateByFamilySize(models: KnownModel[]): KnownModel[] {
+  const bucket = new Map<string, KnownModel[]>(); // "family|size" -> models[]
+
+  for (const m of models) {
+    const fam = m.family || "other";
+    const size = Math.round(m.params_b); // round to nearest integer B
+    const key = `${fam}|${size}`;
+    const arr = bucket.get(key) ?? [];
+    arr.push(m);
+    bucket.set(key, arr);
+  }
+
+  const kept: KnownModel[] = [];
+  for (const arr of bucket.values()) {
+    arr.sort((a, b) => (b.last_seen ?? "0").localeCompare(a.last_seen ?? "0"));
+    const newest = arr[0];
+    kept.push(newest);
+    if (arr.length > 1) {
+      console.log(`  Deprecated ${arr.length - 1} older ${newest.family ?? "other"} ${Math.round(newest.params_b)}B models, keeping "${newest.name}" (${newest.last_seen})`);
+    }
+  }
+
+  return kept.sort((a, b) => a.params_b - b.params_b);
 }
 
 // ---------------------------------------------------------------------------
@@ -282,6 +354,7 @@ async function main() {
       arch: r.method === "regex_moe" ? "moe" : "dense",
       source: `models.dev:${r.method}`,
       last_seen: m.last_updated,
+      family: deriveFamily(m.name, m.model_id, m.family),
     });
   }
   console.log(`Resolved ${freshKnown.length} models`);
@@ -290,10 +363,12 @@ async function main() {
   let cachedKnown: KnownModel[] = [];
   try { cachedKnown = JSON.parse(readFileSync(KNOWN_MODELS_PATH, "utf-8")); } catch {}
   const cleanCached = cachedKnown.filter(
-    (m) => isTextLLM(m.name, "") || m.manual === true
+    (m) => isTextLLM(m.name, "", m.family) || m.manual === true
   );
 
-  const mergedModels = mergeKnownModels(freshKnown, cleanCached);
+  let mergedModels = mergeKnownModels(freshKnown, cleanCached);
+  console.log(`Merged ${mergedModels.length} models; deprecating stale family/size variants…`);
+  mergedModels = deprecateByFamilySize(mergedModels);
   writeFileSync(KNOWN_MODELS_PATH, JSON.stringify(mergedModels, null, 2) + "\n");
   console.log(`Wrote ${mergedModels.length} models to knownModels.json`);
 

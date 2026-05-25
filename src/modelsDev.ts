@@ -36,6 +36,7 @@ export interface OpenWeightModel {
   model_id: string;
   name: string;
   last_updated: string;
+  family?: string;
 }
 
 export interface KnownModel {
@@ -47,6 +48,8 @@ export interface KnownModel {
   last_seen: string;
   /** If true, keeps the entry even if it no longer appears in models.dev */
   manual?: boolean;
+  /** Computed family (e.g. "llama", "qwen"). Used for deprecation. */
+  family?: string;
 }
 
 export type ParamsMethod = "regex_moe" | "regex" | "hf" | "unknown";

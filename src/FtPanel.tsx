@@ -17,7 +17,51 @@ import {
   type CostView,
 } from "./engine";
 import { buildPaybackSentence, queriesToAmortize } from "./ftPayback";
-import { computeFtCapex, FT_METHODS, type FtMethod } from "./ft";
+import {
+  computeFtCost,
+  FT_METHODS,
+  type FtMethod,
+  type FtWarning,
+  type ModelSpec,
+  type FtTraining,
+  type FtOptions,
+} from "./ft";
+
+function WarningBanner({ warnings }: { warnings: FtWarning[] }) {
+  if (warnings.length === 0) return null;
+  const styles: Record<FtWarning["severity"], { row: string; dot: string }> = {
+    info: {
+      row: "bg-slate-50 border-slate-200 text-slate-700",
+      dot: "bg-slate-400",
+    },
+    warning: {
+      row: "bg-amber-50 border-amber-200 text-amber-800",
+      dot: "bg-amber-500",
+    },
+    blocker: {
+      row: "bg-rose-50 border-rose-200 text-rose-800",
+      dot: "bg-rose-500",
+    },
+  };
+  return (
+    <div className="space-y-1.5">
+      {warnings.map((w, i) => (
+        <div
+          key={`${w.code}-${i}`}
+          className={`flex items-start gap-2 rounded-md border px-3 py-2 text-xs ${styles[w.severity].row}`}
+        >
+          <span
+            className={`mt-1 h-2 w-2 shrink-0 rounded-full ${styles[w.severity].dot}`}
+          />
+          <span className="flex-1 leading-relaxed">{w.message}</span>
+          <span className="text-[10px] opacity-60 font-mono shrink-0">
+            [{w.code}]
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 const fmt = (n: number, d = 2) =>
   n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
@@ -84,10 +128,23 @@ export function FtPanel({
 
   // FLOPs scale with ACTIVE params (work per token). VRAM/cluster math uses
   // TOTAL via the third arg. For dense models these are equal so no-op.
-  const capex = useMemo(
-    () => computeFtCapex(active_params_b, ftInputs, params_b),
-    [active_params_b, params_b, ftInputs]
-  );
+  const capex = useMemo(() => {
+    const spec: ModelSpec = {
+      name: "",
+      arch: active_params_b !== params_b ? "moe" : "dense",
+      total_params_b: params_b,
+      active_params_b,
+    };
+    const training: FtTraining = {
+      num_examples: ftInputs.num_examples,
+      tokens_per_example: ftInputs.tokens_per_example,
+      epochs: ftInputs.epochs,
+      prep_cost_usd: ftInputs.prep_cost_usd,
+      experiments_multiplier: ftInputs.experiments_multiplier,
+    };
+    const options: FtOptions = { cluster_overhead: ftInputs.cluster_overhead };
+    return computeFtCost(spec, training, ftInputs.method, options);
+  }, [active_params_b, params_b, ftInputs]);
 
   const projection = useMemo(
     () =>
@@ -260,6 +317,8 @@ export function FtPanel({
           </span>
         </div>
       </div>
+
+      <WarningBanner warnings={capex.warnings} />
 
       <div className={`rounded-md border px-3 py-2.5 ${paybackToneClass}`}>
         <div className="text-sm font-semibold">{payback.headline}</div>

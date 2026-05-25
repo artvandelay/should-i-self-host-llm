@@ -17,16 +17,19 @@ import {
   costViewSuffix,
   type CostView,
 } from "./engine";
+import { buildPaybackSentence, queriesToAmortize } from "./ftPayback";
 import { FT_METHODS, type FtMethod } from "./ftMethods";
 
 const fmt = (n: number, d = 2) =>
   n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
 const fmtCurrency = (n: number) => `$${fmt(n, 2)}`;
+const fmtInt = (n: number) => Math.round(n).toLocaleString("en-US");
 
 interface FtPanelProps {
   params_b: number;
   apiWeeklyCost: number;
   selfhostWeeklyCost: number;
+  queriesPerWeek: number;
   view: CostView;
 }
 
@@ -34,6 +37,7 @@ export function FtPanel({
   params_b,
   apiWeeklyCost,
   selfhostWeeklyCost,
+  queriesPerWeek,
   view,
 }: FtPanelProps) {
   const [numExamples, setNumExamples] = useState(100_000);
@@ -68,6 +72,35 @@ export function FtPanel({
       ),
     [apiWeeklyCost, selfhostWeeklyCost, capex.total_capex_usd]
   );
+
+  const payback = useMemo(
+    () =>
+      buildPaybackSentence(
+        capex.total_capex_usd,
+        apiWeeklyCost,
+        selfhostWeeklyCost,
+        projection
+      ),
+    [capex.total_capex_usd, apiWeeklyCost, selfhostWeeklyCost, projection]
+  );
+
+  const breakeven = useMemo(
+    () =>
+      queriesToAmortize(
+        capex.total_capex_usd,
+        apiWeeklyCost,
+        selfhostWeeklyCost,
+        queriesPerWeek
+      ),
+    [capex.total_capex_usd, apiWeeklyCost, selfhostWeeklyCost, queriesPerWeek]
+  );
+
+  const paybackToneClass =
+    payback.tone === "good"
+      ? "border-emerald-200 bg-emerald-50/70 text-emerald-900"
+      : payback.tone === "bad"
+      ? "border-rose-200 bg-rose-50/70 text-rose-900"
+      : "border-amber-200 bg-amber-50/70 text-amber-900";
 
   const weeklySavings = apiWeeklyCost - selfhostWeeklyCost;
   const monthlySavings = costForView(weeklySavings, "monthly");
@@ -153,7 +186,14 @@ export function FtPanel({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+      <div className={`rounded-md border px-3 py-2.5 ${paybackToneClass}`}>
+        <div className="text-sm font-semibold">{payback.headline}</div>
+        {payback.supporting && (
+          <div className="text-xs mt-1 opacity-90">{payback.supporting}</div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-2">
         <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2">
           <div className="text-[10px] uppercase tracking-wide text-slate-500">
             One-time capex
@@ -187,6 +227,18 @@ export function FtPanel({
             {projection.crossover_month != null
               ? `Month ${projection.crossover_month}`
               : "Never within 24 months"}
+          </div>
+        </div>
+        <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2">
+          <div className="text-[10px] uppercase tracking-wide text-slate-500">
+            Queries to break-even
+          </div>
+          <div className="text-sm font-semibold text-slate-900">
+            {breakeven === null
+              ? "—"
+              : breakeven.queries === 0
+              ? "Already paid back"
+              : fmtInt(breakeven.queries)}
           </div>
         </div>
       </div>

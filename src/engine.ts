@@ -415,24 +415,32 @@ function deriveSizeBuckets(models: KnownModel[]) {
   return { dense, moe };
 }
 
+/** Clamp a numeric input: reject NaN/Infinity, force non-negative. */
+function clampNonNeg(n: number, fallback = 0): number {
+  if (!Number.isFinite(n) || n < 0) return fallback;
+  return n;
+}
+
 export function recommendTiers(args: RecommendArgs): RecommendResult {
   const {
     pricing,
-    queries_per_week,
-    input_tokens,
-    output_tokens,
     api_key,
     api_override,
     pattern,
     vendor,
     quant_pref,
-    min_params_b,
-    overhead_gb,
-    cold_start_sec,
-    ft_cost,
-    ft_weeks,
     knownModels,
   } = args;
+
+  // Sanitize all numeric inputs against NaN/Infinity/negative.
+  const queries_per_week = clampNonNeg(args.queries_per_week);
+  const input_tokens = clampNonNeg(args.input_tokens);
+  const output_tokens = clampNonNeg(args.output_tokens);
+  const min_params_b = clampNonNeg(args.min_params_b);
+  const overhead_gb = clampNonNeg(args.overhead_gb);
+  const cold_start_sec = clampNonNeg(args.cold_start_sec);
+  const ft_cost = clampNonNeg(args.ft_cost);
+  const ft_weeks = clampNonNeg(args.ft_weeks);
 
   const models = knownModels ?? KNOWN_MODELS;
   const { dense: DENSE_SIZES, moe: MOE_SIZES } = deriveSizeBuckets(models);

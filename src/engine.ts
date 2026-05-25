@@ -1,5 +1,12 @@
 import pricingJson from "./pricing.json";
 import knownModelsJson from "./knownModels.json";
+import {
+  tierFor,
+  tierFromSize,
+  tierMinusOne,
+  TIER_RANK,
+  type QualityTier,
+} from "./qualityTiers";
 
 // =============================================================================
 // TYPES
@@ -194,6 +201,8 @@ export interface ConfigResult {
   active_params_b: number;
   arch: Arch;
   quant: Quant;
+  /** Coarse quality tier for the named open-weight model (if known). */
+  quality_tier?: QualityTier | null;
   gpu: string;
   gpu_price_per_hr: number;
   vram_needed_gb: number;
@@ -306,12 +315,14 @@ export function evaluateConfig(args: EvalArgs): ConfigResult | null {
     b.weekly_cost < min.weekly_cost ? b : min
   );
   const named = nearestModelInList(params_b, arch, args.knownModels ?? KNOWN_MODELS);
+  const quality_tier = named ? tierFor(named.name) ?? tierFromSize(params_b, named.active_b ?? null) : tierFromSize(params_b, active_params_b);
 
   return {
     params_b,
     active_params_b,
     arch,
     quant,
+    quality_tier,
     gpu: gpu.name,
     gpu_price_per_hr: price_per_hr,
     vram_needed_gb: vram_needed,
@@ -354,11 +365,27 @@ export interface GradedTier {
   tier: ConfigResult;
 }
 
+export interface ComparableQualityPick {
+  tier: ConfigResult;
+  /** Tier of the API model we're comparing against (best-effort lookup). */
+  apiTier: QualityTier | null;
+  /** Tier of the picked open-weight model. */
+  modelTier: QualityTier;
+  /** Floor used to filter — apiTier or one tier below if nothing fits. */
+  floor: QualityTier;
+}
+
 export interface RecommendResult {
   api_cost: number;
   tiers: ConfigResult[];
   largest: ConfigResult | null;
   gradedTiers: GradedTier[];
+  /**
+   * Cheapest open-weight model whose curated quality tier matches the
+   * selected API model (or one tier below if no exact match fits the budget).
+   * Null when we have no quality info for the API or nothing comparable fits.
+   */
+  comparableQuality: ComparableQualityPick | null;
   all_candidates: ConfigResult[];
 }
 
@@ -506,11 +533,67 @@ export function recommendTiers(args: RecommendArgs): RecommendResult {
 
   const largest = affordable[0] ?? null;
 
+  const comparableQuality = pickComparableQuality(affordable, pricing, api_key, api_override, largest);
+
   return {
     api_cost,
     tiers: affordable,
     largest,
     gradedTiers: pickGradedTiers(affordable, api_cost, largest),
+    comparableQuality,
     all_candidates: candidates,
   };
+}
+
+/**
+ * Pick the cheapest affordable open-weight model whose quality tier is at
+ * least as high as the API model's tier. If nothing matches the exact tier,
+ * fall back one tier (e.g. frontier API → look for strong open-weight).
+ *
+ * Returns null when:
+ *   - we don't recognize the API model's tier (curated list miss), OR
+ *   - no affordable candidate clears the floor.
+ */
+function pickComparableQuality(
+  affordable: ConfigResult[],
+  pricing: Pricing,
+  api_key: string,
+  api_override: { input_per_1m: number; output_per_1m: number } | undefined,
+  largest: ConfigResult | null
+): ComparableQualityPick | null {
+  if (api_override) return null; // custom rates -> no quality signal
+  const apiRow = pricing.apis[api_key];
+  if (!apiRow) return null;
+  const apiTier = tierFor(apiRow.label);
+  if (!apiTier) return null;
+  const apiRank = TIER_RANK[apiTier];
+
+  // Try exact tier first; fall back to one step below.
+  const floors: QualityTier[] = [apiTier, tierMinusOne(apiTier)];
+  for (const floor of floors) {
+    const floorRank = TIER_RANK[floor];
+    const eligible = affordable.filter(
+      (c) => c.quality_tier && TIER_RANK[c.quality_tier] >= floorRank && TIER_RANK[c.quality_tier] <= apiRank
+    );
+    if (!eligible.length) continue;
+    // Cheapest weekly cost wins; tie-break by larger params (more headroom).
+    const cheapest = eligible.reduce((best, c) => {
+      const bw = best.weekly_cost_with_ft ?? best.weekly_cost;
+      const cw = c.weekly_cost_with_ft ?? c.weekly_cost;
+      if (cw < bw) return c;
+      if (cw === bw && c.params_b > best.params_b) return c;
+      return best;
+    });
+    // If this is just the same pick as `largest`, skip on the first floor pass
+    // so we don't surface a duplicate card. UI will hide on equality anyway.
+    return {
+      tier: cheapest,
+      apiTier,
+      modelTier: cheapest.quality_tier as QualityTier,
+      floor,
+    };
+  }
+  // Suppress unused-largest warning in some builds.
+  void largest;
+  return null;
 }

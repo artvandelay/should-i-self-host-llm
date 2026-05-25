@@ -581,8 +581,36 @@ export interface ConfigResult {
 }
 
 export function evaluateConfig(args: EvalArgs): ConfigResult | null {
+  const { pricing, params_b, active_params_b, quant, overhead_gb = 4 } = args;
+
+  // Effective overhead: scales with active params, with the user-supplied value as a floor.
+  // Lets users with measured KV-cache numbers raise the bar; never silently lowers it.
+  const effective_overhead = Math.max(overhead_gb, scaledOverhead(active_params_b));
+  const vram_needed = vramRequired(params_b, quant, effective_overhead);
+  // Pick by minimum total weekly cost, not minimum $/hr. A higher-$/hr GPU
+  // with much higher throughput (e.g. H100 vs A100) often wins because it
+  // needs fewer replicas and fewer billable hours. We loop over all
+  // VRAM-eligible GPUs, build the full result for each, and keep the
+  // cheapest by weekly_cost. Falls back to pickCheapestGpu's behavior
+  // (lowest $/hr) when there's only one candidate.
+  const eligibleGpus = pricing.gpus.filter((g) => g.vram_gb >= vram_needed);
+  if (eligibleGpus.length === 0) return null;
+
+  let best: ConfigResult | null = null;
+  for (const gpu of eligibleGpus) {
+    const r = evaluateOnGpu(args, gpu, vram_needed, effective_overhead);
+    if (r && (best === null || r.weekly_cost < best.weekly_cost)) best = r;
+  }
+  return best;
+}
+
+function evaluateOnGpu(
+  args: EvalArgs,
+  gpu: GpuRow,
+  vram_needed: number,
+  effective_overhead: number
+): ConfigResult | null {
   const {
-    pricing,
     params_b,
     active_params_b,
     arch,
@@ -592,16 +620,8 @@ export function evaluateConfig(args: EvalArgs): ConfigResult | null {
     pattern,
     vendor,
     cold_start_sec = 30,
-    overhead_gb = 4,
     input_tokens = 0,
   } = args;
-
-  // Effective overhead: scales with active params, with the user-supplied value as a floor.
-  // Lets users with measured KV-cache numbers raise the bar; never silently lowers it.
-  const effective_overhead = Math.max(overhead_gb, scaledOverhead(active_params_b));
-  const vram_needed = vramRequired(params_b, quant, effective_overhead);
-  const gpu = pickCheapestGpu(pricing, vram_needed, vendor);
-  if (!gpu) return null;
 
   const price_per_hr = gpu[`${vendor}_per_hr`];
   const shape = trafficShape(pattern);

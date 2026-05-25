@@ -58,6 +58,40 @@ const FIRST_PARTY = new Set([
   "tencent-tokenhub", "sarvam", "fireworks-ai",
 ]);
 
+// Text-LLM filter: reject embeddings, classifiers, vision-only, speech, bio, code-completion-only, image gen.
+// Use (?<![a-zA-Z])/(?![a-zA-Z]) instead of \b because model IDs mix letters and digits,
+// and digits count as word chars so \bguard\b fails on "Qwen3Guard".
+export const TEXT_LLM_REJECT_PATTERNS: RegExp[] = [
+  // embeddings & retrieval
+  /(?<![a-zA-Z])(embed|embedding|retriev|reranker|rerank|nemoretriever)(?![a-zA-Z])/i,
+  // safety classifiers
+  /(?<![a-zA-Z])(prompt[\s-]?guard|moderation|toxic)(?![a-zA-Z])/i,
+  /(?<![a-zA-Z])guard(?![a-zA-Z])/i,
+  // vision-only / OCR / VL
+  /(?<![a-zA-Z])(paddle[\s-]?ocr|ocr|vl)(?![a-zA-Z])/i,
+  // speech / audio
+  /(?<![a-zA-Z])(whisper|asr|tts|speech[\s-]?to[\s-]?text|text[\s-]?to[\s-]?speech)(?![a-zA-Z])/i,
+  // bio
+  /(?<![a-zA-Z])(esm[12]?|protein|biomed)(?![a-zA-Z])/i,
+  // code-completion-only (NOT general-capable like Qwen3 Coder)
+  /(?<![a-zA-Z])(codestral|devstral|prover[\s-]?v?\d)(?![a-zA-Z])/i,
+  // image / video gen
+  /(?<![a-zA-Z])(flux|sdxl|stable[\s-]?diffusion|imagen|wan[\s-]?gen)(?![a-zA-Z])/i,
+  // embedding families that slip through digit splitting
+  /(?<![a-zA-Z])e5(?![a-zA-Z])/i,
+  /(?<![a-zA-Z])gme(?![a-zA-Z])/i,
+  /(?<![a-zA-Z])osmosis(?![a-zA-Z])/i,
+  /(?<![a-zA-Z])structure(?![a-zA-Z])/i,
+];
+
+export function isTextLLM(name: string, modelId: string): boolean {
+  const haystack = `${name} ${modelId}`;
+  for (const re of TEXT_LLM_REJECT_PATTERNS) {
+    if (re.test(haystack)) return false;
+  }
+  return true;
+}
+
 function extractClosedApis(payload: ModelsDevPayload): ClosedApi[] {
   const results: ClosedApi[] = [];
   const seen = new Set<string>();
@@ -90,6 +124,8 @@ function extractOpenWeightModels(payload: ModelsDevPayload): OpenWeightModel[] {
       if (!model.open_weights) continue;
       if (seen.has(mid)) continue;
       seen.add(mid);
+      // Only text LLMs
+      if (!isTextLLM(model.name ?? mid, mid)) continue;
       results.push({
         provider_id: pid,
         model_id: mid,
@@ -250,11 +286,14 @@ async function main() {
   }
   console.log(`Resolved ${freshKnown.length} models`);
 
-  // Load cached
+  // Load cached — drop stale non-LLMs, keep manual overrides
   let cachedKnown: KnownModel[] = [];
   try { cachedKnown = JSON.parse(readFileSync(KNOWN_MODELS_PATH, "utf-8")); } catch {}
+  const cleanCached = cachedKnown.filter(
+    (m) => isTextLLM(m.name, "") || m.manual === true
+  );
 
-  const mergedModels = mergeKnownModels(freshKnown, cachedKnown);
+  const mergedModels = mergeKnownModels(freshKnown, cleanCached);
   writeFileSync(KNOWN_MODELS_PATH, JSON.stringify(mergedModels, null, 2) + "\n");
   console.log(`Wrote ${mergedModels.length} models to knownModels.json`);
 

@@ -188,7 +188,6 @@ function TierCard({
   const weekly = tier.weekly_cost_with_ft ?? tier.weekly_cost;
   const savings = apiCost - weekly;
   const savings_pct = apiCost > 0 ? (savings / apiCost) * 100 : 0;
-  const named = tier.nearest_named;
   const ringClass =
     badge?.color === "green"
       ? "border-emerald-400 bg-emerald-50/40 ring-2 ring-emerald-200"
@@ -215,11 +214,6 @@ function TierCard({
               </span>
             )}
           </div>
-          {named && (
-            <div className="text-sm text-slate-600">
-              similar to <span className="font-medium">{named.name}</span>
-            </div>
-          )}
         </div>
         <div className="text-right">
           <div className="text-2xl font-bold text-slate-900">

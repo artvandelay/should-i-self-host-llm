@@ -45,6 +45,8 @@ export interface KnownModel {
   arch: "dense" | "moe";
   source: string;
   last_seen: string;
+  /** If true, keeps the entry even if it no longer appears in models.dev */
+  manual?: boolean;
 }
 
 export type ParamsMethod = "regex_moe" | "regex" | "hf" | "unknown";

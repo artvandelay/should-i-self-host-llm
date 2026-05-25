@@ -355,19 +355,21 @@ export interface RecommendResult {
   all_candidates: ConfigResult[];
 }
 
-/** Derive DENSE_SIZES and MOE_SIZES from the model list dynamically. */
+/** Derive DENSE_SIZES and MOE_SIZES from the model list dynamically.
+ *  Dedupe by exact params_b (3-decimal), no rounding, no zero bucket.
+ */
 function deriveSizeBuckets(models: KnownModel[]) {
   const denseSet = new Set<number>();
   const moeMap = new Map<number, { total: number; active: number }>();
 
   for (const m of models) {
-    const rounded = Math.round(m.params_b / 5) * 5;
+    if (m.params_b <= 0) continue;
     if (m.arch === "moe") {
-      if (!moeMap.has(rounded)) {
-        moeMap.set(rounded, { total: m.params_b, active: m.active_b ?? m.params_b });
+      if (!moeMap.has(m.params_b)) {
+        moeMap.set(m.params_b, { total: m.params_b, active: m.active_b ?? m.params_b });
       }
     } else {
-      denseSet.add(rounded);
+      denseSet.add(m.params_b);
     }
   }
 

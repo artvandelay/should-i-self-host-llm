@@ -1,101 +1,5 @@
 [
   {
-    "params_b": 0.022,
-    "active_b": null,
-    "name": "Llama Prompt Guard 2 22M",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2024-10-01"
-  },
-  {
-    "params_b": 0.086,
-    "active_b": null,
-    "name": "Llama Prompt Guard 2 86M",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2024-10-01"
-  },
-  {
-    "params_b": 0.3,
-    "active_b": null,
-    "name": "llama-3_2-nemoretriever-300m-embed-v1",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-07-24"
-  },
-  {
-    "params_b": 0.6,
-    "active_b": null,
-    "name": "Qwen3 Embedding 0.6B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-06-03"
-  },
-  {
-    "params_b": 0.6,
-    "active_b": null,
-    "name": "Qwen3 Reranker 0.6B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-06-03"
-  },
-  {
-    "params_b": 0.6,
-    "active_b": null,
-    "name": "Qwen3Guard Gen 0.6B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-04-25"
-  },
-  {
-    "params_b": 0.6,
-    "active_b": null,
-    "name": "E5 Multi-Lingual Large Embeddings 0.6B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2024-06-01"
-  },
-  {
-    "params_b": 0.6,
-    "active_b": null,
-    "name": "Osmosis Structure 0.6B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-01-01"
-  },
-  {
-    "params_b": 0.65,
-    "active_b": null,
-    "name": "esm2-650m",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-03-10"
-  },
-  {
-    "params_b": 0.959,
-    "active_b": null,
-    "name": "PaddleOCR-VL",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2025-10-22"
-  },
-  {
-    "params_b": 0.959,
-    "active_b": null,
-    "name": "PaddlePaddle/PaddleOCR-VL",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2025-10-16"
-  },
-  {
-    "params_b": 0.959,
-    "active_b": null,
-    "name": "PaddlePaddle/PaddleOCR-VL-1.5",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-01-29"
-  },
-  {
     "params_b": 1,
     "active_b": null,
     "name": "Meta: Llama 3.2 1B Instruct",
@@ -120,22 +24,6 @@
     "last_seen": "2025-03-12"
   },
   {
-    "params_b": 1,
-    "active_b": null,
-    "name": "llama-nemotron-rerank-vl-1b-v2",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-03-31"
-  },
-  {
-    "params_b": 1,
-    "active_b": null,
-    "name": "llama-nemotron-embed-vl-1b-v2",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-02-10"
-  },
-  {
     "params_b": 1.2,
     "active_b": null,
     "name": "LFM2.5-1.2B-Thinking (free)",
@@ -150,30 +38,6 @@
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2026-01-20"
-  },
-  {
-    "params_b": 1.543,
-    "active_b": null,
-    "name": "Whisper Large v3",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2023-11-06"
-  },
-  {
-    "params_b": 1.61,
-    "active_b": null,
-    "name": "KB Whisper",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2024-10-01"
-  },
-  {
-    "params_b": 2,
-    "active_b": null,
-    "name": "cosmos-transfer2.5-2b",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-02-26"
   },
   {
     "params_b": 2,
@@ -264,28 +128,12 @@
     "last_seen": "2026-03-12"
   },
   {
-    "params_b": 3.039,
-    "active_b": null,
-    "name": "dots.ocr",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-04-25"
-  },
-  {
     "params_b": 3.191,
     "active_b": null,
     "name": "IBM: Granite 4.0 Micro",
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-03-15"
-  },
-  {
-    "params_b": 3.336,
-    "active_b": null,
-    "name": "deepseek-ai/DeepSeek-OCR",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2025-10-20"
   },
   {
     "params_b": 3.821,
@@ -330,30 +178,6 @@
   {
     "params_b": 4,
     "active_b": null,
-    "name": "FLUX.2 Klein 4B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-01-31"
-  },
-  {
-    "params_b": 4,
-    "active_b": null,
-    "name": "Qwen3-Embedding 4B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-06-06"
-  },
-  {
-    "params_b": 4,
-    "active_b": null,
-    "name": "Qwen3-Reranker-4B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-02-01"
-  },
-  {
-    "params_b": 4,
-    "active_b": null,
     "name": "Qwen3 4B FP8",
     "arch": "dense",
     "source": "models.dev:regex",
@@ -394,14 +218,6 @@
   {
     "params_b": 4,
     "active_b": null,
-    "name": "rerank-qa-mistral-4b",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-01-17"
-  },
-  {
-    "params_b": 4,
-    "active_b": null,
     "name": "riva-translate-4b-instruct-v1_1",
     "arch": "dense",
     "source": "models.dev:regex",
@@ -430,14 +246,6 @@
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2026-04-02"
-  },
-  {
-    "params_b": 4,
-    "active_b": null,
-    "name": "Qwen 3 Embedding 4B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-01-01"
   },
   {
     "params_b": 4.3,
@@ -578,14 +386,6 @@
   {
     "params_b": 7,
     "active_b": null,
-    "name": "cosmos-transfer1-7b",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-06-30"
-  },
-  {
-    "params_b": 7,
-    "active_b": null,
     "name": "nv-embedcode-7b-v1",
     "arch": "dense",
     "source": "models.dev:regex",
@@ -606,22 +406,6 @@
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2025-04-01"
-  },
-  {
-    "params_b": 7,
-    "active_b": null,
-    "name": "E5 Mistral 7B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2023-12-11"
-  },
-  {
-    "params_b": 7,
-    "active_b": null,
-    "name": "Qwen2.5-VL 7B Instruct",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2024-09"
   },
   {
     "params_b": 7,
@@ -738,14 +522,6 @@
   {
     "params_b": 8,
     "active_b": null,
-    "name": "qwen/qwen3-vl-8b-instruct",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-10-17"
-  },
-  {
-    "params_b": 8,
-    "active_b": null,
     "name": "Qwen3 8B",
     "arch": "dense",
     "source": "models.dev:regex",
@@ -826,14 +602,6 @@
   {
     "params_b": 8,
     "active_b": null,
-    "name": "Llama Guard 3 8B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2024-07-23"
-  },
-  {
-    "params_b": 8,
-    "active_b": null,
     "name": "Llama 3.1 8B Instruct fp8",
     "arch": "dense",
     "source": "models.dev:regex",
@@ -854,14 +622,6 @@
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2024-05-09"
-  },
-  {
-    "params_b": 8,
-    "active_b": null,
-    "name": "Llama 3.1 Nemotron Safety Guard",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-10-28"
   },
   {
     "params_b": 8,
@@ -894,30 +654,6 @@
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2026-04-30"
-  },
-  {
-    "params_b": 8,
-    "active_b": null,
-    "name": "Qwen3 VL 8B Thinking",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-10-14"
-  },
-  {
-    "params_b": 8,
-    "active_b": null,
-    "name": "Qwen3-Embedding-8B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-02-01"
-  },
-  {
-    "params_b": 8,
-    "active_b": null,
-    "name": "Qwen3 VL 8B Instruct",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-08-19"
   },
   {
     "params_b": 8,
@@ -962,34 +698,10 @@
   {
     "params_b": 8,
     "active_b": null,
-    "name": "llama-3.1-nemotron-safety-guard-8b-v3",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-10-28"
-  },
-  {
-    "params_b": 8,
-    "active_b": null,
     "name": "Meta Llama 3.1 8B Instruct (GGUF)",
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2024-07-23"
-  },
-  {
-    "params_b": 8,
-    "active_b": null,
-    "name": "Qwen3-VL Embedding 8B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-02-05"
-  },
-  {
-    "params_b": 8,
-    "active_b": null,
-    "name": "Qwen3 Embedding 8B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-07-30"
   },
   {
     "params_b": 8.311,
@@ -1162,14 +874,6 @@
   {
     "params_b": 12,
     "active_b": null,
-    "name": "Nemotron Nano 12B v2 VL",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-04-30"
-  },
-  {
-    "params_b": 12,
-    "active_b": null,
     "name": "Pixtral 12B",
     "arch": "dense",
     "source": "models.dev:regex",
@@ -1194,14 +898,6 @@
   {
     "params_b": 12,
     "active_b": null,
-    "name": "Meta: Llama Guard 4 12B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-04-05"
-  },
-  {
-    "params_b": 12,
-    "active_b": null,
     "name": "gemma 3 12b it",
     "arch": "dense",
     "source": "models.dev:regex",
@@ -1210,26 +906,10 @@
   {
     "params_b": 12,
     "active_b": null,
-    "name": "Nemotron Nano 12B 2 VL (free)",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-10-28"
-  },
-  {
-    "params_b": 12,
-    "active_b": null,
     "name": "gemma3:12b",
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2026-01-19"
-  },
-  {
-    "params_b": 12,
-    "active_b": null,
-    "name": "Llama Guard 4 12B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-04-30"
   },
   {
     "params_b": 12,
@@ -1722,14 +1402,6 @@
   {
     "params_b": 24,
     "active_b": null,
-    "name": "Devstral Small 2 24B Instruct 2512",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-12-01"
-  },
-  {
-    "params_b": 24,
-    "active_b": null,
     "name": "Mistral-Small-3.2-24B-Instruct-2506",
     "arch": "dense",
     "source": "models.dev:regex",
@@ -1742,14 +1414,6 @@
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2025-07-09"
-  },
-  {
-    "params_b": 24,
-    "active_b": null,
-    "name": "devstral-small-2:24b",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-01-19"
   },
   {
     "params_b": 24,
@@ -1936,22 +1600,6 @@
     "last_seen": "2026-02-23"
   },
   {
-    "params_b": 28,
-    "active_b": 3,
-    "name": "ERNIE-4.5-VL-28B-A3B-Thinking",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2025-11-26"
-  },
-  {
-    "params_b": 28,
-    "active_b": 3,
-    "name": "ERNIE 4.5 VL 28B A3B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2025-06-30"
-  },
-  {
     "params_b": 30,
     "active_b": 3,
     "name": "Qwen3 Coder 30B A3B Instruct",
@@ -1998,22 +1646,6 @@
     "arch": "moe",
     "source": "models.dev:regex_moe",
     "last_seen": "2025-09-24"
-  },
-  {
-    "params_b": 30,
-    "active_b": 3,
-    "name": "qwen/qwen3-vl-30b-a3b-thinking",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2025-10-11"
-  },
-  {
-    "params_b": 30,
-    "active_b": 3,
-    "name": "qwen/qwen3-vl-30b-a3b-instruct",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2025-10-11"
   },
   {
     "params_b": 30,
@@ -2082,14 +1714,6 @@
   {
     "params_b": 30,
     "active_b": 3,
-    "name": "Qwen3-VL 30B-A3B Instruct",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2025-09-23"
-  },
-  {
-    "params_b": 30,
-    "active_b": 3,
     "name": "Qwen3-Coder 30B-A3B",
     "arch": "moe",
     "source": "models.dev:regex_moe",
@@ -2134,22 +1758,6 @@
     "arch": "moe",
     "source": "models.dev:regex_moe",
     "last_seen": "2025-07-08"
-  },
-  {
-    "params_b": 30,
-    "active_b": 3,
-    "name": "Qwen3 VL 30B A3B Thinking",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2025-10-02"
-  },
-  {
-    "params_b": 30,
-    "active_b": 3,
-    "name": "Qwen3 VL 30B A3B Instruct",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2025-10-02"
   },
   {
     "params_b": 30,
@@ -2206,14 +1814,6 @@
     "arch": "moe",
     "source": "models.dev:regex_moe",
     "last_seen": "2026-03-12"
-  },
-  {
-    "params_b": 30,
-    "active_b": 3,
-    "name": "Qwen3-VL 30B-A3B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2025-04"
   },
   {
     "params_b": 30,
@@ -2302,14 +1902,6 @@
     "arch": "dense",
     "source": "manual",
     "last_seen": "2026-05-25"
-  },
-  {
-    "params_b": 32,
-    "active_b": null,
-    "name": "Qwen 2.5 VL 32B Instruct",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2024-11-01"
   },
   {
     "params_b": 32,
@@ -2406,22 +1998,6 @@
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2024-11-11"
-  },
-  {
-    "params_b": 32,
-    "active_b": null,
-    "name": "Qwen3 VL 32B Instruct",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-10-23"
-  },
-  {
-    "params_b": 32,
-    "active_b": null,
-    "name": "Qwen2.5 VL 32B Instruct",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-03-15"
   },
   {
     "params_b": 32,
@@ -2850,14 +2426,6 @@
   {
     "params_b": 72,
     "active_b": null,
-    "name": "Qwen2.5 VL 72B Instruct",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-03-25"
-  },
-  {
-    "params_b": 72,
-    "active_b": null,
     "name": "Qwen 2.5 72B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
@@ -2870,22 +2438,6 @@
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2026-03-15"
-  },
-  {
-    "params_b": 72,
-    "active_b": null,
-    "name": "Qwen2.5-VL-72B-Instruct",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-02-04"
-  },
-  {
-    "params_b": 72,
-    "active_b": null,
-    "name": "Qwen2.5-VL 72B Instruct",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2024-09"
   },
   {
     "params_b": 72,
@@ -3256,38 +2808,6 @@
     "last_seen": "2026-05-25"
   },
   {
-    "params_b": 123,
-    "active_b": null,
-    "name": "devstral-2:123b",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-01-19"
-  },
-  {
-    "params_b": 123,
-    "active_b": null,
-    "name": "Devstral-2-123B-Instruct-2512",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-12-09"
-  },
-  {
-    "params_b": 123,
-    "active_b": null,
-    "name": "Devstral 2 123B Instruct (2512)",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-03-17"
-  },
-  {
-    "params_b": 123,
-    "active_b": null,
-    "name": "Devstral 2 123B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-02-17"
-  },
-  {
     "params_b": 128,
     "active_b": null,
     "name": "Mistral Medium 3.5 128B",
@@ -3386,22 +2906,6 @@
   {
     "params_b": 235,
     "active_b": 22,
-    "name": "Qwen3 VL 235B A22B Instruct",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2025-09-15"
-  },
-  {
-    "params_b": 235,
-    "active_b": 22,
-    "name": "Qwen3 VL 235B A22B Thinking",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2025-09-15"
-  },
-  {
-    "params_b": 235,
-    "active_b": 22,
     "name": "Qwen3 235B A22B",
     "arch": "moe",
     "source": "models.dev:regex_moe",
@@ -3465,22 +2969,6 @@
   },
   {
     "params_b": 235,
-    "active_b": null,
-    "name": "qwen3-vl:235b",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-01-19"
-  },
-  {
-    "params_b": 235,
-    "active_b": null,
-    "name": "qwen3-vl:235b-instruct",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-01-19"
-  },
-  {
-    "params_b": 235,
     "active_b": 22,
     "name": "Qwen3 235B A22B Instruct 2507 TEE",
     "arch": "moe",
@@ -3510,22 +2998,6 @@
     "arch": "moe",
     "source": "models.dev:regex_moe",
     "last_seen": "2025-07-01"
-  },
-  {
-    "params_b": 235,
-    "active_b": 22,
-    "name": "Qwen3-VL 235B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2024-11-01"
-  },
-  {
-    "params_b": 235,
-    "active_b": 22,
-    "name": "Qwen3 VL 235B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2026-03-12"
   },
   {
     "params_b": 235,
@@ -3638,6 +3110,14 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2025-12-22"
+  },
+  {
+    "params_b": 394.498,
+    "active_b": null,
+    "name": "DeepSeek V3.2",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2025-12-01"
   },
   {
     "params_b": 397,
@@ -3800,14 +3280,6 @@
     "last_seen": "2026-02-04"
   },
   {
-    "params_b": 424,
-    "active_b": 47,
-    "name": "ERNIE 4.5 VL 424B A47B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2025-06-30"
-  },
-  {
     "params_b": 456.09,
     "active_b": null,
     "name": "MiniMax M1",
@@ -3874,14 +3346,6 @@
   {
     "params_b": 671,
     "active_b": null,
-    "name": "Deepseek Prover V2 671B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-04-30"
-  },
-  {
-    "params_b": 671,
-    "active_b": null,
     "name": "Deep Cogito: Cogito v2.1 671B",
     "arch": "dense",
     "source": "models.dev:regex",
@@ -3941,7 +3405,7 @@
     "name": "DeepSeek R1",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-05-28"
+    "last_seen": "2025-01-20"
   },
   {
     "params_b": 684.531,
@@ -3974,14 +3438,6 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2025-05-29"
-  },
-  {
-    "params_b": 685.397,
-    "active_b": null,
-    "name": "DeepSeek V3.2",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-03-06"
   },
   {
     "params_b": 685.397,

@@ -4,9 +4,8 @@ A reader-facing companion to the FT cost panel. You should be able to read this
 without opening any code. If any assumption here looks wrong for your workload,
 treat the FT panel's output as a rough order-of-magnitude estimate, not a quote.
 
-Last updated: 2026-05-26 (post-MoE-fix). Engine code: `src/ftMethods.ts`,
-`src/engine.ts` (`computeFtCapex`, `ftVramGb`, `pickClusterOverhead`,
-`pickFtGpu`), `src/FtPanel.tsx`.
+Last updated: 2026-05-26 (post-MoE-fix). Engine code: `src/ft/` (types.ts,
+methods.ts, hardware.ts, cost.ts, index.ts); UI: `src/FtPanel.tsx`.
 
 ---
 
@@ -291,12 +290,17 @@ These are the calls we'd like you to make before we polish the panel further.
 
 Code:
 
-- `src/ftMethods.ts` — multipliers, constants, citations inline.
-- `src/engine.ts` — `computeFtCapex`, `ftVramGb`, `pickClusterOverhead`,
-  `pickFtGpu` (search the file for the function names; line numbers drift).
-- `src/FtPanel.tsx` — UI and footer disclaimer.
-- `tests/ftCapex.test.ts` — Guanaco-65B anchor; MoE active-vs-total split;
-  cluster-overhead boundaries; experiments-multiplier semantics.
+- `src/ft/types.ts` — ModelSpec (single source of truth), FtTraining, FtStage,
+  FtCostBreakdown.
+- `src/ft/methods.ts` — FT_METHODS multipliers, BASELINE_MFU,
+  FLOPS_PER_TOKEN_PER_PARAM, with citation JSDoc.
+- `src/ft/hardware.ts` — ftVramGb, pickClusterOverhead, pickFtGpu.
+- `src/ft/cost.ts` — computeFtCost (pipeline that records every stage in
+  FtCostBreakdown.stages for debugging).
+- `src/ft/index.ts` — public re-exports plus back-compat computeFtCapex adapter
+  (so FtPanel.tsx didn't have to change).
+- `tests/ftCapex.test.ts` — Guanaco-65B anchor, MoE active-vs-total,
+  cluster-overhead boundaries, experiments-multiplier semantics.
 
 Public references (only those actively used above):
 

@@ -7,12 +7,14 @@ import {
   TIER_RANK,
   type QualityTier,
 } from "./qualityTiers";
-import {
-  FT_METHODS,
-  FLOPS_PER_TOKEN_PER_PARAM,
-  BASELINE_MFU,
-  type FtMethod,
-} from "./ftMethods";
+export {
+  computeFtCapex,
+  ftVramGb,
+  pickClusterOverhead,
+  pickFtGpu,
+  type FtInputs,
+  type FtCapexResult,
+} from "./ft";
 
 // =============================================================================
 // TYPES
@@ -309,46 +311,6 @@ export function breakEvenWeeks(
   return weeks;
 }
 
-export interface FtInputs {
-  num_examples: number;
-  tokens_per_example: number;
-  method: FtMethod;
-  epochs: number;
-  prep_cost_usd: number;
-  /**
-   * Experiments/failures multiplier — production FT campaigns require
-   * multiple runs (HP sweeps, early-stopped failures, ablations).
-   * 1.0 = single successful run (theoretical floor). 2-3 = realistic
-   * range for production work. Default: 2.5.
-   */
-  experiments_multiplier: number;
-  /**
-   * Cluster overhead multiplier — accounts for inter-GPU and inter-node
-   * communication cost (gradient sync, sharded backward). When omitted
-   * (undefined), the engine auto-picks based on whether the FT workload
-   * fits in a single H100 (1.0×), multi-GPU NVLink node (1.3×), or
-   * needs multi-node (1.6×). Pass a number to override.
-   */
-  cluster_overhead?: number;
-}
-
-export interface FtCapexResult {
-  gpu_hours: number;
-  gpu_cost_usd: number;
-  total_capex_usd: number;
-  method: FtMethod;
-  /** GPU cost for a single successful run, before the experiments multiplier. */
-  single_run_gpu_cost_usd: number;
-  /** Effective multiplier applied (after clamping to >= 1.0). */
-  experiments_multiplier: number;
-  /** Effective cluster-overhead multiplier (auto-picked or user override). */
-  cluster_overhead: number;
-  /** Topology label the cluster_overhead corresponds to. */
-  cluster_topology: "single-gpu" | "multi-gpu" | "multi-node";
-  /** Rough VRAM footprint of the FT workload, GB (used for topology pick). */
-  ft_vram_gb: number;
-}
-
 export interface CumulativePoint {
   month: number;
   api_cumulative: number;
@@ -359,153 +321,6 @@ export interface CumulativeProjection {
   points: CumulativePoint[];
   crossover_month: number | null;
   horizon_months: number;
-}
-
-/**
- * Rough VRAM needed to *fine-tune* a model of `params_b` billion params with
- * the given method. Much larger than inference VRAM because of activations,
- * gradients, and optimizer state.
- *
- * Bytes-per-param calibrated against published 70B numbers
- * (TildAlice / channel.tel):
- *   - full FT  (BF16 weights 2 + grads 2 + FP32 Adam m+v 8 + acts 2)  ≈ 14 B/p
- *   - LoRA     (BF16 frozen weights + small adapter state + acts)     ≈ 1.0 B/p
- *   - QLoRA    (4-bit frozen weights + tiny adapter state + acts)     ≈ 0.5 B/p
- *
- * Yields: 70B QLoRA ≈ 43 GB ✓; 70B LoRA ≈ 78 GB ✓; 70B full ≈ 988 GB ✓.
- */
-export function ftVramGb(params_b: number, method: FtMethod): number {
-  const bpp = method === "full" ? 14 : method === "lora" ? 1.0 : 0.5;
-  return Math.max(0, params_b) * bpp + 8; // +8 GB constant overhead
-}
-
-/**
- * Pick a cluster-overhead multiplier from the FT VRAM footprint, sized to the
- * actual training GPU's per-unit VRAM and node size.
- *   ft_vram ≤ single_gpu_vram                      → 1.0× (single GPU)
- *   ft_vram ≤ single_gpu_vram × gpus_per_node      → 1.3× (intra-node NVLink)
- *   ft_vram > that                                 → 1.6× (multi-node IB)
- *
- * Defaults to 80 GB / 8 GPUs per node — sane for H100/H200/B200 SXM — but
- * the actual numbers come from the GpuRow so a future MI300X (192 GB) or
- * GB200 NVL36 (36 GPUs/node) just works.
- */
-export function pickClusterOverhead(
-  ft_vram_gb: number,
-  single_gpu_vram_gb = 80,
-  gpus_per_node = 8
-): { multiplier: number; topology: "single-gpu" | "multi-gpu" | "multi-node" } {
-  const node_vram = single_gpu_vram_gb * gpus_per_node;
-  if (ft_vram_gb <= single_gpu_vram_gb)
-    return { multiplier: 1.0, topology: "single-gpu" };
-  if (ft_vram_gb <= node_vram)
-    return { multiplier: 1.3, topology: "multi-gpu" };
-  return { multiplier: 1.6, topology: "multi-node" };
-}
-
-/**
- * Pick the best GPU row for fine-tuning from the pricing config: any row with
- * `bf16_tflops > 0` is eligible. Among eligible rows, pick the one with the
- * **best $/TFLOP-hr** — i.e. the most compute per dollar — using the cheapest
- * of the three vendor rates as the price. That's the right metric for FT
- * because total cost = FLOPs / (TFLOPs × MFU) × $/hr, and FLOPs is fixed by
- * the workload; minimizing $/TFLOP minimizes total cost.
- *
- * (Multi-GPU rows like "8xH100 640GB" tend to lose this contest because their
- * $/hr scales linearly with GPU count while TFLOPs stays per-unit in this
- * field's interpretation — keep `bf16_tflops` per-single-GPU and the math
- * works out. Cluster comms overhead is modeled separately.)
- */
-export function pickFtGpu(pricing: Pricing): GpuRow | null {
-  const eligible = pricing.gpus.filter(
-    (g) => typeof g.bf16_tflops === "number" && g.bf16_tflops > 0
-  );
-  if (eligible.length === 0) return null;
-  const score = (g: GpuRow) => {
-    const rate = Math.min(g.modal_per_hr, g.lambda_per_hr, g.runpod_per_hr);
-    return rate / (g.bf16_tflops ?? 1); // $/TFLOP-hr — lower is better
-  };
-  return eligible.reduce((best, g) => (score(g) < score(best) ? g : best));
-}
-
-/**
- * Compute fine-tuning capex.
- *
- * `params_b` is the **active** parameters per token in billions — the number
- * that drives FLOPs. For dense models that's just the model size; for MoE
- * it's the experts-fired-per-token figure (Mixtral 8x7B → 12, not 47).
- *
- * `total_params_b` (optional) is the **total** parameter count, used only
- * for VRAM footprint and cluster-overhead auto-pick. All weights load into
- * memory regardless of which fire per token. Defaults to `params_b` (correct
- * for dense models).
- */
-export function computeFtCapex(
-  params_b: number,
-  inputs: FtInputs,
-  total_params_b?: number
-): FtCapexResult {
-  const num = clampNonNeg(inputs.num_examples);
-  const tok = clampNonNeg(inputs.tokens_per_example);
-  const epochs = clampNonNeg(inputs.epochs);
-  const prep = clampNonNeg(inputs.prep_cost_usd);
-  const params = clampNonNeg(params_b) * 1e9;
-  const total_tokens = num * tok * epochs;
-  const spec = FT_METHODS[inputs.method];
-  const full_flops = FLOPS_PER_TOKEN_PER_PARAM * params * total_tokens;
-  const method_flops = full_flops * spec.computeMultiplier;
-  // Pick the training GPU from the pricing config (tagged with bf16_tflops).
-  // Fall back to a generic 989-TFLOPS / $4-hr H100 placeholder if the config
-  // has no tagged GPU — keeps the engine working with stale pricing files.
-  const ftGpu = pickFtGpu(PRICING);
-  const peak_tflops = ftGpu?.bf16_tflops ?? 989;
-  const cheapestRate = ftGpu
-    ? Math.min(ftGpu.modal_per_hr, ftGpu.lambda_per_hr, ftGpu.runpod_per_hr)
-    : 4.0;
-  // Effective throughput = peak BF16 × baseline 30% MFU × per-method MFU
-  // penalty. QLoRA's mfuPenalty captures the dequantization tax.
-  const effective_flops_per_sec =
-    peak_tflops * 1e12 * BASELINE_MFU * spec.mfuPenalty;
-  const seconds = method_flops / effective_flops_per_sec;
-  const single_gpu_hours = seconds / 3600;
-  // Cluster overhead: user override wins; otherwise auto-pick from FT VRAM.
-  // VRAM scales with TOTAL params (all weights load even for MoE), so use
-  // total_params_b here; falls back to params_b for dense models.
-  const ft_vram_gb = ftVramGb(total_params_b ?? params_b, inputs.method);
-  const auto = pickClusterOverhead(
-    ft_vram_gb,
-    ftGpu?.single_gpu_vram_gb ?? ftGpu?.vram_gb ?? 80,
-    ftGpu?.gpus_per_node ?? 8
-  );
-  const cluster_overhead = clampNonNeg(
-    inputs.cluster_overhead ?? auto.multiplier,
-    auto.multiplier
-  );
-  // Topology label should track the effective overhead, not the auto-pick,
-  // so a user forcing 1.6x on a tiny model sees "multi-node" not "single-gpu".
-  const cluster_topology: "single-gpu" | "multi-gpu" | "multi-node" =
-    cluster_overhead <= 1.0 ? "single-gpu" : cluster_overhead <= 1.3 ? "multi-gpu" : "multi-node";
-  const hours = single_gpu_hours * cluster_overhead;
-  const single_run_gpu_cost = hours * cheapestRate;
-  // Experiments multiplier: clamp UP to 1.0 (values below 1 are non-physical;
-  // there's no such thing as "less than one run"). Applies to gpu_hours AND
-  // gpu_cost (both scale linearly with number of runs), but NOT to prep_cost
-  // (data prep / engineering is one-time across the whole campaign).
-  const raw_xm = clampNonNeg(inputs.experiments_multiplier, 1);
-  const xm = raw_xm < 1 ? 1 : raw_xm;
-  const gpu_hours_total = hours * xm;
-  const gpu_cost_total = single_run_gpu_cost * xm;
-  return {
-    gpu_hours: gpu_hours_total,
-    gpu_cost_usd: gpu_cost_total,
-    total_capex_usd: gpu_cost_total + prep,
-    method: inputs.method,
-    single_run_gpu_cost_usd: single_run_gpu_cost,
-    experiments_multiplier: xm,
-    cluster_overhead,
-    cluster_topology,
-    ft_vram_gb,
-  };
 }
 
 export function cumulativeProjection(

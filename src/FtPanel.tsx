@@ -11,14 +11,13 @@ import {
   ReferenceLine,
 } from "recharts";
 import {
-  computeFtCapex,
   cumulativeProjection,
   costForView,
   costViewSuffix,
   type CostView,
 } from "./engine";
 import { buildPaybackSentence, queriesToAmortize } from "./ftPayback";
-import { FT_METHODS, type FtMethod } from "./ftMethods";
+import { computeFtCapex, FT_METHODS, type FtMethod } from "./ft";
 
 const fmt = (n: number, d = 2) =>
   n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });

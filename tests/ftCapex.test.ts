@@ -2,10 +2,12 @@ import { describe, it, expect } from "vitest";
 
 import {
   computeFtCapex,
-  cumulativeProjection,
   ftVramGb,
   pickClusterOverhead,
   pickFtGpu,
+} from "../src/ft";
+import {
+  cumulativeProjection,
   WEEKS_PER_MONTH,
   type Pricing,
 } from "../src/engine";

@@ -1,4 +1,4 @@
-export type FtMethod = "lora" | "qlora" | "full";
+import type { FtMethod } from "./types";
 
 export interface FtMethodSpec {
   id: FtMethod;
@@ -70,10 +70,3 @@ export const FLOPS_PER_TOKEN_PER_PARAM = 6;
  * dequant tax).
  */
 export const BASELINE_MFU = 0.3;
-
-/**
- * @deprecated Hard-coded H100 throughput. The FT engine now reads peak
- * TFLOPS per-GPU from pricing.json and applies BASELINE_MFU at compute time.
- * Kept exported only for any external import.
- */
-export const H100_FP16_FLOPS_PER_SEC = 989e12 * BASELINE_MFU;

@@ -341,6 +341,7 @@ function TierCard({
         {ftOpen && (
           <FtPanel
             params_b={tier.params_b}
+            active_params_b={tier.active_params_b ?? tier.params_b}
             apiWeeklyCost={apiCost}
             selfhostWeeklyCost={weekly}
             queriesPerWeek={queriesPerWeek}

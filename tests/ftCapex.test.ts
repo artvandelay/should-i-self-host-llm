@@ -108,6 +108,41 @@ describe("experiments_multiplier", () => {
   });
 });
 
+describe("MoE: compute uses active params, VRAM uses total", () => {
+  it("Llama-4-Scout-class (109B total / 17B active) costs like 17B for raw compute", () => {
+    const moe = computeFtCapex(17, baseInputs, 109);   // 17 active, 109 total
+    const dense17 = computeFtCapex(17, baseInputs);     // dense 17B
+    // Raw single-GPU FLOPs (gpu_hours stripped of cluster overhead) must
+    // match dense-17B exactly — active_params drives compute. MoE may pay
+    // a higher cluster tax because total is bigger; that's expected.
+    const moe_base = moe.gpu_hours / moe.cluster_overhead / moe.experiments_multiplier;
+    const d17_base = dense17.gpu_hours / dense17.cluster_overhead / dense17.experiments_multiplier;
+    expect(moe_base).toBeCloseTo(d17_base, 4);
+  });
+
+  it("MoE total drives VRAM/cluster overhead, not active", () => {
+    // 397B total → ~207 GB FT VRAM (QLoRA) → multi-gpu (1.3x), even though
+    // active is small. Pass method=qlora for the realistic case.
+    const moe = computeFtCapex(
+      17,
+      { ...baseInputs, method: "qlora" },
+      397
+    );
+    const dense17 = computeFtCapex(17, { ...baseInputs, method: "qlora" });
+    expect(moe.cluster_topology).toBe("multi-gpu");
+    expect(dense17.cluster_topology).toBe("single-gpu");
+    // Same FLOPs but MoE pays the 1.3x comms tax.
+    expect(moe.gpu_cost_usd).toBeCloseTo(dense17.gpu_cost_usd * 1.3, 4);
+  });
+
+  it("omitting total_params_b falls back to dense behavior", () => {
+    const explicit = computeFtCapex(17, baseInputs, 17);
+    const implicit = computeFtCapex(17, baseInputs);
+    expect(explicit.gpu_cost_usd).toBeCloseTo(implicit.gpu_cost_usd, 6);
+    expect(explicit.ft_vram_gb).toBeCloseTo(implicit.ft_vram_gb, 6);
+  });
+});
+
 describe("cluster overhead", () => {
   it("ftVramGb hits the right ballpark for 70B", () => {
     expect(ftVramGb(70, "qlora")).toBeGreaterThan(35); // ≈ 43 GB

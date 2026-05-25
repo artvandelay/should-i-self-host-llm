@@ -26,7 +26,16 @@ const fmtCurrency = (n: number) => `$${fmt(n, 2)}`;
 const fmtInt = (n: number) => Math.round(n).toLocaleString("en-US");
 
 interface FtPanelProps {
+  /** Total parameters in billions — drives VRAM footprint (all weights load even for MoE). */
   params_b: number;
+  /**
+   * Active parameters per token in billions. For dense models pass the same
+   * value as `params_b`. For MoE pass only the experts that fire (e.g.
+   * Mixtral 8x7B: 47 total / 12 active; Llama-4-Scout: 109 / 17).
+   * Compute (FLOPs) scales with active params, not total — this is the
+   * whole point of MoE.
+   */
+  active_params_b: number;
   apiWeeklyCost: number;
   selfhostWeeklyCost: number;
   queriesPerWeek: number;
@@ -35,6 +44,7 @@ interface FtPanelProps {
 
 export function FtPanel({
   params_b,
+  active_params_b,
   apiWeeklyCost,
   selfhostWeeklyCost,
   queriesPerWeek,
@@ -73,9 +83,11 @@ export function FtPanel({
     ]
   );
 
+  // FLOPs scale with ACTIVE params (work per token). VRAM/cluster math uses
+  // TOTAL via the third arg. For dense models these are equal so no-op.
   const capex = useMemo(
-    () => computeFtCapex(params_b, ftInputs),
-    [params_b, ftInputs]
+    () => computeFtCapex(active_params_b, ftInputs, params_b),
+    [active_params_b, params_b, ftInputs]
   );
 
   const projection = useMemo(
@@ -352,6 +364,14 @@ export function FtPanel({
       </div>
 
       <p className="text-[10px] text-slate-400 leading-relaxed">
+        {active_params_b < params_b && (
+          <>
+            <strong>MoE:</strong> FLOPs computed against {active_params_b}B active
+            params per token (not the {params_b}B total). VRAM and cluster
+            sizing still use the {params_b}B total since all experts load into
+            memory.{" "}
+          </>
+        )}
         Anchored to the QLoRA paper's Guanaco-65B 24-hour benchmark. Cost is
         for the full campaign (multiplier above); 1-run cost shown in the
         breakdown. Quality impact of fine-tuning is not modeled — check Arena

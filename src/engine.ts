@@ -404,7 +404,23 @@ export function pickFtGpu(pricing: Pricing): GpuRow | null {
   return eligible.reduce((best, g) => (score(g) < score(best) ? g : best));
 }
 
-export function computeFtCapex(params_b: number, inputs: FtInputs): FtCapexResult {
+/**
+ * Compute fine-tuning capex.
+ *
+ * `params_b` is the **active** parameters per token in billions — the number
+ * that drives FLOPs. For dense models that's just the model size; for MoE
+ * it's the experts-fired-per-token figure (Mixtral 8x7B → 12, not 47).
+ *
+ * `total_params_b` (optional) is the **total** parameter count, used only
+ * for VRAM footprint and cluster-overhead auto-pick. All weights load into
+ * memory regardless of which fire per token. Defaults to `params_b` (correct
+ * for dense models).
+ */
+export function computeFtCapex(
+  params_b: number,
+  inputs: FtInputs,
+  total_params_b?: number
+): FtCapexResult {
   const num = clampNonNeg(inputs.num_examples);
   const tok = clampNonNeg(inputs.tokens_per_example);
   const epochs = clampNonNeg(inputs.epochs);
@@ -429,7 +445,9 @@ export function computeFtCapex(params_b: number, inputs: FtInputs): FtCapexResul
   const seconds = method_flops / effective_flops_per_sec;
   const single_gpu_hours = seconds / 3600;
   // Cluster overhead: user override wins; otherwise auto-pick from FT VRAM.
-  const ft_vram_gb = ftVramGb(params_b, inputs.method);
+  // VRAM scales with TOTAL params (all weights load even for MoE), so use
+  // total_params_b here; falls back to params_b for dense models.
+  const ft_vram_gb = ftVramGb(total_params_b ?? params_b, inputs.method);
   const auto = pickClusterOverhead(
     ft_vram_gb,
     ftGpu?.single_gpu_vram_gb ?? ftGpu?.vram_gb ?? 80,

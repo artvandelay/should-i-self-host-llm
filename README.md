@@ -89,6 +89,16 @@ Name: `FIRECRAWL_API_KEY`. The app works without it (GPU prices stay at their la
 └── README.md
 ```
 
+## Credits
+
+- **[models.dev](https://models.dev)** — the open, community-maintained database of LLM specs and pricing that powers this calculator's API rates and open-weight catalog. Huge thanks to the maintainers; without their work this tool would be a stale spreadsheet.
+- **[Firecrawl](https://firecrawl.dev)** — used to refresh GPU hourly rates from cloud provider pricing pages.
+- **[Hugging Face](https://huggingface.co)** — fallback for resolving model parameter counts.
+
+## Maintainer
+
+Jigar Doshi — [GitHub](https://github.com/artvandelay) · [Twitter/X @jigarkdoshi](https://twitter.com/jigarkdoshi)
+
 ## License
 
 MIT

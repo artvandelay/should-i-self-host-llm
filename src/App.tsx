@@ -31,6 +31,7 @@ import { useLiveData } from "./useLiveData";
 import type { ClosedApi, KnownModel } from "./modelsDev";
 import { ApiCombobox } from "./ApiCombobox";
 import { CostSizeChart } from "./CostSizeChart";
+import { FtPanel } from "./FtPanel";
 import { Presets, type PresetValues } from "./Presets";
 import { ExportMenu } from "./ExportMenu";
 import { TIER_LABEL, QUALITY_TIERS_SOURCE_URL } from "./qualityTiers";
@@ -204,6 +205,7 @@ function TierCard({
   apiLabel?: string;
 }) {
   const weekly = tier.weekly_cost_with_ft ?? tier.weekly_cost;
+  const [ftOpen, setFtOpen] = useState(false);
   const savings = apiCost - weekly;
   const savings_pct = apiCost > 0 ? (savings / apiCost) * 100 : 0;
   const viewedCost = costForView(weekly, view);
@@ -319,6 +321,23 @@ function TierCard({
           </span>
         </div>
       )}
+
+      <div className="mt-3 border-t border-slate-200 pt-2">
+        <button
+          onClick={() => setFtOpen((v) => !v)}
+          className="text-xs font-medium text-indigo-700 hover:text-indigo-900 inline-flex items-center gap-1"
+        >
+          {ftOpen ? "− Hide" : "+ Estimate"} fine-tuning cost
+        </button>
+        {ftOpen && (
+          <FtPanel
+            params_b={tier.params_b}
+            apiWeeklyCost={apiCost}
+            selfhostWeeklyCost={weekly}
+            view={view}
+          />
+        )}
+      </div>
     </div>
   );
 }

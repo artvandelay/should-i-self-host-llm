@@ -498,10 +498,13 @@ export default function App() {
       !(showCheapestSeparately && cheapest && t.params_b === cheapest.params_b && t.arch === cheapest.arch)
   );
 
+  const [copied, setCopied] = useState(false);
   const copyShareLink = async () => {
     if (typeof window === "undefined") return;
     try {
       await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
     } catch {
       // ignore -- older browsers
     }
@@ -566,10 +569,22 @@ export default function App() {
             )}
             <button
               onClick={copyShareLink}
-              className="text-sm flex items-center gap-1.5 px-3 py-2 border border-slate-300 rounded-md hover:bg-white text-slate-700"
+              className={`text-sm flex items-center gap-1.5 px-3 py-2 border rounded-md transition-colors ${
+                copied
+                  ? "border-emerald-300 bg-emerald-50 text-emerald-700"
+                  : "border-slate-300 hover:bg-white text-slate-700"
+              }`}
               title="Copy a link with all your inputs encoded"
             >
-              <LinkIcon className="w-4 h-4" /> Copy share link
+              {copied ? (
+                <>
+                  <Check className="w-4 h-4" /> Copied!
+                </>
+              ) : (
+                <>
+                  <LinkIcon className="w-4 h-4" /> Copy share link
+                </>
+              )}
             </button>
           </div>
         </header>

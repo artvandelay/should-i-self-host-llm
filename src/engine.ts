@@ -174,11 +174,26 @@ export function scaledOverhead(active_params_b: number): number {
   return 24;
 }
 
-// Conservative throughput estimate: H100-class hardware does ~120 tok/s
-// per 8B active params on an 80GB unit; scales linearly with GPU count.
-export function throughputTokensPerSec(active_params_b: number, vram_gb: number): number {
-  const gpu_units = Math.max(1, vram_gb / 80);
-  const base_per_unit = 960 / Math.max(active_params_b, 1);
+/**
+ * Conservative inference throughput estimate. Calibrated against
+ * H100-class hardware (~120 tok/s per 8B active params on an 80 GB unit,
+ * which corresponds to ~989 TFLOPS BF16 peak). When a `bf16_tflops` value
+ * is provided we scale that anchor linearly with the GPU's actual peak
+ * compute, so a future B200 (~2250 TFLOPS) or MI300X (~1307 TFLOPS) gets
+ * a higher per-unit throughput automatically. Cross-GPU scaling stays
+ * linear in raw VRAM ÷ single-unit VRAM — same heuristic as before.
+ *
+ * For MoE: pass `active_params_b`, not total.
+ */
+export function throughputTokensPerSec(
+  active_params_b: number,
+  vram_gb: number,
+  bf16_tflops?: number,
+  single_gpu_vram_gb = 80
+): number {
+  const gpu_units = Math.max(1, vram_gb / single_gpu_vram_gb);
+  const tflops_scale = bf16_tflops ? bf16_tflops / 989 : 1;
+  const base_per_unit = (960 * tflops_scale) / Math.max(active_params_b, 1);
   return base_per_unit * gpu_units;
 }
 
@@ -468,7 +483,12 @@ export function evaluateConfig(args: EvalArgs): ConfigResult | null {
 
   const price_per_hr = gpu[`${vendor}_per_hr`];
   const shape = trafficShape(pattern);
-  const tps = throughputTokensPerSec(active_params_b, gpu.vram_gb);
+  const tps = throughputTokensPerSec(
+    active_params_b,
+    gpu.vram_gb,
+    gpu.bf16_tflops,
+    gpu.single_gpu_vram_gb ?? gpu.vram_gb
+  );
 
   const queries_per_hour = shape.map((f) => f * queries_per_week);
   const peak_qph = Math.max(...queries_per_hour);

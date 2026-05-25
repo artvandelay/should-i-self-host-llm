@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Rounded chip background -->
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="#4f46e5"/>
+  <!-- Balance/scale beam -->
+  <line x1="14" y1="22" x2="50" y2="22" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+  <!-- Center pivot down to base -->
+  <line x1="32" y1="22" x2="32" y2="46" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+  <!-- Base -->
+  <line x1="22" y1="48" x2="42" y2="48" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+  <!-- Left pan: dollar (API cost, heavier visual weight) -->
+  <circle cx="18" cy="32" r="7" fill="#fff"/>
+  <text x="18" y="36" font-family="ui-sans-serif, system-ui, -apple-system" font-size="10" font-weight="700" fill="#4f46e5" text-anchor="middle">$</text>
+  <!-- Right pan: chip (self-host) -->
+  <rect x="40" y="27" width="10" height="10" rx="2" fill="#fff"/>
+  <rect x="42.5" y="29.5" width="5" height="5" rx="0.5" fill="#4f46e5"/>
+</svg>

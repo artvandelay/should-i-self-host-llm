@@ -27,6 +27,8 @@ import { useLiveData } from "./useLiveData";
 import type { ClosedApi, KnownModel } from "./modelsDev";
 import { ApiCombobox } from "./ApiCombobox";
 import { CostSizeChart } from "./CostSizeChart";
+// @ts-expect-error - Vite handles SVG imports as asset URLs at build time
+import logoUrl from "./logo.svg";
 
 // =============================================================================
 // FORMATTING
@@ -541,14 +543,23 @@ export default function App() {
         )}
 
         <header className="mb-6 flex items-start justify-between gap-4 flex-wrap">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">
-              API vs Self-Host LLM Cost Calculator
-            </h1>
-            <p className="text-slate-600 mt-1 max-w-3xl">
-              Given your traffic and the API price you'd pay, find the largest open-weight model
-              you can self-host for the same cost or less.
-            </p>
+          <div className="flex items-start gap-3">
+            <img
+              src={logoUrl}
+              alt="Should I self-host my LLM logo"
+              className="w-12 h-12 flex-shrink-0 mt-0.5"
+              width="48"
+              height="48"
+            />
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900">
+                API vs Self-Host LLM Cost Calculator
+              </h1>
+              <p className="text-slate-600 mt-1 max-w-3xl">
+                Given your traffic and the API price you'd pay, find the largest open-weight model
+                you can self-host for the same cost or less.
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             {status.apis === "loading" ? (
@@ -771,6 +782,35 @@ export default function App() {
             Bundled prices last updated: <span className="font-mono">{PRICING.last_updated}</span>{" · "}
             <code className="px-1 py-0.5 bg-slate-200 rounded">src/pricing.json</code>
             {" (auto-refreshed nightly by GitHub Action)"}
+          </div>
+          <div className="pt-2 flex items-center justify-center gap-3 text-slate-500">
+            <span>Maintained by Jigar Doshi</span>
+            <span className="text-slate-300">·</span>
+            <a
+              href="https://github.com/artvandelay/should-i-self-host-llm"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-indigo-600 inline-flex items-center gap-1"
+              aria-label="GitHub repository"
+            >
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.92.58.11.79-.25.79-.55 0-.27-.01-1.17-.02-2.12-3.2.69-3.87-1.36-3.87-1.36-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.24 3.34.95.1-.74.4-1.24.72-1.53-2.55-.29-5.24-1.27-5.24-5.66 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.45.11-3.03 0 0 .96-.31 3.15 1.17a10.9 10.9 0 0 1 5.74 0c2.18-1.48 3.14-1.17 3.14-1.17.62 1.58.23 2.74.11 3.03.74.8 1.18 1.82 1.18 3.07 0 4.4-2.69 5.36-5.25 5.65.41.36.78 1.07.78 2.16 0 1.56-.02 2.81-.02 3.19 0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5Z"/>
+              </svg>
+              GitHub
+            </a>
+            <span className="text-slate-300">·</span>
+            <a
+              href="https://twitter.com/jigarkdoshi"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-indigo-600 inline-flex items-center gap-1"
+              aria-label="Twitter / X profile"
+            >
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644Z"/>
+              </svg>
+              @jigarkdoshi
+            </a>
           </div>
         </footer>
       </div>

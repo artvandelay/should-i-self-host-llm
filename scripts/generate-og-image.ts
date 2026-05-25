@@ -1,0 +1,122 @@
+/**
+ * Generates public/og-image.png (1200x630) from an inline SVG.
+ * Uses sharp if installed; otherwise writes public/og-image.svg only and exits non-zero.
+ *
+ *   npx tsx scripts/generate-og-image.ts
+ */
+import { writeFileSync, mkdirSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const PUBLIC_DIR = join(__dirname, "..", "public");
+
+// Static "API line + scattered open-weight dots" illustration.
+// Coordinates are hand-picked to look like a log-log cost-vs-size scatter
+// where the red dashed line is the API budget and indigo dots are self-host configs.
+const DOTS: { x: number; y: number; r: number }[] = [
+  { x: 760, y: 470, r: 8 },
+  { x: 820, y: 445, r: 9 },
+  { x: 880, y: 420, r: 10 },
+  { x: 935, y: 395, r: 11 },
+  { x: 985, y: 372, r: 12 },
+  { x: 1030, y: 352, r: 13 },
+  { x: 1070, y: 335, r: 14 },
+  { x: 1100, y: 320, r: 15 },
+  { x: 800, y: 410, r: 7 },
+  { x: 870, y: 380, r: 8 },
+  { x: 950, y: 340, r: 9 },
+];
+
+const svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <linearGradient id="chip" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#4338ca"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Logo chip -->
+  <g transform="translate(64, 64)">
+    <rect x="0" y="0" width="112" height="112" rx="26" fill="url(#chip)"/>
+    <line x1="20" y1="36" x2="92" y2="36" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+    <line x1="56" y1="36" x2="56" y2="84" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+    <line x1="36" y1="88" x2="76" y2="88" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="28" cy="56" r="13" fill="#fff"/>
+    <text x="28" y="62" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18" font-weight="700" fill="#4338ca" text-anchor="middle">$</text>
+    <rect x="72" y="48" width="18" height="18" rx="3" fill="#fff"/>
+    <rect x="76" y="52" width="10" height="10" rx="1" fill="#4338ca"/>
+  </g>
+
+  <!-- Title + tagline -->
+  <text x="64" y="260" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="68" font-weight="800" fill="#0f172a">Should I self-host</text>
+  <text x="64" y="338" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="68" font-weight="800" fill="#4338ca">my LLM?</text>
+
+  <text x="64" y="408" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="28" font-weight="500" fill="#334155">
+    Find the largest open-weight model you can self-host
+  </text>
+  <text x="64" y="446" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="28" font-weight="500" fill="#334155">
+    for the cost of your API bill.
+  </text>
+
+  <text x="64" y="556" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="22" font-weight="600" fill="#64748b">
+    GPT-5 · Claude · Gemini  vs  Llama · Qwen · Mistral
+  </text>
+
+  <!-- Chart panel -->
+  <g transform="translate(720, 110)">
+    <rect x="0" y="0" width="420" height="420" rx="20" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+
+    <!-- axes -->
+    <line x1="40" y1="370" x2="395" y2="370" stroke="#94a3b8" stroke-width="2"/>
+    <line x1="40" y1="30" x2="40" y2="370" stroke="#94a3b8" stroke-width="2"/>
+
+    <!-- axis labels -->
+    <text x="217" y="402" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" fill="#64748b" text-anchor="middle">Model size (B params, log)</text>
+    <text x="20" y="200" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" fill="#64748b" text-anchor="middle" transform="rotate(-90 20 200)">Weekly cost (log)</text>
+
+    <!-- API budget dashed line -->
+    <line x1="40" y1="180" x2="395" y2="180" stroke="#dc2626" stroke-width="3" stroke-dasharray="10 6"/>
+    <text x="385" y="170" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="700" fill="#dc2626" text-anchor="end">API budget</text>
+
+    <!-- self-host dots (relative to panel; subtract 720/110 from DOTS coords) -->
+    ${DOTS.map((d) => {
+      const cx = d.x - 720;
+      const cy = d.y - 110;
+      return `<circle cx="${cx}" cy="${cy}" r="${d.r}" fill="#6366f1" fill-opacity="0.85" stroke="#4338ca" stroke-width="2"/>`;
+    }).join("\n    ")}
+
+    <!-- Largest-that-fits highlight -->
+    <circle cx="${1070 - 720}" cy="${335 - 110}" r="18" fill="none" stroke="#10b981" stroke-width="4"/>
+  </g>
+</svg>`;
+
+mkdirSync(PUBLIC_DIR, { recursive: true });
+const svgPath = join(PUBLIC_DIR, "og-image.svg");
+writeFileSync(svgPath, svg);
+console.log(`Wrote ${svgPath}`);
+
+async function renderPng() {
+  try {
+    const sharp = (await import("sharp")).default;
+    const pngPath = join(PUBLIC_DIR, "og-image.png");
+    await sharp(Buffer.from(svg)).png().toFile(pngPath);
+    console.log(`Wrote ${pngPath}`);
+    return true;
+  } catch (e) {
+    console.warn("sharp not available — install with `npm i -D sharp` to generate PNG.");
+    console.warn(String(e));
+    return false;
+  }
+}
+
+renderPng().then((ok) => {
+  if (!ok) process.exitCode = 1;
+});

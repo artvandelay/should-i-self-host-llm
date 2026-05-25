@@ -457,6 +457,10 @@ export function computeFtCapex(
     inputs.cluster_overhead ?? auto.multiplier,
     auto.multiplier
   );
+  // Topology label should track the effective overhead, not the auto-pick,
+  // so a user forcing 1.6x on a tiny model sees "multi-node" not "single-gpu".
+  const cluster_topology: "single-gpu" | "multi-gpu" | "multi-node" =
+    cluster_overhead <= 1.0 ? "single-gpu" : cluster_overhead <= 1.3 ? "multi-gpu" : "multi-node";
   const hours = single_gpu_hours * cluster_overhead;
   const single_run_gpu_cost = hours * cheapestRate;
   // Experiments multiplier: clamp UP to 1.0 (values below 1 are non-physical;
@@ -475,7 +479,7 @@ export function computeFtCapex(
     single_run_gpu_cost_usd: single_run_gpu_cost,
     experiments_multiplier: xm,
     cluster_overhead,
-    cluster_topology: auto.topology,
+    cluster_topology,
     ft_vram_gb,
   };
 }

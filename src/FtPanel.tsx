@@ -131,8 +131,13 @@ export function FtPanel({
       : "border-amber-200 bg-amber-50/70 text-amber-900";
 
   const weeklySavings = apiWeeklyCost - selfhostWeeklyCost;
-  const monthlySavings = costForView(weeklySavings, "monthly");
+  // Follow the global cost view so label, value and suffix agree. Previously
+  // the value was always monthly but the suffix tracked `view`, so Weekly
+  // showed "$X/wk" labeled "Monthly savings" — wrong number and wrong unit.
+  const viewSavings = costForView(weeklySavings, view);
   const suffix = costViewSuffix(view);
+  const savingsLabel =
+    view === "monthly" ? "Monthly savings" : view === "annual" ? "Annual savings" : "Weekly savings";
 
   const inputClass =
     "w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400";
@@ -286,10 +291,10 @@ export function FtPanel({
         </div>
         <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2">
           <div className="text-[10px] uppercase tracking-wide text-slate-500">
-            Monthly savings
+            {savingsLabel}
           </div>
           <div className="text-sm font-semibold text-emerald-700">
-            {fmtCurrency(monthlySavings)}
+            {fmtCurrency(viewSavings)}
             {suffix}
           </div>
         </div>

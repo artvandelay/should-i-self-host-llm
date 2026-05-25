@@ -452,9 +452,6 @@ export default function App() {
     if (typeof window !== "undefined") localStorage.setItem("cost_view", v);
   };
   const [setup_cost, setSetupCost] = useState<number>(5000);
-  const [openFtCount, setOpenFtCount] = useState(0);
-  const handleFtToggle = (open: boolean) =>
-    setOpenFtCount((c) => Math.max(0, c + (open ? 1 : -1)));
   const [dismissedBannerFp, setDismissedBannerFp] = useState<string | null>(
     () => (typeof window !== "undefined" ? localStorage.getItem("dismissed_banner_fp") : null)
   );
@@ -887,7 +884,6 @@ export default function App() {
                     badge={{ label: "Largest that fits", color: "green" }}
                     view={cost_view}
                     queriesPerWeek={queries_per_week}
-                    onFtToggle={handleFtToggle}
                   />
                 )}
                 {showComparable && comparable && (
@@ -899,7 +895,6 @@ export default function App() {
                     badge={{ label: "Comparable quality", color: "teal" }}
                     view={cost_view}
                     queriesPerWeek={queries_per_week}
-                    onFtToggle={handleFtToggle}
                     qualityNote={
                       <span>
                         <strong>{TIER_LABEL[comparable.modelTier]}</strong> open-weight model — same coarse tier as{" "}
@@ -931,7 +926,6 @@ export default function App() {
                     badge={{ label: g.label, color: "indigo" }}
                     view={cost_view}
                     queriesPerWeek={queries_per_week}
-                    onFtToggle={handleFtToggle}
                   />
                 ))}
                 {(show_all_tiers ? otherTiers : otherTiers.slice(0, 2)).map((tier) => (
@@ -944,7 +938,6 @@ export default function App() {
                     badge={null}
                     view={cost_view}
                     queriesPerWeek={queries_per_week}
-                    onFtToggle={handleFtToggle}
                   />
                 ))}
               </div>
@@ -979,7 +972,7 @@ export default function App() {
               )}
             </div>
 
-            {largest && openFtCount === 0 && (
+            {largest && (
               <div className="mb-3">
                 <Expander title="Break-even analysis (setup cost payback)">
                   {(() => {

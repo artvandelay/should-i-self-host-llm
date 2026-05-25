@@ -867,9 +867,10 @@ export default function App() {
                   </div>
                 </div>
               </div>
-              <p className="text-xs text-slate-500 mb-4 mt-2">
-                Compute only. Engineering time (infra, evals, on-call) not included.
-                Verify GPU rates with your vendor before quoting.
+              <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-3 py-2 mb-4 mt-2">
+                <strong>Note:</strong> Compute only (inference + any fine-tuning you estimate per card).
+                Engineering time — serving infra, evals, monitoring, on-call — is not included. GPU hourly
+                rates are approximate; verify with your vendor before quoting.
               </p>
 
               <CostSizeChart result={result} view={cost_view} />

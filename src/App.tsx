@@ -195,6 +195,8 @@ function TierCard({
   qualityNote,
   apiElo,
   apiLabel,
+  queriesPerWeek,
+  onFtToggle,
 }: {
   tier: ConfigResult;
   apiCost: number;
@@ -203,9 +205,16 @@ function TierCard({
   qualityNote?: React.ReactNode;
   apiElo?: number;
   apiLabel?: string;
+  queriesPerWeek: number;
+  onFtToggle?: (open: boolean) => void;
 }) {
   const weekly = tier.weekly_cost_with_ft ?? tier.weekly_cost;
   const [ftOpen, setFtOpen] = useState(false);
+  const handleFtToggle = () => {
+    const next = !ftOpen;
+    setFtOpen(next);
+    onFtToggle?.(next);
+  };
   const savings = apiCost - weekly;
   const savings_pct = apiCost > 0 ? (savings / apiCost) * 100 : 0;
   const viewedCost = costForView(weekly, view);
@@ -324,7 +333,7 @@ function TierCard({
 
       <div className="mt-3 border-t border-slate-200 pt-2">
         <button
-          onClick={() => setFtOpen((v) => !v)}
+          onClick={handleFtToggle}
           className="text-xs font-medium text-indigo-700 hover:text-indigo-900 inline-flex items-center gap-1"
         >
           {ftOpen ? "− Hide" : "+ Estimate"} fine-tuning cost
@@ -334,6 +343,7 @@ function TierCard({
             params_b={tier.params_b}
             apiWeeklyCost={apiCost}
             selfhostWeeklyCost={weekly}
+            queriesPerWeek={queriesPerWeek}
             view={view}
           />
         )}
@@ -441,6 +451,9 @@ export default function App() {
     if (typeof window !== "undefined") localStorage.setItem("cost_view", v);
   };
   const [setup_cost, setSetupCost] = useState<number>(5000);
+  const [openFtCount, setOpenFtCount] = useState(0);
+  const handleFtToggle = (open: boolean) =>
+    setOpenFtCount((c) => Math.max(0, c + (open ? 1 : -1)));
   const [dismissedBannerFp, setDismissedBannerFp] = useState<string | null>(
     () => (typeof window !== "undefined" ? localStorage.getItem("dismissed_banner_fp") : null)
   );
@@ -874,6 +887,8 @@ export default function App() {
                     apiLabel={apiLabelShort}
                     badge={{ label: "Largest that fits", color: "green" }}
                     view={cost_view}
+                    queriesPerWeek={queries_per_week}
+                    onFtToggle={handleFtToggle}
                   />
                 )}
                 {showComparable && comparable && (
@@ -884,6 +899,8 @@ export default function App() {
                     apiLabel={apiLabelShort}
                     badge={{ label: "Comparable quality", color: "teal" }}
                     view={cost_view}
+                    queriesPerWeek={queries_per_week}
+                    onFtToggle={handleFtToggle}
                     qualityNote={
                       <span>
                         <strong>{TIER_LABEL[comparable.modelTier]}</strong> open-weight model — same coarse tier as{" "}
@@ -914,6 +931,8 @@ export default function App() {
                     apiLabel={apiLabelShort}
                     badge={{ label: g.label, color: "indigo" }}
                     view={cost_view}
+                    queriesPerWeek={queries_per_week}
+                    onFtToggle={handleFtToggle}
                   />
                 ))}
                 {(show_all_tiers ? otherTiers : otherTiers.slice(0, 2)).map((tier) => (
@@ -925,6 +944,8 @@ export default function App() {
                     apiLabel={apiLabelShort}
                     badge={null}
                     view={cost_view}
+                    queriesPerWeek={queries_per_week}
+                    onFtToggle={handleFtToggle}
                   />
                 ))}
               </div>
@@ -959,7 +980,7 @@ export default function App() {
               )}
             </div>
 
-            {largest && (
+            {largest && openFtCount === 0 && (
               <div className="mb-3">
                 <Expander title="Break-even analysis (setup cost payback)">
                   {(() => {

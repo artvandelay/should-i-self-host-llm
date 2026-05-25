@@ -8,6 +8,10 @@ import {
   type ClosedApi,
   type KnownModel,
 } from "./modelsDev";
+import { attachElo, type EloSnapshot } from "./eloMatch";
+import eloJson from "./elo.json";
+
+const BUNDLED_ELO = eloJson as EloSnapshot;
 
 export interface DataStatus {
   apis: "idle" | "loading" | "live" | "cached";
@@ -17,6 +21,11 @@ export interface DataStatus {
   modelsError?: string;
   modelsFetchedAt?: string;
   gpus: string; // e.g. "bundled 3h ago" or "cached"
+  /** LMArena ELO snapshot status. */
+  elo: "bundled" | "live" | "cached";
+  eloLastUpdated?: string;
+  eloError?: string;
+  eloMatched?: { apis: number; models: number };
 }
 
 export interface LiveData {
@@ -36,12 +45,24 @@ export function useLiveData(
   bundledKnownModels: KnownModel[],
   gpuLastUpdated: string
 ): LiveData {
-  const [apis, setApis] = useState<ClosedApi[]>(bundledApis);
-  const [knownModels, setKnownModels] = useState<KnownModel[]>(bundledKnownModels);
+  // Apply bundled ELO snapshot to the bundled lists up-front so the very
+  // first render already has quality scores (even before network resolves).
+  const [apis, setApis] = useState<ClosedApi[]>(() => {
+    const copy = bundledApis.map((a) => ({ ...a }));
+    attachElo(copy, BUNDLED_ELO);
+    return copy;
+  });
+  const [knownModels, setKnownModels] = useState<KnownModel[]>(() => {
+    const copy = bundledKnownModels.map((m) => ({ ...m }));
+    attachElo(copy, BUNDLED_ELO);
+    return copy;
+  });
   const [status, setStatus] = useState<DataStatus>({
     apis: "idle",
     models: "idle",
     gpus: `bundled (${gpuLastUpdated})`,
+    elo: "bundled",
+    eloLastUpdated: BUNDLED_ELO.last_updated,
   });
   const refreshId = useRef(0);
 
@@ -57,6 +78,7 @@ export function useLiveData(
       try {
         const freshApis = extractClosedApis(payload);
         const mergedApis = mergeApiLists(bundledApis, freshApis);
+        attachElo(mergedApis, BUNDLED_ELO);
         if (id === refreshId.current) {
           setApis(mergedApis);
           setStatus((s) => ({
@@ -100,6 +122,7 @@ export function useLiveData(
         }
 
         const mergedModels = mergeKnownModels(freshKnown, bundledKnownModels);
+        attachElo(mergedModels, BUNDLED_ELO);
         if (id === refreshId.current) {
           setKnownModels(mergedModels);
           setStatus((s) => ({

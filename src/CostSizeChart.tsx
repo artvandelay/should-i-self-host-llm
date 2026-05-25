@@ -23,6 +23,7 @@ interface ChartPoint {
   highlight: "largest" | "comparable" | "graded" | null;
   active_params_b: number;
   quality_tier: QualityTier | null;
+  elo?: number;
 }
 
 function toPoint(
@@ -41,15 +42,38 @@ function toPoint(
     highlight,
     active_params_b: c.active_params_b,
     quality_tier: c.quality_tier ?? null,
+    elo: c.elo,
   };
+}
+
+/**
+ * Map ELO to fill colour intensity. Higher ELO -> more saturated.
+ * We pick the per-arch hue then darken with ELO. Models with no ELO
+ * render at the dim end so the chart still shows them but with a
+ * visual hint that the quality signal is missing.
+ */
+function eloFill(arch: "dense" | "moe", elo?: number): { fill: string; stroke: string } {
+  // Anchor: 1300 -> dim, 1500 -> bright. Clamp.
+  const t = elo == null ? 0 : Math.max(0, Math.min(1, (elo - 1300) / 200));
+  if (arch === "dense") {
+    // Indigo scale: #c7d2fe (light) -> #312e81 (dark)
+    const light = [199, 210, 254];
+    const dark = [67, 56, 202]; // indigo-700
+    const fill = light.map((c, i) => Math.round(c + (dark[i] - c) * t));
+    return { fill: `rgb(${fill.join(",")})`, stroke: `rgb(49,46,129)` };
+  }
+  // Sky scale: #bae6fd -> #0c4a6e
+  const light = [186, 230, 253];
+  const dark = [14, 165, 233]; // sky-500
+  const fill = light.map((c, i) => Math.round(c + (dark[i] - c) * t));
+  return { fill: `rgb(${fill.join(",")})`, stroke: `rgb(3,105,161)` };
 }
 
 function CustomDot(props: any) {
   const { cx, cy, payload } = props;
   if (cx == null || cy == null) return null;
   const isDense = payload.arch === "dense";
-  const baseFill = isDense ? "#6366f1" : "#0ea5e9";
-  const baseStroke = isDense ? "#4338ca" : "#0369a1";
+  const { fill: baseFill, stroke: baseStroke } = eloFill(payload.arch, payload.elo);
   const r = 5;
 
   if (payload.highlight === "largest") {
@@ -137,6 +161,11 @@ function CustomTooltip({ active, payload, view }: any) {
       <div className="text-slate-700">${scaled.toFixed(2)}{costViewSuffix(v)}</div>
       <div className="text-emerald-700">saves {p.savings_pct.toFixed(0)}%</div>
       <div className="text-slate-500">{p.gpu}</div>
+      {p.elo != null ? (
+        <div className="text-slate-600 mt-0.5">Arena ELO {p.elo}</div>
+      ) : (
+        <div className="text-slate-400 mt-0.5">No Arena ELO</div>
+      )}
     </div>
   );
 }

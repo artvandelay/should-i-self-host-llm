@@ -192,12 +192,16 @@ function TierCard({
   badge,
   view,
   qualityNote,
+  apiElo,
+  apiLabel,
 }: {
   tier: ConfigResult;
   apiCost: number;
   badge?: { label: string; color: "indigo" | "green" | "teal" } | null;
   view: CostView;
   qualityNote?: React.ReactNode;
+  apiElo?: number;
+  apiLabel?: string;
 }) {
   const weekly = tier.weekly_cost_with_ft ?? tier.weekly_cost;
   const savings = apiCost - weekly;
@@ -233,6 +237,29 @@ function TierCard({
               <span className="text-sm font-normal text-slate-500 ml-1">
                 ({tier.active_params_b}B active)
               </span>
+            )}
+          </div>
+          <div className="mt-0.5 text-xs">
+            {tier.elo != null ? (
+              <span className="text-slate-700">
+                Arena ELO <span className="font-semibold">{tier.elo}</span>
+                {tier.eloRank != null && (
+                  <span className="text-slate-400"> (#{tier.eloRank})</span>
+                )}
+                {apiElo != null && (() => {
+                  const delta = tier.elo! - apiElo;
+                  const cls =
+                    delta >= 0 ? "text-emerald-700" : delta >= -30 ? "text-amber-700" : "text-rose-700";
+                  const sign = delta > 0 ? "+" : "";
+                  return (
+                    <span className={`ml-1 ${cls}`}>
+                      ({sign}{delta} vs {apiLabel ?? "API"})
+                    </span>
+                  );
+                })()}
+              </span>
+            ) : (
+              <span className="text-slate-400">No LMArena score for this size class</span>
             )}
           </div>
         </div>
@@ -405,6 +432,8 @@ export default function App() {
   const [min_params_b, setMinParamsB] = useUrlState<number>("mp", 0);
   const [ft_cost, setFtCost] = useUrlState<number>("ft", 0);
   const [ft_weeks, setFtWeeks] = useUrlState<number>("fw", 52);
+  // Quality floor (LMArena ELO). 0 = off.
+  const [min_elo, setMinElo] = useUrlState<number>("me", 0);
 
   // Live data from models.dev
   const bundledApis: ClosedApi[] = Object.entries(PRICING.apis)
@@ -473,6 +502,7 @@ export default function App() {
         ft_cost,
         ft_weeks,
         knownModels: knownModels as EngineKnownModel[],
+        min_elo,
       }),
     [
       activePricing,
@@ -491,6 +521,7 @@ export default function App() {
       cold_start_sec,
       ft_cost,
       ft_weeks,
+      min_elo,
     ]
   );
 
@@ -521,6 +552,15 @@ export default function App() {
     resolvedApiKey === "custom"
       ? { input_per_1m: api_input_override, output_per_1m: api_output_override }
       : livePricingApis[resolvedApiKey] ?? { input_per_1m: 1, output_per_1m: 3 };
+
+  // Look up the ELO of the currently-selected API by matching against the
+  // live ClosedApi list (which carries elo attached by useLiveData).
+  const selectedApi = liveApis.find(
+    (a) => a.label === livePricingApis[resolvedApiKey]?.label
+  );
+  const apiElo = selectedApi?.elo;
+  const apiLabelShort =
+    selectedApi?.label ?? livePricingApis[resolvedApiKey]?.label ?? "API";
 
   const largest = result.largest;
   const graded = result.gradedTiers;
@@ -726,6 +766,13 @@ export default function App() {
               <NumberInput label="Min model size (B params)" value={min_params_b} onChange={setMinParamsB} step={1} hint="Filter out tiny models even if cheaper. 0 = no floor." />
               <NumberInput label="One-time fine-tuning cost ($)" value={ft_cost} onChange={setFtCost} step={100} hint="Added amortized to weekly cost" />
               <NumberInput label="Amortize over (weeks)" value={ft_weeks} onChange={setFtWeeks} step={1} min={1} hint="How long the fine-tune is in service" />
+              <NumberInput
+                label="Minimum quality (Arena ELO)"
+                value={min_elo}
+                onChange={setMinElo}
+                step={10}
+                hint="0 = off. Drops self-host candidates whose nearest known model is below this LMArena ELO. Models with no ELO are kept."
+              />
             </div>
           </Expander>
         </div>
@@ -781,6 +828,11 @@ export default function App() {
                       {fmtCurrency(costForView(result.api_cost, cost_view))}
                       {costViewSuffix(cost_view)}
                     </span>
+                    {apiElo != null && (
+                      <span className="ml-2 text-slate-500">
+                        · Arena ELO <span className="font-semibold text-slate-700">{apiElo}</span>
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -790,7 +842,8 @@ export default function App() {
                   The chart plots weekly cost vs model size (log-log) for every candidate; the red dashed line
                   is the API price. We highlight the <strong>largest</strong> model that fits (green ring) and
                   up to three <strong>savings-banded</strong> picks — the largest model at each of 80%+, 50%+,
-                  and 20%+ savings (indigo rings) — so you can see the cost/capability trade-off at a glance.
+                  and 20%+ savings (indigo rings). Marker colour intensity encodes <strong>LMArena ELO</strong> (darker = higher
+                  Arena score), so cheap-AND-good models pop visually.
                 </span>
               </p>
               <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-3 py-2 mb-4">
@@ -806,6 +859,8 @@ export default function App() {
                   <TierCard
                     tier={largest}
                     apiCost={result.api_cost}
+                    apiElo={apiElo}
+                    apiLabel={apiLabelShort}
                     badge={{ label: "Largest that fits", color: "green" }}
                     view={cost_view}
                   />
@@ -814,6 +869,8 @@ export default function App() {
                   <TierCard
                     tier={comparable.tier}
                     apiCost={result.api_cost}
+                    apiElo={apiElo}
+                    apiLabel={apiLabelShort}
                     badge={{ label: "Comparable quality", color: "teal" }}
                     view={cost_view}
                     qualityNote={
@@ -842,6 +899,8 @@ export default function App() {
                     key={`graded-${g.tier.arch}-${g.tier.params_b}`}
                     tier={g.tier}
                     apiCost={result.api_cost}
+                    apiElo={apiElo}
+                    apiLabel={apiLabelShort}
                     badge={{ label: g.label, color: "indigo" }}
                     view={cost_view}
                   />
@@ -851,6 +910,8 @@ export default function App() {
                     key={`${tier.arch}-${tier.params_b}`}
                     tier={tier}
                     apiCost={result.api_cost}
+                    apiElo={apiElo}
+                    apiLabel={apiLabelShort}
                     badge={null}
                     view={cost_view}
                   />
@@ -977,6 +1038,9 @@ export default function App() {
             {status.models === "live" ? "live" : status.models === "loading" ? "loading..." : "cached"}
             {" | "}
             <span className="font-medium">GPUs:</span> {status.gpus}
+            {" | "}
+            <span className="font-medium">Arena ELO:</span> LMArena{" "}
+            {status.elo}{status.eloLastUpdated ? ` (${status.eloLastUpdated})` : ""}
           </div>
           <div>
             Bundled prices last updated: <span className="font-mono">{PRICING.last_updated}</span>{" · "}

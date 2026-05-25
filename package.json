@@ -10,7 +10,8 @@
     "lint": "tsc -b --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "refresh": "npx tsx scripts/refresh-prices.ts"
+    "refresh": "npx tsx scripts/refresh-prices.ts",
+    "refresh:elo": "npx tsx scripts/refresh-elo.ts"
   },
   "dependencies": {
     "cmdk": "^1.1.1",

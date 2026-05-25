@@ -22,8 +22,12 @@ jobs:
         env:
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
 
+      - name: Refresh LMArena ELO snapshot
+        run: npx tsx scripts/refresh-elo.ts
+        continue-on-error: true
+
       - name: Commit updated JSONs
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: refresh prices from models.dev + Firecrawl"
-          file_pattern: "src/pricing.json src/knownModels.json"
+          commit_message: "chore: refresh prices + LMArena ELO"
+          file_pattern: "src/pricing.json src/knownModels.json src/elo.json"

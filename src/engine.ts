@@ -7,6 +7,14 @@ import {
   TIER_RANK,
   type QualityTier,
 } from "./qualityTiers";
+export {
+  computeFtCapex,
+  ftVramGb,
+  pickClusterOverhead,
+  pickFtGpu,
+  type FtInputs,
+  type FtCapexResult,
+} from "./ft";
 
 // =============================================================================
 // TYPES
@@ -28,6 +36,30 @@ export interface GpuRow {
   modal_per_hr: number;
   lambda_per_hr: number;
   runpod_per_hr: number;
+  /**
+   * Optional: peak BF16/FP16 dense matmul throughput in TFLOPS, used for
+   * fine-tuning cost estimates. Examples:
+   *   H100 SXM     989
+   *   H200 SXM     989  (same compute as H100; more HBM)
+   *   B200         2250
+   *   MI300X       1307
+   *   A100 80GB    312
+   * Omit (or leave 0) for GPUs that should NOT be considered for training.
+   */
+  bf16_tflops?: number;
+  /**
+   * Optional: how many of THIS single-GPU unit live in one NVLink/NVSwitch
+   * node. Used to set the cluster-overhead boundary between "multi-GPU
+   * (intra-node, fast)" and "multi-node (Infiniband, slow)". Default 8.
+   */
+  gpus_per_node?: number;
+  /**
+   * Optional: VRAM (GB) of ONE individual accelerator in this row. For a
+   * multi-GPU row like "4xH100 320GB" this is 80, not 320. Used to size
+   * cluster overhead. Defaults to vram_gb if omitted (correct for single-GPU
+   * rows).
+   */
+  single_gpu_vram_gb?: number;
 }
 
 export interface ApiRow {
@@ -144,12 +176,51 @@ export function scaledOverhead(active_params_b: number): number {
   return 24;
 }
 
-// Conservative throughput estimate: H100-class hardware does ~120 tok/s
-// per 8B active params on an 80GB unit; scales linearly with GPU count.
-export function throughputTokensPerSec(active_params_b: number, vram_gb: number): number {
-  const gpu_units = Math.max(1, vram_gb / 80);
-  const base_per_unit = 960 / Math.max(active_params_b, 1);
-  return base_per_unit * gpu_units;
+/**
+ * Aggregate inference throughput estimate (tokens/sec served across
+ * concurrent requests). Calibrated against H100-class hardware with a
+ * modern serving stack (vLLM / TGI / SGLang with continuous batching),
+ * not single-stream decode.
+ *
+ * Single-stream decode: ~120 tok/s per 8B active on H100 (anchor).
+ * With continuous batching, aggregate throughput is 2–20× higher because
+ * multiple concurrent requests share KV cache and amortize attention
+ * compute. The `batchingMultiplier` below approximates published vLLM
+ * benchmarks: smaller-active models leave more KV-cache headroom for
+ * concurrent slots, so batch wins are bigger.
+ *
+ * Cross-GPU scaling is linear in raw VRAM ÷ single-unit VRAM — a 4xH100
+ * row produces 4× one H100's throughput. Real tensor-parallel scaling is
+ * sub-linear (~3–3.5× for 4 GPUs), but the bigger error is single-stream
+ * vs batched, which dominates.
+ *
+ * For MoE: pass `active_params_b`, not total. Active drives the matmul.
+ */
+export function throughputTokensPerSec(
+  active_params_b: number,
+  vram_gb: number,
+  bf16_tflops?: number,
+  single_gpu_vram_gb = 80
+): number {
+  const gpu_units = Math.max(1, vram_gb / single_gpu_vram_gb);
+  const tflops_scale = bf16_tflops ? bf16_tflops / 989 : 1;
+  const base_per_unit = (960 * tflops_scale) / Math.max(active_params_b, 1);
+  return base_per_unit * gpu_units * batchingMultiplier(active_params_b);
+}
+
+/**
+ * Continuous-batching throughput multiplier vs single-stream decode.
+ * Smaller-active models leave more KV-cache memory for concurrent slots,
+ * so batch wins are dramatically bigger. Numbers are conservative
+ * round-figures from published vLLM / TGI benchmarks on H100 80 GB at
+ * typical 2–4 K context lengths.
+ */
+export function batchingMultiplier(active_params_b: number): number {
+  if (active_params_b <= 4) return 10; // tiny MoE-active or small dense
+  if (active_params_b <= 16) return 6;
+  if (active_params_b <= 40) return 3;
+  if (active_params_b <= 80) return 2;
+  return 1.5; // >80B active: barely any KV-cache headroom for batching
 }
 
 export function pickCheapestGpu(
@@ -240,6 +311,40 @@ export function breakEvenWeeks(
   return weeks;
 }
 
+export interface CumulativePoint {
+  month: number;
+  api_cumulative: number;
+  selfhost_cumulative: number;
+}
+
+export interface CumulativeProjection {
+  points: CumulativePoint[];
+  crossover_month: number | null;
+  horizon_months: number;
+}
+
+export function cumulativeProjection(
+  api_weekly: number,
+  selfhost_weekly: number,
+  capex_usd: number,
+  horizon_months = 24
+): CumulativeProjection {
+  const apiW = clampNonNeg(api_weekly);
+  const shW = clampNonNeg(selfhost_weekly);
+  const cap = clampNonNeg(capex_usd);
+  const horizon = Math.max(1, Math.floor(horizon_months));
+  const points: CumulativePoint[] = [];
+  let crossover: number | null = null;
+  for (let m = 0; m <= horizon; m++) {
+    const weeks = m * WEEKS_PER_MONTH;
+    const api_cum = apiW * weeks;
+    const sh_cum = shW * weeks + cap;
+    points.push({ month: m, api_cumulative: api_cum, selfhost_cumulative: sh_cum });
+    if (crossover === null && m > 0 && sh_cum <= api_cum) crossover = m;
+  }
+  return { points, crossover_month: crossover, horizon_months: horizon };
+}
+
 export function weeklyApiCost(
   pricing: Pricing,
   queries_per_week: number,
@@ -264,6 +369,12 @@ export interface EvalArgs {
   quant: Quant;
   queries_per_week: number;
   output_tokens: number;
+  /**
+   * Input tokens per query. Prefill is compute-bound just like decode (and
+   * often dominates for RAG / long-context). Defaults to 0 for backward
+   * compatibility, but callers should pass it.
+   */
+  input_tokens?: number;
   pattern: Pattern;
   vendor: Vendor;
   cold_start_sec?: number;
@@ -313,8 +424,36 @@ export interface ConfigResult {
 }
 
 export function evaluateConfig(args: EvalArgs): ConfigResult | null {
+  const { pricing, params_b, active_params_b, quant, overhead_gb = 4 } = args;
+
+  // Effective overhead: scales with active params, with the user-supplied value as a floor.
+  // Lets users with measured KV-cache numbers raise the bar; never silently lowers it.
+  const effective_overhead = Math.max(overhead_gb, scaledOverhead(active_params_b));
+  const vram_needed = vramRequired(params_b, quant, effective_overhead);
+  // Pick by minimum total weekly cost, not minimum $/hr. A higher-$/hr GPU
+  // with much higher throughput (e.g. H100 vs A100) often wins because it
+  // needs fewer replicas and fewer billable hours. We loop over all
+  // VRAM-eligible GPUs, build the full result for each, and keep the
+  // cheapest by weekly_cost. Falls back to pickCheapestGpu's behavior
+  // (lowest $/hr) when there's only one candidate.
+  const eligibleGpus = pricing.gpus.filter((g) => g.vram_gb >= vram_needed);
+  if (eligibleGpus.length === 0) return null;
+
+  let best: ConfigResult | null = null;
+  for (const gpu of eligibleGpus) {
+    const r = evaluateOnGpu(args, gpu, vram_needed, effective_overhead);
+    if (r && (best === null || r.weekly_cost < best.weekly_cost)) best = r;
+  }
+  return best;
+}
+
+function evaluateOnGpu(
+  args: EvalArgs,
+  gpu: GpuRow,
+  vram_needed: number,
+  effective_overhead: number
+): ConfigResult | null {
   const {
-    pricing,
     params_b,
     active_params_b,
     arch,
@@ -324,49 +463,65 @@ export function evaluateConfig(args: EvalArgs): ConfigResult | null {
     pattern,
     vendor,
     cold_start_sec = 30,
-    overhead_gb = 4,
+    input_tokens = 0,
   } = args;
-
-  // Effective overhead: scales with active params, with the user-supplied value as a floor.
-  // Lets users with measured KV-cache numbers raise the bar; never silently lowers it.
-  const effective_overhead = Math.max(overhead_gb, scaledOverhead(active_params_b));
-  const vram_needed = vramRequired(params_b, quant, effective_overhead);
-  const gpu = pickCheapestGpu(pricing, vram_needed, vendor);
-  if (!gpu) return null;
 
   const price_per_hr = gpu[`${vendor}_per_hr`];
   const shape = trafficShape(pattern);
-  const tps = throughputTokensPerSec(active_params_b, gpu.vram_gb);
+  const tps = throughputTokensPerSec(
+    active_params_b,
+    gpu.vram_gb,
+    gpu.bf16_tflops,
+    gpu.single_gpu_vram_gb ?? gpu.vram_gb
+  );
+
+  // Both prefill (input) and decode (output) tokens consume GPU compute.
+  // For RAG / long-context workloads input often dominates — ignoring it
+  // understates self-host cost meaningfully.
+  const tokens_per_query = output_tokens + input_tokens;
 
   const queries_per_hour = shape.map((f) => f * queries_per_week);
   const peak_qph = Math.max(...queries_per_hour);
-  const peak_seconds_needed = (peak_qph * output_tokens) / tps;
+  const peak_seconds_needed = (peak_qph * tokens_per_query) / tps;
   const replicas_needed = Math.max(1, Math.ceil(peak_seconds_needed / 3600));
   const saturated = replicas_needed > 1;
 
-  // Billing modes — all costs scaled by replicas_needed so saturation isn't silent
+  // Per-hour replica need: a tier with bursty traffic shouldn't pay for peak
+  // replicas during the quiet hours. Compute per-hour, sum to get billable
+  // hours-of-GPU. Always-on still uses peak (you can't scale down within
+  // a forced-always-on mode), but hourly billing scales by actual demand.
+  const replicas_per_hour = queries_per_hour.map((qph) =>
+    qph > 0.1 ? Math.max(1, Math.ceil((qph * tokens_per_query) / tps / 3600)) : 0
+  );
+  const replica_hours = replicas_per_hour.reduce((s, r) => s + r, 0);
+
+  // Always-on: peak replicas, all 168 hours — that's the user-chosen mode.
   const always_on_cost = price_per_hr * 168 * replicas_needed;
 
-  let warm_hours = 0;
-  for (const qph of queries_per_hour) {
-    if (qph > 0.1) warm_hours += 1;
-  }
-  const hourly_cost = price_per_hr * warm_hours * replicas_needed;
+  // Hourly/warm: pay only for the replicas actually needed in each hour.
+  const hourly_cost = price_per_hr * replica_hours;
 
+  // Per-second / scale-to-zero billing. Bill min(total GPU-work, capacity).
   let serve_seconds = 0;
   let cold_starts = 0;
 
   if (pattern === "cold_per_query") {
     cold_starts = queries_per_week;
-    const seconds_serving = (queries_per_week * output_tokens) / tps;
+    // Each query loads a fresh replica; cold-start time is per-query, not
+    // amplified by replicas (one query loads one replica, even if peak
+    // concurrency requires N).
+    const seconds_serving = (queries_per_week * tokens_per_query) / tps;
     serve_seconds = seconds_serving + queries_per_week * cold_start_sec;
   } else {
     let was_idle = true;
-    for (const qph of queries_per_hour) {
+    for (let h = 0; h < queries_per_hour.length; h++) {
+      const qph = queries_per_hour[h];
+      const r_h = replicas_per_hour[h];
       if (qph > 0.1) {
-        const seconds_serving = (qph * output_tokens) / tps;
-        // cap per replica-hour at 3600s; replicas_needed already factored in
-        serve_seconds += Math.min(seconds_serving, 3600);
+        const work_seconds = (qph * tokens_per_query) / tps;
+        // Capacity per hour is replicas-this-hour * 3600. Cap total work
+        // by that (not by 3600 * peak-replicas, which over-counted before).
+        serve_seconds += Math.min(work_seconds, r_h * 3600);
         if (was_idle) {
           cold_starts += 1;
           serve_seconds += cold_start_sec;
@@ -377,7 +532,9 @@ export function evaluateConfig(args: EvalArgs): ConfigResult | null {
       }
     }
   }
-  const per_second_cost = price_per_hr * (serve_seconds / 3600) * replicas_needed;
+  // serve_seconds is already aggregate GPU-seconds across replicas — DO NOT
+  // multiply by replicas_needed again (that was the prior double-count bug).
+  const per_second_cost = price_per_hr * (serve_seconds / 3600);
 
   let billing_options: BillingOption[];
   if (pattern === "always_warm") {
@@ -392,8 +549,8 @@ export function evaluateConfig(args: EvalArgs): ConfigResult | null {
   } else {
     billing_options = [
       { mode: "always_on", label: "Always-on", weekly_cost: always_on_cost, billed_hours: 168 * replicas_needed },
-      { mode: "hourly", label: "Hourly warm during active hours", weekly_cost: hourly_cost, billed_hours: warm_hours * replicas_needed },
-      { mode: "per_second", label: "Scale-to-zero (pay only while serving)", weekly_cost: per_second_cost, billed_hours: (serve_seconds / 3600) * replicas_needed },
+      { mode: "hourly", label: "Hourly warm during active hours", weekly_cost: hourly_cost, billed_hours: replica_hours },
+      { mode: "per_second", label: "Scale-to-zero (pay only while serving)", weekly_cost: per_second_cost, billed_hours: serve_seconds / 3600 },
     ];
   }
 
@@ -523,8 +680,13 @@ function deriveSizeBuckets(models: KnownModel[]) {
   for (const m of models) {
     if (m.params_b <= 0) continue;
     if (m.arch === "moe") {
+      // CRITICAL: MoE without active_b would silently get compute=total params,
+      // re-introducing the bug class we fixed (24x cost overstatement for big
+      // MoEs). Skip the model entirely if we don't know active — better to
+      // omit a tier than to quote a misleading number.
+      if (m.active_b == null || m.active_b <= 0) continue;
       if (!moeMap.has(m.params_b)) {
-        moeMap.set(m.params_b, { total: m.params_b, active: m.active_b ?? m.params_b });
+        moeMap.set(m.params_b, { total: m.params_b, active: m.active_b });
       }
     } else {
       denseSet.add(m.params_b);
@@ -586,6 +748,7 @@ export function recommendTiers(args: RecommendArgs): RecommendResult {
       arch: "dense",
       quant: quant_pref,
       queries_per_week,
+      input_tokens,
       output_tokens,
       pattern,
       vendor,
@@ -604,6 +767,7 @@ export function recommendTiers(args: RecommendArgs): RecommendResult {
       arch: "moe",
       quant: quant_pref,
       queries_per_week,
+      input_tokens,
       output_tokens,
       pattern,
       vendor,

@@ -294,6 +294,55 @@ async function firecrawlScrape(url: string): Promise<string> {
   return data.data?.markdown ?? "";
 }
 
+/**
+ * Scan vendor markdown for GPU SKU mentions of the form
+ *   "[NxM ]<family><size>GB"
+ * e.g. "H100 80GB", "B200 192GB", "MI300X 192GB", "8xH100 640GB".
+ *
+ * Conservative on purpose — we only emit names whose family token is in our
+ * allowlist of known GPU families, so we don't pick up random "256GB RAM"
+ * mentions or marketing fluff.
+ */
+const GPU_FAMILY_TOKENS = [
+  // NVIDIA datacenter
+  "H100", "H200", "H800",
+  "A100", "A800", "A40", "A30", "A10", "A10G", "A6000", "A5000", "A4000",
+  "L4", "L40", "L40S",
+  "B100", "B200", "B300", "GB200", "GB300",
+  "V100",
+  "T4",
+  "RTX4090", "RTX5090", "RTX6000", "RTX A6000",
+  // AMD
+  "MI250", "MI250X", "MI300", "MI300A", "MI300X", "MI325X", "MI350X", "MI355X",
+];
+
+export function discoverGpuSkus(markdown: string): { name: string; vram_gb: number }[] {
+  if (!markdown) return [];
+  // Build an alternation of family tokens, longest-first so "MI300X" wins
+  // over "MI300", "H200" wins over "H20", etc.
+  const families = [...GPU_FAMILY_TOKENS].sort((a, b) => b.length - a.length);
+  const famAlt = families.map((f) => f.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+  // Pattern: optional "Nx " prefix, family token, whitespace, NN GB
+  // Cap N at 64 (no one ships 128x configs) and VRAM at 4 digits.
+  const re = new RegExp(
+    `(?:(\\d{1,2})\\s*[xX×]\\s*)?(${famAlt})\\s+(\\d{2,4})\\s*GB`,
+    "gi",
+  );
+  const seen = new Map<string, { name: string; vram_gb: number }>();
+  for (const m of markdown.matchAll(re)) {
+    const mult = m[1] ? parseInt(m[1], 10) : 1;
+    // Normalize family token to canonical casing from our allowlist
+    const familyRaw = m[2];
+    const canonical = families.find((f) => f.toLowerCase() === familyRaw.toLowerCase()) ?? familyRaw;
+    const vram = parseInt(m[3], 10);
+    if (!Number.isFinite(vram) || vram <= 0 || vram > 4096) continue;
+    if (!Number.isFinite(mult) || mult <= 0 || mult > 64) continue;
+    const name = mult > 1 ? `${mult}x${canonical} ${vram}GB` : `${canonical} ${vram}GB`;
+    if (!seen.has(name)) seen.set(name, { name, vram_gb: vram });
+  }
+  return [...seen.values()];
+}
+
 function extractGpuRate(gpuName: string, markdown: string): number | null {
   const raw = gpuName.replace(/^\d+x\s+/i, "").trim();
   const re = new RegExp(raw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
@@ -321,6 +370,11 @@ function extractGpuRate(gpuName: string, markdown: string): number | null {
 interface GpuEntry {
   name: string; vram_gb: number;
   modal_per_hr: number; lambda_per_hr: number; runpod_per_hr: number;
+  // Optional FT-engine fields, hand-maintained in pricing.json; preserved
+  // across refreshes (this script never scrapes them).
+  bf16_tflops?: number;
+  single_gpu_vram_gb?: number;
+  gpus_per_node?: number;
 }
 
 interface ApiEntry {
@@ -386,20 +440,9 @@ async function main() {
       }
     }
 
-    // These are the GPU entries we ship; extract rates from the scraped markdown
-    const gpuDefs = [
-      { name: "L4 24GB", vram: 24 },
-      { name: "L40S 48GB", vram: 48 },
-      { name: "A100 40GB", vram: 40 },
-      { name: "A100 80GB", vram: 80 },
-      { name: "H100 80GB", vram: 80 },
-      { name: "2xH100 160GB", vram: 160 },
-      { name: "4xH100 320GB", vram: 320 },
-      { name: "8xH100 640GB", vram: 640 },
-      { name: "8xH200 1128GB", vram: 1128 },
-    ];
-
-    // Load cached rows so we can fall back when regex extraction returns 0/null.
+    // Load cached rows so we can fall back when regex extraction returns 0/null
+    // AND so manually curated SKUs (with bf16_tflops etc.) always stay in the
+    // union below.
     let cachedGpus: GpuEntry[] = [];
     try {
       const existing = JSON.parse(readFileSync(PRICING_PATH, "utf-8"));
@@ -407,13 +450,43 @@ async function main() {
     } catch {}
     const cachedByName = new Map(cachedGpus.map((g) => [g.name, g]));
 
+    // Auto-discover SKUs from each vendor's scraped markdown. Union with the
+    // existing cached SKU list so we never silently lose a hand-curated row,
+    // and so vendor-launched GPUs (e.g. B200 192GB) enter pricing.json the
+    // first nightly run after the vendor lists them.
+    const discovered = new Map<string, { name: string; vram_gb: number }>();
+    for (const [label, md] of Object.entries(markdowns)) {
+      const skus = discoverGpuSkus(md);
+      for (const s of skus) {
+        if (!discovered.has(s.name)) discovered.set(s.name, s);
+      }
+      if (skus.length) console.log(`Discovered ${skus.length} SKU mentions from ${label}`);
+    }
+
+    const union = new Map<string, { name: string; vram: number }>();
+    for (const g of cachedGpus) union.set(g.name, { name: g.name, vram: g.vram_gb });
+    for (const s of discovered.values()) {
+      if (!union.has(s.name)) {
+        console.log(`NEW GPU SKU discovered: ${s.name}`);
+        union.set(s.name, { name: s.name, vram: s.vram_gb });
+      }
+    }
+
     let extracted = 0;
     let preserved = 0;
-    for (const gd of gpuDefs) {
+    let skippedNew = 0;
+    for (const gd of union.values()) {
       const cached = cachedByName.get(gd.name);
       const modalFresh = extractGpuRate(gd.name, markdowns["Modal"] ?? "");
       const lambdaFresh = extractGpuRate(gd.name, markdowns["Lambda"] ?? "");
       const runpodFresh = extractGpuRate(gd.name, markdowns["Runpod"] ?? "");
+
+      // For brand-new SKUs (not in cache), if we couldn't extract ANY rate,
+      // skip — don't write a useless zero-rate row.
+      if (!cached && !modalFresh && !lambdaFresh && !runpodFresh) {
+        skippedNew++;
+        continue;
+      }
 
       const modal = modalFresh && modalFresh > 0 ? modalFresh : cached?.modal_per_hr ?? 0;
       const lambda = lambdaFresh && lambdaFresh > 0 ? lambdaFresh : cached?.lambda_per_hr ?? 0;
@@ -422,9 +495,27 @@ async function main() {
       if (modalFresh && lambdaFresh && runpodFresh) extracted++;
       else preserved++;
 
-      gpuRows.push({ name: gd.name, vram_gb: gd.vram, modal_per_hr: modal, lambda_per_hr: lambda, runpod_per_hr: runpod });
+      // Preserve hand-maintained FT-engine fields (bf16_tflops,
+      // single_gpu_vram_gb, gpus_per_node) — these don't change with vendor
+      // pricing and would silently disappear if we only wrote the four
+      // scraped fields. Auto-discovered SKUs without a cached row get only
+      // the four scraped fields; pickFtGpu filters by bf16_tflops > 0, so
+      // those SKUs are inference-only until a human adds FT metadata.
+      const row: GpuEntry = {
+        name: gd.name,
+        vram_gb: gd.vram,
+        modal_per_hr: modal,
+        lambda_per_hr: lambda,
+        runpod_per_hr: runpod,
+      };
+      if (cached?.bf16_tflops !== undefined) row.bf16_tflops = cached.bf16_tflops;
+      if (cached?.single_gpu_vram_gb !== undefined)
+        row.single_gpu_vram_gb = cached.single_gpu_vram_gb;
+      if (cached?.gpus_per_node !== undefined)
+        row.gpus_per_node = cached.gpus_per_node;
+      gpuRows.push(row);
     }
-    console.log(`GPU rates: ${extracted} fully extracted, ${preserved} partially-or-fully preserved from cache`);
+    console.log(`GPU rates: ${extracted} fully extracted, ${preserved} partially-or-fully preserved from cache, ${skippedNew} new-but-unpriced SKUs skipped`);
   } else {
     console.log("FIRECRAWL_API_KEY not set; keeping cached GPU prices");
     try {
@@ -454,7 +545,11 @@ async function main() {
   console.log("Wrote pricing.json");
 }
 
-main().catch((e) => {
-  console.error("Refresh failed:", e);
-  process.exit(1);
-});
+// Only run main() when executed as a script, not when imported (e.g. by the
+// discoverGpuSkus parser smoke test).
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((e) => {
+    console.error("Refresh failed:", e);
+    process.exit(1);
+  });
+}

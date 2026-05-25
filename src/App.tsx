@@ -31,6 +31,7 @@ import { useLiveData } from "./useLiveData";
 import type { ClosedApi, KnownModel } from "./modelsDev";
 import { ApiCombobox } from "./ApiCombobox";
 import { CostSizeChart } from "./CostSizeChart";
+import { FtPanel } from "./FtPanel";
 import { Presets, type PresetValues } from "./Presets";
 import { ExportMenu } from "./ExportMenu";
 import { TIER_LABEL, QUALITY_TIERS_SOURCE_URL } from "./qualityTiers";
@@ -194,6 +195,8 @@ function TierCard({
   qualityNote,
   apiElo,
   apiLabel,
+  queriesPerWeek,
+  onFtToggle,
 }: {
   tier: ConfigResult;
   apiCost: number;
@@ -202,8 +205,16 @@ function TierCard({
   qualityNote?: React.ReactNode;
   apiElo?: number;
   apiLabel?: string;
+  queriesPerWeek: number;
+  onFtToggle?: (open: boolean) => void;
 }) {
   const weekly = tier.weekly_cost_with_ft ?? tier.weekly_cost;
+  const [ftOpen, setFtOpen] = useState(false);
+  const handleFtToggle = () => {
+    const next = !ftOpen;
+    setFtOpen(next);
+    onFtToggle?.(next);
+  };
   const savings = apiCost - weekly;
   const savings_pct = apiCost > 0 ? (savings / apiCost) * 100 : 0;
   const viewedCost = costForView(weekly, view);
@@ -319,6 +330,25 @@ function TierCard({
           </span>
         </div>
       )}
+
+      <div className="mt-3 border-t border-slate-200 pt-2">
+        <button
+          onClick={handleFtToggle}
+          className="text-xs font-medium text-indigo-700 hover:text-indigo-900 inline-flex items-center gap-1"
+        >
+          {ftOpen ? "− Hide" : "+ Estimate"} fine-tuning cost
+        </button>
+        {ftOpen && (
+          <FtPanel
+            params_b={tier.params_b}
+            active_params_b={tier.active_params_b ?? tier.params_b}
+            apiWeeklyCost={apiCost}
+            selfhostWeeklyCost={weekly}
+            queriesPerWeek={queriesPerWeek}
+            view={view}
+          />
+        )}
+      </div>
     </div>
   );
 }
@@ -773,7 +803,7 @@ export default function App() {
                 value={min_elo}
                 onChange={setMinElo}
                 step={10}
-                hint="0 = off. Drops self-host candidates whose nearest known model is below this LMArena ELO. Models with no ELO are kept."
+                hint="0 = off. Filters out candidates below this LMArena ELO. For reference: GPT-4o ≈ 1280, Llama-3.1-70B ≈ 1190, Mistral-7B ≈ 1070."
               />
             </div>
           </Expander>
@@ -787,13 +817,12 @@ export default function App() {
               <div>
                 <h3 className="text-lg font-semibold text-amber-900">Stick with the API</h3>
                 <p className="text-amber-800 mt-1">
-                  At this volume ({fmtInt(queries_per_week)} queries/week, {fmtCurrency(result.api_cost)}/wk on
-                  the API), no self-host config beats the API price — even the smallest models on the cheapest
-                  GPUs cost more than you'd pay the API directly.
+                  At {fmtInt(queries_per_week)} queries/week ({fmtCurrency(result.api_cost)}/wk on the API),
+                  even the smallest self-host setup costs more than the API.
                 </p>
                 <p className="text-amber-800 mt-2 text-sm">
-                  Self-hosting starts winning at higher volumes. Try increasing queries/week or output tokens
-                  to see the crossover.
+                  Self-hosting wins at higher volumes. Bump queries/week or output tokens
+                  to find your crossover.
                 </p>
               </div>
             </div>
@@ -855,6 +884,7 @@ export default function App() {
                     apiLabel={apiLabelShort}
                     badge={{ label: "Largest that fits", color: "green" }}
                     view={cost_view}
+                    queriesPerWeek={queries_per_week}
                   />
                 )}
                 {showComparable && comparable && (
@@ -865,6 +895,7 @@ export default function App() {
                     apiLabel={apiLabelShort}
                     badge={{ label: "Comparable quality", color: "teal" }}
                     view={cost_view}
+                    queriesPerWeek={queries_per_week}
                     qualityNote={
                       <span>
                         <strong>{TIER_LABEL[comparable.modelTier]}</strong> open-weight model — same coarse tier as{" "}
@@ -895,6 +926,7 @@ export default function App() {
                     apiLabel={apiLabelShort}
                     badge={{ label: g.label, color: "indigo" }}
                     view={cost_view}
+                    queriesPerWeek={queries_per_week}
                   />
                 ))}
                 {(show_all_tiers ? otherTiers : otherTiers.slice(0, 2)).map((tier) => (
@@ -906,6 +938,7 @@ export default function App() {
                     apiLabel={apiLabelShort}
                     badge={null}
                     view={cost_view}
+                    queriesPerWeek={queries_per_week}
                   />
                 ))}
               </div>

@@ -430,8 +430,12 @@ export default function App() {
   const [overhead_gb, setOverheadGb] = useUrlState<number>("oh", 4);
   const [cold_start_sec, setColdStartSec] = useUrlState<number>("cs", 30);
   const [min_params_b, setMinParamsB] = useUrlState<number>("mp", 0);
-  const [ft_cost, setFtCost] = useUrlState<number>("ft", 0);
-  const [ft_weeks, setFtWeeks] = useUrlState<number>("fw", 52);
+  // Lump-sum "one-time fine-tuning cost" was removed from Advanced settings;
+  // per-card fine-tuning estimators provide the same number, derived from
+  // training params (LoRA/QLoRA/full FT) instead of a free-form dollar input.
+  // Engine still accepts ft_cost/ft_weeks, so we pin them at 0 here.
+  const ft_cost = 0;
+  const ft_weeks = 52;
   // Quality floor (LMArena ELO). 0 = off.
   const [min_elo, setMinElo] = useUrlState<number>("me", 0);
 
@@ -764,8 +768,6 @@ export default function App() {
               <NumberInput label="VRAM overhead floor (GB)" value={overhead_gb} onChange={setOverheadGb} step={1} hint="KV cache + activations. Engine auto-scales above this." />
               <NumberInput label="Cold-start penalty (sec)" value={cold_start_sec} onChange={setColdStartSec} step={5} hint="For scale-to-zero mode" />
               <NumberInput label="Min model size (B params)" value={min_params_b} onChange={setMinParamsB} step={1} hint="Filter out tiny models even if cheaper. 0 = no floor." />
-              <NumberInput label="One-time fine-tuning cost ($)" value={ft_cost} onChange={setFtCost} step={100} hint="Added amortized to weekly cost" />
-              <NumberInput label="Amortize over (weeks)" value={ft_weeks} onChange={setFtWeeks} step={1} min={1} hint="How long the fine-tune is in service" />
               <NumberInput
                 label="Minimum quality (Arena ELO)"
                 value={min_elo}
@@ -836,20 +838,10 @@ export default function App() {
                   </div>
                 </div>
               </div>
-              <p className="text-sm text-slate-600 mb-2 flex items-start gap-1.5">
-                <Info className="w-4 h-4 mt-0.5 flex-shrink-0 text-slate-400" />
-                <span>
-                  The chart plots weekly cost vs model size (log-log) for every candidate; the red dashed line
-                  is the API price. We highlight the <strong>largest</strong> model that fits (green ring) and
-                  up to three <strong>savings-banded</strong> picks — the largest model at each of 80%+, 50%+,
-                  and 20%+ savings (indigo rings). Marker colour intensity encodes <strong>LMArena ELO</strong> (darker = higher
-                  Arena score), so cheap-AND-good models pop visually.
-                </span>
-              </p>
-              <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-3 py-2 mb-4">
-                <strong>Note:</strong> Inference costs only. Engineering time (serving infra, evals, monitoring,
-                on-call) and any fine-tuning compute beyond what you enter in Advanced are not included. GPU
-                hourly rates are approximate — verify with your vendor before quoting.
+              <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-3 py-2 mb-4 mt-2">
+                <strong>Note:</strong> Compute only (inference + any fine-tuning you estimate per card).
+                Engineering time — serving infra, evals, monitoring, on-call — is not included. GPU hourly
+                rates are approximate; verify with your vendor before quoting.
               </p>
 
               <CostSizeChart result={result} view={cost_view} />

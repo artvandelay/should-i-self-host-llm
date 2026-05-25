@@ -45,6 +45,7 @@ export function FtPanel({
   const [method, setMethod] = useState<FtMethod>("lora");
   const [epochs, setEpochs] = useState(3);
   const [prepCost, setPrepCost] = useState(0);
+  const [experimentsMultiplier, setExperimentsMultiplier] = useState(2.5);
 
   const ftInputs = useMemo(
     () => ({
@@ -53,8 +54,9 @@ export function FtPanel({
       method,
       epochs,
       prep_cost_usd: prepCost,
+      experiments_multiplier: experimentsMultiplier,
     }),
-    [numExamples, tokensPerExample, method, epochs, prepCost]
+    [numExamples, tokensPerExample, method, epochs, prepCost, experimentsMultiplier]
   );
 
   const capex = useMemo(
@@ -184,6 +186,25 @@ export function FtPanel({
             className={inputClass}
           />
         </div>
+        <div className="flex flex-col sm:col-span-2">
+          <label className="text-xs font-medium text-slate-700 mb-1">
+            Experiments / failed-runs multiplier
+          </label>
+          <input
+            type="number"
+            min={1}
+            step={0.5}
+            value={experimentsMultiplier}
+            onChange={(e) =>
+              setExperimentsMultiplier(Math.max(1, Number(e.target.value) || 1))
+            }
+            className={inputClass}
+          />
+          <span className="text-[10px] text-slate-500 mt-1">
+            Most teams run 2–3 attempts before one sticks. 1× is the
+            theoretical floor.
+          </span>
+        </div>
       </div>
 
       <div className={`rounded-md border px-3 py-2.5 ${paybackToneClass}`}>
@@ -196,10 +217,13 @@ export function FtPanel({
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-2">
         <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2">
           <div className="text-[10px] uppercase tracking-wide text-slate-500">
-            One-time capex
+            One-time capex ({fmt(capex.experiments_multiplier, 1)}× campaign)
           </div>
           <div className="text-sm font-semibold text-slate-900">
             {fmtCurrency(capex.total_capex_usd)}
+          </div>
+          <div className="text-[10px] text-slate-500 mt-0.5">
+            1 run = {fmtCurrency(capex.single_run_gpu_cost_usd + prepCost)}
           </div>
         </div>
         <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2">
@@ -298,7 +322,9 @@ export function FtPanel({
         30% sustained MFU for fine-tuning workloads, with per-method penalties (QLoRA
         dequantization tax). Anchored to QLoRA paper's Guanaco-65B 24-hour benchmark.
         Quality impact of fine-tuning is not estimated — compare Arena ELO of base vs
-        fine-tuned models separately.
+        fine-tuned models separately. Cost shown is for an N× campaign
+        (HP sweeps + failed runs); the single-run lower bound is shown in the
+        breakdown above. Prep cost is treated as one-time and is not multiplied.
       </p>
     </div>
   );

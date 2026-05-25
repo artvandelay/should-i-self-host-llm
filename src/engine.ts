@@ -291,6 +291,13 @@ export interface FtInputs {
   method: FtMethod;
   epochs: number;
   prep_cost_usd: number;
+  /**
+   * Experiments/failures multiplier — production FT campaigns require
+   * multiple runs (HP sweeps, early-stopped failures, ablations).
+   * 1.0 = single successful run (theoretical floor). 2-3 = realistic
+   * range for production work. Default: 2.5.
+   */
+  experiments_multiplier: number;
 }
 
 export interface FtCapexResult {
@@ -298,6 +305,10 @@ export interface FtCapexResult {
   gpu_cost_usd: number;
   total_capex_usd: number;
   method: FtMethod;
+  /** GPU cost for a single successful run, before the experiments multiplier. */
+  single_run_gpu_cost_usd: number;
+  /** Effective multiplier applied (after clamping to >= 1.0). */
+  experiments_multiplier: number;
 }
 
 export interface CumulativePoint {
@@ -361,8 +372,23 @@ export function computeFtCapex(params_b: number, inputs: FtInputs): FtCapexResul
     peak_tflops * 1e12 * BASELINE_MFU * spec.mfuPenalty;
   const seconds = method_flops / effective_flops_per_sec;
   const hours = seconds / 3600;
-  const gpu_cost = hours * cheapestRate;
-  return { gpu_hours: hours, gpu_cost_usd: gpu_cost, total_capex_usd: gpu_cost + prep, method: inputs.method };
+  const single_run_gpu_cost = hours * cheapestRate;
+  // Experiments multiplier: clamp UP to 1.0 (values below 1 are non-physical;
+  // there's no such thing as "less than one run"). Applies to gpu_hours AND
+  // gpu_cost (both scale linearly with number of runs), but NOT to prep_cost
+  // (data prep / engineering is one-time across the whole campaign).
+  const raw_xm = clampNonNeg(inputs.experiments_multiplier, 1);
+  const xm = raw_xm < 1 ? 1 : raw_xm;
+  const gpu_hours_total = hours * xm;
+  const gpu_cost_total = single_run_gpu_cost * xm;
+  return {
+    gpu_hours: gpu_hours_total,
+    gpu_cost_usd: gpu_cost_total,
+    total_capex_usd: gpu_cost_total + prep,
+    method: inputs.method,
+    single_run_gpu_cost_usd: single_run_gpu_cost,
+    experiments_multiplier: xm,
+  };
 }
 
 export function cumulativeProjection(

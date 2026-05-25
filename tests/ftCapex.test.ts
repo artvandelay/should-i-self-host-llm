@@ -14,6 +14,7 @@ const baseInputs = {
   method: "lora" as const,
   epochs: 3,
   prep_cost_usd: 0,
+  experiments_multiplier: 1.0,
 };
 
 describe("computeFtCapex", () => {
@@ -41,6 +42,7 @@ describe("computeFtCapex", () => {
       method: "qlora",
       epochs: 3,
       prep_cost_usd: 0,
+      experiments_multiplier: 1.0,
     });
     expect(r.gpu_hours).toBeGreaterThan(2);
     expect(r.gpu_hours).toBeLessThan(20);
@@ -60,6 +62,7 @@ describe("computeFtCapex", () => {
       method: "lora",
       epochs: -2,
       prep_cost_usd: -500,
+      experiments_multiplier: NaN,
     });
     expect(r.gpu_hours).toBe(0);
     expect(r.gpu_cost_usd).toBe(0);
@@ -70,6 +73,36 @@ describe("computeFtCapex", () => {
     const single = computeFtCapex(70, { ...baseInputs, num_examples: 50_000 });
     const doubled = computeFtCapex(70, { ...baseInputs, num_examples: 100_000 });
     expect(doubled.gpu_cost_usd).toBeCloseTo(single.gpu_cost_usd * 2, 6);
+  });
+});
+
+describe("experiments_multiplier", () => {
+  it("2x doubles gpu cost vs 1x", () => {
+    const single = computeFtCapex(70, { ...baseInputs, experiments_multiplier: 1 });
+    const doubled = computeFtCapex(70, { ...baseInputs, experiments_multiplier: 2 });
+    expect(doubled.gpu_cost_usd).toBeCloseTo(single.gpu_cost_usd * 2, 6);
+  });
+
+  it("below 1 clamps to 1", () => {
+    const low = computeFtCapex(70, { ...baseInputs, experiments_multiplier: 0.5 });
+    const one = computeFtCapex(70, { ...baseInputs, experiments_multiplier: 1 });
+    expect(low.gpu_cost_usd).toBeCloseTo(one.gpu_cost_usd, 6);
+    expect(low.experiments_multiplier).toBe(1);
+  });
+
+  it("does not multiply prep_cost", () => {
+    const r = computeFtCapex(70, {
+      ...baseInputs,
+      prep_cost_usd: 5000,
+      experiments_multiplier: 2,
+    });
+    expect(r.total_capex_usd).toBeCloseTo(r.gpu_cost_usd + 5000, 6);
+  });
+
+  it("single_run_gpu_cost_usd is reported independent of multiplier", () => {
+    const single = computeFtCapex(70, { ...baseInputs, experiments_multiplier: 1 });
+    const tripled = computeFtCapex(70, { ...baseInputs, experiments_multiplier: 3 });
+    expect(tripled.single_run_gpu_cost_usd).toBeCloseTo(single.single_run_gpu_cost_usd, 6);
   });
 });
 

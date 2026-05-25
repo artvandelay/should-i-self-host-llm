@@ -105,11 +105,58 @@ describe("resolveParamsB", () => {
     expect(r.method).toBe("regex");
   });
 
-  it("detects MoE with active params", () => {
+  it("detects MoE with active params (B-AYB pattern)", () => {
     const r = resolveParamsB("Qwen3-235B-A22B (MoE)", "qwen3-235b-a22b");
     expect(r.paramsB).toBe(235);
     expect(r.activeB).toBe(22);
     expect(r.method).toBe("regex_moe");
+  });
+
+  // Mixtral-style "NxYB" pattern. Pinning this means we never need
+  // per-model hand-edits in knownModels.json for future "NxYB" MoEs —
+  // the structure does the work.
+  it("detects Mixtral 8x7B (NxYB pattern) within ~5% of published", () => {
+    // Published: 46.7B total, 12.9B active per token.
+    const r = resolveParamsB("Mistral: Mixtral 8x7B Instruct", "mistralai/Mixtral-8x7B-Instruct-v0.1");
+    expect(r.method).toBe("regex_moe");
+    expect(r.paramsB).toBeGreaterThanOrEqual(43);
+    expect(r.paramsB).toBeLessThanOrEqual(49);
+    expect(r.activeB).toBeGreaterThanOrEqual(12);
+    expect(r.activeB).toBeLessThanOrEqual(14);
+  });
+
+  it("detects Mixtral 8x22B within ~5% of published", () => {
+    // Published: 141B total, 39B active per token.
+    const r = resolveParamsB("Mixtral 8x22B", "mistralai/Mixtral-8x22B-v0.1");
+    expect(r.method).toBe("regex_moe");
+    expect(r.paramsB).toBeGreaterThanOrEqual(135);
+    expect(r.paramsB).toBeLessThanOrEqual(147);
+    expect(r.activeB).toBeGreaterThanOrEqual(37);
+    expect(r.activeB).toBeLessThanOrEqual(42);
+  });
+
+  it("Wizardlm 2 8x22B uses the same shape as Mixtral 8x22B", () => {
+    const a = resolveParamsB("Wizardlm 2 8x22B", "microsoft/WizardLM-2-8x22B");
+    const b = resolveParamsB("Mixtral 8x22B", "mistralai/Mixtral-8x22B-v0.1");
+    expect(a.paramsB).toBe(b.paramsB);
+    expect(a.activeB).toBe(b.activeB);
+  });
+
+  it("generalizes to hypothetical NxYB names (no per-model code)", () => {
+    // Future model the regex has never seen — should still resolve sanely
+    // as MoE, not silently degrade to dense.
+    const r = resolveParamsB("Llama 5 MoE 16x14B", "meta-llama/Llama-5-MoE-16x14B");
+    expect(r.method).toBe("regex_moe");
+    expect(r.paramsB).toBeGreaterThan(150);
+    expect(r.paramsB).toBeLessThan(220);
+    expect(r.activeB).toBeGreaterThan(20);
+    expect(r.activeB).toBeLessThan(35);
+  });
+
+  it("does NOT treat dense names matching xN patterns as MoE", () => {
+    // "Llama 3.3 70B" must not match MIXTRAL_RE; "x" needs an N on the left.
+    const r = resolveParamsB("Llama 3.3 70B", "llama-3.3-70b");
+    expect(r.method).toBe("regex"); // dense path
   });
 
   it("returns unknown for names without param counts", () => {

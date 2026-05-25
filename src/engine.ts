@@ -526,6 +526,12 @@ export interface EvalArgs {
   quant: Quant;
   queries_per_week: number;
   output_tokens: number;
+  /**
+   * Input tokens per query. Prefill is compute-bound just like decode (and
+   * often dominates for RAG / long-context). Defaults to 0 for backward
+   * compatibility, but callers should pass it.
+   */
+  input_tokens?: number;
   pattern: Pattern;
   vendor: Vendor;
   cold_start_sec?: number;
@@ -587,6 +593,7 @@ export function evaluateConfig(args: EvalArgs): ConfigResult | null {
     vendor,
     cold_start_sec = 30,
     overhead_gb = 4,
+    input_tokens = 0,
   } = args;
 
   // Effective overhead: scales with active params, with the user-supplied value as a floor.
@@ -605,35 +612,53 @@ export function evaluateConfig(args: EvalArgs): ConfigResult | null {
     gpu.single_gpu_vram_gb ?? gpu.vram_gb
   );
 
+  // Both prefill (input) and decode (output) tokens consume GPU compute.
+  // For RAG / long-context workloads input often dominates — ignoring it
+  // understates self-host cost meaningfully.
+  const tokens_per_query = output_tokens + input_tokens;
+
   const queries_per_hour = shape.map((f) => f * queries_per_week);
   const peak_qph = Math.max(...queries_per_hour);
-  const peak_seconds_needed = (peak_qph * output_tokens) / tps;
+  const peak_seconds_needed = (peak_qph * tokens_per_query) / tps;
   const replicas_needed = Math.max(1, Math.ceil(peak_seconds_needed / 3600));
   const saturated = replicas_needed > 1;
 
-  // Billing modes — all costs scaled by replicas_needed so saturation isn't silent
+  // Per-hour replica need: a tier with bursty traffic shouldn't pay for peak
+  // replicas during the quiet hours. Compute per-hour, sum to get billable
+  // hours-of-GPU. Always-on still uses peak (you can't scale down within
+  // a forced-always-on mode), but hourly billing scales by actual demand.
+  const replicas_per_hour = queries_per_hour.map((qph) =>
+    qph > 0.1 ? Math.max(1, Math.ceil((qph * tokens_per_query) / tps / 3600)) : 0
+  );
+  const replica_hours = replicas_per_hour.reduce((s, r) => s + r, 0);
+
+  // Always-on: peak replicas, all 168 hours — that's the user-chosen mode.
   const always_on_cost = price_per_hr * 168 * replicas_needed;
 
-  let warm_hours = 0;
-  for (const qph of queries_per_hour) {
-    if (qph > 0.1) warm_hours += 1;
-  }
-  const hourly_cost = price_per_hr * warm_hours * replicas_needed;
+  // Hourly/warm: pay only for the replicas actually needed in each hour.
+  const hourly_cost = price_per_hr * replica_hours;
 
+  // Per-second / scale-to-zero billing. Bill min(total GPU-work, capacity).
   let serve_seconds = 0;
   let cold_starts = 0;
 
   if (pattern === "cold_per_query") {
     cold_starts = queries_per_week;
-    const seconds_serving = (queries_per_week * output_tokens) / tps;
+    // Each query loads a fresh replica; cold-start time is per-query, not
+    // amplified by replicas (one query loads one replica, even if peak
+    // concurrency requires N).
+    const seconds_serving = (queries_per_week * tokens_per_query) / tps;
     serve_seconds = seconds_serving + queries_per_week * cold_start_sec;
   } else {
     let was_idle = true;
-    for (const qph of queries_per_hour) {
+    for (let h = 0; h < queries_per_hour.length; h++) {
+      const qph = queries_per_hour[h];
+      const r_h = replicas_per_hour[h];
       if (qph > 0.1) {
-        const seconds_serving = (qph * output_tokens) / tps;
-        // cap per replica-hour at 3600s; replicas_needed already factored in
-        serve_seconds += Math.min(seconds_serving, 3600);
+        const work_seconds = (qph * tokens_per_query) / tps;
+        // Capacity per hour is replicas-this-hour * 3600. Cap total work
+        // by that (not by 3600 * peak-replicas, which over-counted before).
+        serve_seconds += Math.min(work_seconds, r_h * 3600);
         if (was_idle) {
           cold_starts += 1;
           serve_seconds += cold_start_sec;
@@ -644,7 +669,9 @@ export function evaluateConfig(args: EvalArgs): ConfigResult | null {
       }
     }
   }
-  const per_second_cost = price_per_hr * (serve_seconds / 3600) * replicas_needed;
+  // serve_seconds is already aggregate GPU-seconds across replicas — DO NOT
+  // multiply by replicas_needed again (that was the prior double-count bug).
+  const per_second_cost = price_per_hr * (serve_seconds / 3600);
 
   let billing_options: BillingOption[];
   if (pattern === "always_warm") {
@@ -659,8 +686,8 @@ export function evaluateConfig(args: EvalArgs): ConfigResult | null {
   } else {
     billing_options = [
       { mode: "always_on", label: "Always-on", weekly_cost: always_on_cost, billed_hours: 168 * replicas_needed },
-      { mode: "hourly", label: "Hourly warm during active hours", weekly_cost: hourly_cost, billed_hours: warm_hours * replicas_needed },
-      { mode: "per_second", label: "Scale-to-zero (pay only while serving)", weekly_cost: per_second_cost, billed_hours: (serve_seconds / 3600) * replicas_needed },
+      { mode: "hourly", label: "Hourly warm during active hours", weekly_cost: hourly_cost, billed_hours: replica_hours },
+      { mode: "per_second", label: "Scale-to-zero (pay only while serving)", weekly_cost: per_second_cost, billed_hours: serve_seconds / 3600 },
     ];
   }
 
@@ -858,6 +885,7 @@ export function recommendTiers(args: RecommendArgs): RecommendResult {
       arch: "dense",
       quant: quant_pref,
       queries_per_week,
+      input_tokens,
       output_tokens,
       pattern,
       vendor,
@@ -876,6 +904,7 @@ export function recommendTiers(args: RecommendArgs): RecommendResult {
       arch: "moe",
       quant: quant_pref,
       queries_per_week,
+      input_tokens,
       output_tokens,
       pattern,
       vendor,

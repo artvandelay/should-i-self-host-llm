@@ -321,6 +321,11 @@ function extractGpuRate(gpuName: string, markdown: string): number | null {
 interface GpuEntry {
   name: string; vram_gb: number;
   modal_per_hr: number; lambda_per_hr: number; runpod_per_hr: number;
+  // Optional FT-engine fields, hand-maintained in pricing.json; preserved
+  // across refreshes (this script never scrapes them).
+  bf16_tflops?: number;
+  single_gpu_vram_gb?: number;
+  gpus_per_node?: number;
 }
 
 interface ApiEntry {
@@ -422,7 +427,23 @@ async function main() {
       if (modalFresh && lambdaFresh && runpodFresh) extracted++;
       else preserved++;
 
-      gpuRows.push({ name: gd.name, vram_gb: gd.vram, modal_per_hr: modal, lambda_per_hr: lambda, runpod_per_hr: runpod });
+      // Preserve hand-maintained FT-engine fields (bf16_tflops,
+      // single_gpu_vram_gb, gpus_per_node) — these don't change with vendor
+      // pricing and would silently disappear if we only wrote the four
+      // scraped fields.
+      const row: GpuEntry = {
+        name: gd.name,
+        vram_gb: gd.vram,
+        modal_per_hr: modal,
+        lambda_per_hr: lambda,
+        runpod_per_hr: runpod,
+      };
+      if (cached?.bf16_tflops !== undefined) row.bf16_tflops = cached.bf16_tflops;
+      if (cached?.single_gpu_vram_gb !== undefined)
+        row.single_gpu_vram_gb = cached.single_gpu_vram_gb;
+      if (cached?.gpus_per_node !== undefined)
+        row.gpus_per_node = cached.gpus_per_node;
+      gpuRows.push(row);
     }
     console.log(`GPU rates: ${extracted} fully extracted, ${preserved} partially-or-fully preserved from cache`);
   } else {

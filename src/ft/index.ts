@@ -5,6 +5,7 @@ export type {
   FtTraining,
   FtOptions,
   FtStage,
+  FtWarning,
   FtCostBreakdown,
 } from "./types";
 
@@ -45,7 +46,12 @@ export interface FtInputs {
   cluster_overhead?: number;
 }
 
-export type FtCapexResult = Omit<FtCostBreakdown, "stages">;
+/**
+ * Back-compat result shape used by the existing FtPanel + tests. Strips
+ * `stages` and `warnings` from the rich `FtCostBreakdown`; new callers
+ * should consume `computeFtCost` directly to get those.
+ */
+export type FtCapexResult = Omit<FtCostBreakdown, "stages" | "warnings">;
 
 export function computeFtCapex(
   active_params_b: number,
@@ -74,6 +80,6 @@ export function computeFtCapex(
     cluster_overhead: inputs.cluster_overhead,
   });
 
-  const { stages: _, ...rest } = result;
+  const { stages: _s, warnings: _w, ...rest } = result;
   return rest;
 }

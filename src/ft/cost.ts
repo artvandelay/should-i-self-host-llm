@@ -5,10 +5,36 @@ import type {
   FtMethod,
   FtCostBreakdown,
   FtStage,
+  FtWarning,
 } from "./types";
 import { FT_METHODS, FLOPS_PER_TOKEN_PER_PARAM, BASELINE_MFU } from "./methods";
 import { ftVramGb, pickClusterOverhead, pickFtGpu } from "./hardware";
 import { PRICING } from "../engine";
+
+/**
+ * Largest single-node VRAM available across the GPU catalog.
+ * Used as the "does any known hardware fit this?" feasibility ceiling.
+ * For an FT workload whose VRAM exceeds this, we still return a number
+ * (the FLOPs math is independent of feasibility), but flag the caller.
+ */
+function largestKnownNodeVramGb(): number {
+  let best = 0;
+  for (const g of PRICING.gpus) {
+    if (typeof g.bf16_tflops !== "number" || g.bf16_tflops <= 0) continue;
+    const per = g.single_gpu_vram_gb ?? g.vram_gb ?? 0;
+    const node = per * (g.gpus_per_node ?? 8);
+    if (node > best) best = node;
+  }
+  return best || 640; // fallback to 8×H100 node if catalog has nothing tagged
+}
+
+/**
+ * Pretraining-vs-fine-tuning heuristic. Chinchilla-optimal pretraining is
+ * ~20 tokens per parameter; production FT recipes are typically 0.01–1
+ * tokens per param. At >10 tokens/param the workload is closer to
+ * continued pretraining than fine-tuning — same math, wrong tool framing.
+ */
+const PRETRAIN_TOKENS_PER_PARAM = 10;
 
 /** Clamp a numeric input: reject NaN/Infinity, force non-negative. */
 function clampNonNeg(n: number, fallback = 0): number {
@@ -30,13 +56,25 @@ export function computeFtCost(
   options?: FtOptions
 ): FtCostBreakdown {
   const stages: FtStage[] = [];
+  const warnings: FtWarning[] = [];
 
   const num = clampNonNeg(training.num_examples);
   const tok = clampNonNeg(training.tokens_per_example);
   const epochs = clampNonNeg(training.epochs);
   const prep = clampNonNeg(training.prep_cost_usd);
-  const active_params = clampNonNeg(spec.active_params_b) * 1e9;
+  const active_params_b = clampNonNeg(spec.active_params_b);
+  const active_params = active_params_b * 1e9;
   const total_params_b = clampNonNeg(spec.total_params_b);
+
+  // Validate the ModelSpec for internal consistency. Don't reject — the math
+  // is well-defined either way — but flag so the caller can warn the user.
+  if (active_params_b > total_params_b && total_params_b > 0) {
+    warnings.push({
+      code: "active_exceeds_total",
+      severity: "warning",
+      message: `Model spec inconsistency: active params (${active_params_b}B) > total params (${total_params_b}B). One of the two is almost certainly wrong.`,
+    });
+  }
 
   const total_tokens = num * tok * epochs;
   stages.push({
@@ -111,10 +149,44 @@ export function computeFtCost(
     ftGpu?.single_gpu_vram_gb ?? ftGpu?.vram_gb ?? 80,
     ftGpu?.gpus_per_node ?? 8
   );
-  const cluster_overhead = clampNonNeg(
+  // User override path: clamp non-negative first, then enforce the physical
+  // floor of 1.0 (a "less than full speed" cluster doesn't exist — comms
+  // can only add overhead, never subtract from compute time).
+  let cluster_overhead = clampNonNeg(
     options?.cluster_overhead ?? auto.multiplier,
     auto.multiplier
   );
+  if (
+    options?.cluster_overhead !== undefined &&
+    Number.isFinite(options.cluster_overhead) &&
+    options.cluster_overhead < 1.0
+  ) {
+    cluster_overhead = 1.0;
+    warnings.push({
+      code: "cluster_overhead_clamped",
+      severity: "info",
+      message: `cluster_overhead override of ${options.cluster_overhead} is non-physical (<1.0); clamped to 1.0. Comms cost can only add overhead, never subtract from compute time.`,
+    });
+  }
+
+  // Hardware feasibility: does the FT VRAM footprint fit any known node?
+  const max_node_vram = largestKnownNodeVramGb();
+  if (ft_vram_gb > max_node_vram) {
+    warnings.push({
+      code: "vram_exceeds_known_hardware",
+      severity: "warning",
+      message: `Estimated FT VRAM (${ft_vram_gb.toFixed(0)} GB) exceeds the largest known node in the catalog (${max_node_vram} GB). Cost is mathematically derived but may not be physically buildable with off-the-shelf clusters; expect multi-node sharding overhead beyond what cluster_overhead models.`,
+    });
+  }
+
+  // Pretraining-scale workload — same FLOPs math, wrong tool framing.
+  if (total_params_b > 0 && total_tokens > PRETRAIN_TOKENS_PER_PARAM * total_params_b * 1e9) {
+    warnings.push({
+      code: "pretrain_scale_workload",
+      severity: "blocker",
+      message: `Total tokens (${total_tokens.toExponential(1)}) exceeds ${PRETRAIN_TOKENS_PER_PARAM}× model params. This is closer to continued pretraining than fine-tuning — Chinchilla-optimal pretraining is ~20 tokens/param. FT estimates above this scale stop being meaningful.`,
+    });
+  }
   stages.push({
     name: "cluster_overhead",
     value: cluster_overhead,
@@ -206,6 +278,17 @@ export function computeFtCost(
 
   const gpu_hours_total = hours * xm;
 
+  // Trivial workload — result is real but probably below decision threshold.
+  // Threshold: < $1 GPU cost. Lets the UI gray out / hide a panel that's
+  // effectively "$0.00" so users don't try to make decisions from noise.
+  if (total_tokens > 0 && gpu_cost_total < 1.0) {
+    warnings.push({
+      code: "trivial_workload",
+      severity: "info",
+      message: `GPU cost (${gpu_cost_total.toFixed(4)}) rounds to under $1 — the workload is too small for the result to be meaningful. Either the dataset is a smoke-test, or the model is much smaller than the rest of the calculator assumes.`,
+    });
+  }
+
   return {
     gpu_hours: gpu_hours_total,
     gpu_cost_usd: gpu_cost_total,
@@ -217,5 +300,6 @@ export function computeFtCost(
     cluster_topology,
     ft_vram_gb,
     stages,
+    warnings,
   };
 }

@@ -2,9 +2,12 @@ import { describe, it, expect } from "vitest";
 
 import {
   computeFtCapex,
+  computeFtCost,
   ftVramGb,
   pickClusterOverhead,
   pickFtGpu,
+  type ModelSpec,
+  type FtTraining,
 } from "../src/ft";
 import {
   cumulativeProjection,
@@ -308,5 +311,79 @@ describe("cumulativeProjection", () => {
   it("null crossover when capex huge", () => {
     const proj = cumulativeProjection(200, 100, 10_000_000, 24);
     expect(proj.crossover_month).toBeNull();
+  });
+});
+
+describe("FtWarning soft caveats (computeFtCost)", () => {
+  const denseSpec = (n: number): ModelSpec => ({
+    name: "test", arch: "dense", total_params_b: n, active_params_b: n,
+  });
+  const training: FtTraining = {
+    num_examples: 10_000, tokens_per_example: 1000, epochs: 3,
+    prep_cost_usd: 0, experiments_multiplier: 1,
+  };
+
+  it("emits no warnings on a normal workload", () => {
+    const r = computeFtCost(denseSpec(8), training, "lora");
+    expect(r.warnings).toEqual([]);
+  });
+
+  it("emits active_exceeds_total when MoE spec is inconsistent", () => {
+    const r = computeFtCost(
+      { name: "broken-moe", arch: "moe", total_params_b: 20, active_params_b: 100 },
+      training,
+      "lora"
+    );
+    expect(r.warnings.some(w => w.code === "active_exceeds_total")).toBe(true);
+  });
+
+  it("emits cluster_overhead_clamped when user passes < 1.0 and clamps to 1.0", () => {
+    const r = computeFtCost(denseSpec(8), training, "lora", { cluster_overhead: 0.5 });
+    expect(r.cluster_overhead).toBe(1.0);
+    expect(r.warnings.some(w => w.code === "cluster_overhead_clamped")).toBe(true);
+  });
+
+  it("does NOT clamp or warn when user passes >= 1.0", () => {
+    const r = computeFtCost(denseSpec(8), training, "lora", { cluster_overhead: 1.5 });
+    expect(r.cluster_overhead).toBe(1.5);
+    expect(r.warnings.some(w => w.code === "cluster_overhead_clamped")).toBe(false);
+  });
+
+  it("emits vram_exceeds_known_hardware for impossibly large models", () => {
+    // 5T dense full FT ≈ 70TB VRAM — no real cluster fits this.
+    const r = computeFtCost(denseSpec(5000), training, "full");
+    expect(r.warnings.some(w => w.code === "vram_exceeds_known_hardware")).toBe(true);
+  });
+
+  it("emits pretrain_scale_workload at >10 tokens per param", () => {
+    // 7B params × 100 tokens/param = 700B tokens → pretraining territory
+    const r = computeFtCost(denseSpec(7), {
+      ...training, num_examples: 100_000_000, tokens_per_example: 1000, epochs: 7,
+    }, "full");
+    expect(r.warnings.some(w => w.code === "pretrain_scale_workload")).toBe(true);
+    const w = r.warnings.find(w => w.code === "pretrain_scale_workload")!;
+    expect(w.severity).toBe("blocker");
+  });
+
+  it("emits trivial_workload when GPU cost rounds under $1", () => {
+    const r = computeFtCost(denseSpec(0.1), {
+      ...training, num_examples: 10, tokens_per_example: 100, epochs: 1,
+    }, "qlora");
+    expect(r.warnings.some(w => w.code === "trivial_workload")).toBe(true);
+  });
+
+  it("zero-data workload does NOT trigger trivial_workload (it's a clean zero)", () => {
+    const r = computeFtCost(denseSpec(70), {
+      ...training, num_examples: 0, tokens_per_example: 0, epochs: 0,
+    }, "qlora");
+    expect(r.warnings.some(w => w.code === "trivial_workload")).toBe(false);
+  });
+
+  it("back-compat computeFtCapex still strips stages AND warnings", () => {
+    const r = computeFtCapex(8, { ...training, method: "lora", cluster_overhead: 0.5 });
+    expect("stages" in r).toBe(false);
+    expect("warnings" in r).toBe(false);
+    // But the clamp still happens — visible via the returned cluster_overhead.
+    expect(r.cluster_overhead).toBe(1.0);
   });
 });

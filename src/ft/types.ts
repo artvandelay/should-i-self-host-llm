@@ -44,7 +44,29 @@ export interface FtStage {
   source: string;
 }
 
-/** Pipeline output — totals plus every stage that produced them. */
+/**
+ * Soft warning attached to a cost breakdown. The engine still returns a
+ * number even when a warning fires — it's the caller's job (UI) to decide
+ * whether to surface, gray out, or block on a warning.
+ *
+ * Severity:
+ *   - "info"     — heads-up; non-physical input was silently clamped
+ *   - "warning"  — result is plausible but the input regime is suspect
+ *   - "blocker"  — result is mathematically derived but is almost certainly
+ *                  the wrong tool for this question (e.g. pretraining)
+ */
+export interface FtWarning {
+  code:
+    | "active_exceeds_total"        // MoE spec inconsistency
+    | "vram_exceeds_known_hardware" // FT VRAM > biggest catalog SKU × node
+    | "pretrain_scale_workload"     // tokens >> Chinchilla-optimal for params
+    | "trivial_workload"            // result rounds to ~$0; not meaningful
+    | "cluster_overhead_clamped";   // user passed < 1.0; clamped to 1.0
+  severity: "info" | "warning" | "blocker";
+  message: string;
+}
+
+/** Pipeline output — totals plus every stage and any warnings that fired. */
 export interface FtCostBreakdown {
   gpu_hours: number;
   gpu_cost_usd: number;
@@ -56,4 +78,6 @@ export interface FtCostBreakdown {
   cluster_topology: "single-gpu" | "multi-gpu" | "multi-node";
   ft_vram_gb: number;
   stages: FtStage[];
+  /** Soft caveats; never block computation. Empty array = clean run. */
+  warnings: FtWarning[];
 }

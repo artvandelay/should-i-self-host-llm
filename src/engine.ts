@@ -34,6 +34,30 @@ export interface GpuRow {
   modal_per_hr: number;
   lambda_per_hr: number;
   runpod_per_hr: number;
+  /**
+   * Optional: peak BF16/FP16 dense matmul throughput in TFLOPS, used for
+   * fine-tuning cost estimates. Examples:
+   *   H100 SXM     989
+   *   H200 SXM     989  (same compute as H100; more HBM)
+   *   B200         2250
+   *   MI300X       1307
+   *   A100 80GB    312
+   * Omit (or leave 0) for GPUs that should NOT be considered for training.
+   */
+  bf16_tflops?: number;
+  /**
+   * Optional: how many of THIS single-GPU unit live in one NVLink/NVSwitch
+   * node. Used to set the cluster-overhead boundary between "multi-GPU
+   * (intra-node, fast)" and "multi-node (Infiniband, slow)". Default 8.
+   */
+  gpus_per_node?: number;
+  /**
+   * Optional: VRAM (GB) of ONE individual accelerator in this row. For a
+   * multi-GPU row like "4xH100 320GB" this is 80, not 320. Used to size
+   * cluster overhead. Defaults to vram_gb if omitted (correct for single-GPU
+   * rows).
+   */
+  single_gpu_vram_gb?: number;
 }
 
 export interface ApiRow {

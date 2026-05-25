@@ -28,14 +28,20 @@
       "vram_gb": 80,
       "modal_per_hr": 3.1,
       "lambda_per_hr": 2.5,
-      "runpod_per_hr": 2.2
+      "runpod_per_hr": 2.2,
+      "bf16_tflops": 312,
+      "single_gpu_vram_gb": 80,
+      "gpus_per_node": 8
     },
     {
       "name": "H100 80GB",
       "vram_gb": 80,
       "modal_per_hr": 4.2,
       "lambda_per_hr": 3.3,
-      "runpod_per_hr": 2.9
+      "runpod_per_hr": 2.9,
+      "bf16_tflops": 989,
+      "single_gpu_vram_gb": 80,
+      "gpus_per_node": 8
     },
     {
       "name": "2xH100 160GB",

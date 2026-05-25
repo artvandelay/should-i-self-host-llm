@@ -790,8 +790,13 @@ function deriveSizeBuckets(models: KnownModel[]) {
   for (const m of models) {
     if (m.params_b <= 0) continue;
     if (m.arch === "moe") {
+      // CRITICAL: MoE without active_b would silently get compute=total params,
+      // re-introducing the bug class we fixed (24x cost overstatement for big
+      // MoEs). Skip the model entirely if we don't know active — better to
+      // omit a tier than to quote a misleading number.
+      if (m.active_b == null || m.active_b <= 0) continue;
       if (!moeMap.has(m.params_b)) {
-        moeMap.set(m.params_b, { total: m.params_b, active: m.active_b ?? m.params_b });
+        moeMap.set(m.params_b, { total: m.params_b, active: m.active_b });
       }
     } else {
       denseSet.add(m.params_b);

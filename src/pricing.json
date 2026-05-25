@@ -21,7 +21,10 @@
       "vram_gb": 40,
       "modal_per_hr": 2.1,
       "lambda_per_hr": 1.85,
-      "runpod_per_hr": 1.6
+      "runpod_per_hr": 1.6,
+      "bf16_tflops": 312,
+      "single_gpu_vram_gb": 40,
+      "gpus_per_node": 8
     },
     {
       "name": "A100 80GB",
@@ -48,28 +51,40 @@
       "vram_gb": 160,
       "modal_per_hr": 8.4,
       "lambda_per_hr": 6.6,
-      "runpod_per_hr": 5.8
+      "runpod_per_hr": 5.8,
+      "bf16_tflops": 989,
+      "single_gpu_vram_gb": 80,
+      "gpus_per_node": 8
     },
     {
       "name": "4xH100 320GB",
       "vram_gb": 320,
       "modal_per_hr": 16.8,
       "lambda_per_hr": 13.2,
-      "runpod_per_hr": 11.6
+      "runpod_per_hr": 11.6,
+      "bf16_tflops": 989,
+      "single_gpu_vram_gb": 80,
+      "gpus_per_node": 8
     },
     {
       "name": "8xH100 640GB",
       "vram_gb": 640,
       "modal_per_hr": 33.6,
       "lambda_per_hr": 26.4,
-      "runpod_per_hr": 23.2
+      "runpod_per_hr": 23.2,
+      "bf16_tflops": 989,
+      "single_gpu_vram_gb": 80,
+      "gpus_per_node": 8
     },
     {
       "name": "8xH200 1128GB",
       "vram_gb": 1128,
       "modal_per_hr": 48,
       "lambda_per_hr": 38.4,
-      "runpod_per_hr": 33.6
+      "runpod_per_hr": 33.6,
+      "bf16_tflops": 989,
+      "single_gpu_vram_gb": 141,
+      "gpus_per_node": 8
     }
   ],
   "apis": {

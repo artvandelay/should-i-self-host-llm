@@ -162,11 +162,11 @@
     "family": "command-r"
   },
   {
-    "params_b": 7,
-    "active_b": null,
+    "params_b": 47,
+    "active_b": 12,
     "name": "Mistral: Mixtral 8x7B Instruct",
-    "arch": "dense",
-    "source": "models.dev:regex",
+    "arch": "moe",
+    "source": "manual:mixtral-override",
     "last_seen": "2026-03-15",
     "family": "mistral"
   },
@@ -180,11 +180,11 @@
     "family": "qwen"
   },
   {
-    "params_b": 7,
-    "active_b": null,
+    "params_b": 47,
+    "active_b": 12,
     "name": "Mixtral 8x7B",
-    "arch": "dense",
-    "source": "models.dev:regex",
+    "arch": "moe",
+    "source": "manual:mixtral-override",
     "last_seen": "2023-12-11",
     "family": "mixtral"
   },
@@ -539,29 +539,29 @@
     "family": "ernie"
   },
   {
-    "params_b": 22,
-    "active_b": null,
+    "params_b": 141,
+    "active_b": 39,
     "name": "Wizardlm 2 8x22B",
-    "arch": "dense",
-    "source": "models.dev:regex",
+    "arch": "moe",
+    "source": "manual:mixtral-override",
     "last_seen": "2024-04-24",
     "family": "other"
   },
   {
-    "params_b": 22,
-    "active_b": null,
+    "params_b": 141,
+    "active_b": 39,
     "name": "Mixtral 8x22B",
-    "arch": "dense",
-    "source": "models.dev:regex",
+    "arch": "moe",
+    "source": "manual:mixtral-override",
     "last_seen": "2024-04-17",
     "family": "mixtral"
   },
   {
-    "params_b": 22,
-    "active_b": null,
+    "params_b": 141,
+    "active_b": 39,
     "name": "Mistral: Mixtral 8x22B Instruct",
-    "arch": "dense",
-    "source": "models.dev:regex",
+    "arch": "moe",
+    "source": "manual:mixtral-override",
     "last_seen": "2024-04-17",
     "family": "mistral"
   },

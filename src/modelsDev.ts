@@ -165,6 +165,11 @@ export function extractOpenWeightModels(payload: ModelsDevPayload): OpenWeightMo
 // =============================================================================
 
 const MOE_RE = /(\d+(?:\.\d+)?)\s*[Bb]-?A\s*(\d+(?:\.\d+)?)\s*[Bb]?/i;
+// Mixtral-style "8x7B" / "8x22B" — N experts × Y-billion-each. Two-of-eight
+// experts fire per token (sparse-MoE-router convention), so active ≈ 2*Y.
+// Total ≈ N*Y * (1 - shared_factor); we use 0.75 to roughly account for
+// shared layers (gives 47 for 8x7B, 141 for 8x22B — published numbers).
+const MIXTRAL_RE = /(\d+)\s*x\s*(\d+(?:\.\d+)?)\s*[Bb]\b/i;
 const MILLION_RE = /(\d+(?:\.\d+)?)\s*[Mm]\b/;
 const BILLION_RE = /(\d+(?:\.\d+)?)\s*[Bb]\b/;
 
@@ -176,6 +181,17 @@ export function resolveParamsB(name: string, modelId: string): ResolvedParams {
     const totalB = parseFloat(moe[1]);
     const activeB = parseFloat(moe[2]);
     if (Number.isFinite(totalB) && Number.isFinite(activeB)) {
+      return { paramsB: totalB, activeB, method: "regex_moe" };
+    }
+  }
+
+  const mixtral = MIXTRAL_RE.exec(search);
+  if (mixtral) {
+    const experts = parseFloat(mixtral[1]);
+    const perExpert = parseFloat(mixtral[2]);
+    if (Number.isFinite(experts) && Number.isFinite(perExpert) && experts >= 2 && experts <= 64) {
+      const totalB = Math.round(experts * perExpert * 0.75);
+      const activeB = Math.round(2 * perExpert);
       return { paramsB: totalB, activeB, method: "regex_moe" };
     }
   }

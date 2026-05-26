@@ -4,6 +4,21 @@
 
 Given your query volume and the API price you'd pay (GPT, Claude, Gemini, DeepSeek), find the largest open-weight model (Llama, Qwen, Mistral) you can self-host on Modal, Lambda, or Runpod for the same cost or less. Live pricing from [models.dev](https://models.dev), GPU rates refreshed nightly via a GitHub Action.
 
+## Use inside an agent
+
+This calculator also ships as an Anthropic-standard Skill for Claude
+Code, Cursor, Codex, and other agent harnesses: **[api-vs-selfhost-skill](https://github.com/artvandelay/api-vs-selfhost-skill)**.
+
+Install in 30 seconds:
+
+```bash
+git clone https://github.com/artvandelay/api-vs-selfhost-skill \
+  ~/.claude/skills/api-vs-selfhost-skill
+```
+
+The skill calls a deterministic Python script for the math and uses
+live web fetches for prices — same engine, agent-native interface.
+
 ## Quick start
 
 ```bash

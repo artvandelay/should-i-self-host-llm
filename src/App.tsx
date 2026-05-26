@@ -159,6 +159,89 @@ function Select<T extends string>({ label, value, onChange, options, hint, toolt
   );
 }
 
+function GettingStarted() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="bg-white rounded-lg shadow-sm border border-slate-200 mb-5 overflow-hidden">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between gap-2 px-5 py-3 text-left hover:bg-slate-50 transition-colors"
+        aria-expanded={open}
+      >
+        <span className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+          <Info className="w-4 h-4 text-indigo-500" />
+          New here? Getting started
+        </span>
+        {open ? (
+          <ChevronDown className="w-4 h-4 text-slate-400" />
+        ) : (
+          <ChevronRight className="w-4 h-4 text-slate-400" />
+        )}
+      </button>
+      {open && (
+        <div className="px-5 pb-5 pt-1 text-sm text-slate-600 space-y-3 border-t border-slate-100">
+          <p>
+            This calculator answers one question: <strong>given the API price you
+            already pay, what's the largest open-weight model you could self-host
+            for the same money or less?</strong>
+          </p>
+          <ol className="list-decimal list-inside space-y-1.5 pl-1">
+            <li>
+              Enter your <strong>weekly query volume</strong>, average input/output
+              tokens, and the <strong>traffic pattern</strong> (steady vs bursty
+              matters — idle GPUs still cost money).
+            </li>
+            <li>
+              Pick an <strong>API baseline</strong> (the model you're comparing
+              against). The headline number is the largest open-weight model that
+              fits that budget.
+            </li>
+            <li>
+              Open <strong>"Show the math"</strong> under any recommendation to
+              see every assumption — VRAM sizing, throughput, GPU choice, hourly
+              rate. Nothing is hidden.
+            </li>
+            <li>
+              For <strong>fine-tuning</strong>, expand the FT panel and set tokens
+              trained + method (LoRA / QLoRA / full). Amber/red banners flag
+              unrealistic inputs but never block the calculation.
+            </li>
+          </ol>
+          <p className="text-xs text-slate-500 pt-1">
+            Deeper reading:{" "}
+            <a
+              href="https://github.com/artvandelay/should-i-self-host-llm#readme"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-indigo-600 hover:underline"
+            >
+              README
+            </a>
+            {" · "}
+            <a
+              href="https://github.com/artvandelay/should-i-self-host-llm/blob/main/src/ft/ASSUMPTIONS.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-indigo-600 hover:underline"
+            >
+              FT assumptions
+            </a>
+            {" · "}
+            <a
+              href="https://github.com/artvandelay/should-i-self-host-llm"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-indigo-600 hover:underline"
+            >
+              Source
+            </a>
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Expander({
   title,
   children,
@@ -714,6 +797,8 @@ export default function App() {
             </button>
           </div>
         </header>
+
+        <GettingStarted />
 
         {/* Presets */}
         <Presets

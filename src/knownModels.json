@@ -81,12 +81,12 @@
     "family": "granite"
   },
   {
-    "params_b": 3.821,
+    "params_b": 3.836,
     "active_b": null,
-    "name": "Phi-3.5-mini instruct (128k)",
+    "name": "Microsoft: Phi 4 Mini Instruct",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2024-08-20",
+    "last_seen": "2026-05-07",
     "family": "phi"
   },
   {
@@ -620,6 +620,15 @@
     "family": "gemma"
   },
   {
+    "params_b": 26.124,
+    "active_b": null,
+    "name": "Arcee AI: Trinity Mini",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-01-28",
+    "family": "other"
+  },
+  {
     "params_b": 27,
     "active_b": null,
     "name": "Gemma 2 27B",
@@ -807,6 +816,15 @@
     "family": "other"
   },
   {
+    "params_b": 41.873,
+    "active_b": null,
+    "name": "Phi-3.5-MoE instruct (128k)",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2024-08-20",
+    "family": "phi"
+  },
+  {
     "params_b": 49,
     "active_b": null,
     "name": "Llama 3.3 Nemotron Super 49B v1.5",
@@ -941,11 +959,20 @@
   {
     "params_b": 107.711,
     "active_b": null,
-    "name": "GLM 4.5V",
+    "name": "GLM 4.6V",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-08-11",
+    "last_seen": "2025-12-08",
     "family": "glmv"
+  },
+  {
+    "params_b": 107.711,
+    "active_b": null,
+    "name": "GLM-4.6V",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2025-09-30",
+    "family": "glm"
   },
   {
     "params_b": 110.469,
@@ -1117,12 +1144,12 @@
     "family": "glm"
   },
   {
-    "params_b": 358.338,
+    "params_b": 358.458,
     "active_b": null,
-    "name": "GLM 4.7",
+    "name": "GLM 4.7 FP8",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-01-29",
+    "last_seen": "2026-04-25",
     "family": "glm"
   },
   {

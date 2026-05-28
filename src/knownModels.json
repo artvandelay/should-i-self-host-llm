@@ -1304,6 +1304,15 @@
     "family": "deepseek-thinking"
   },
   {
+    "params_b": 1023.245,
+    "active_b": null,
+    "name": "MiMo-V2.5-Pro",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-05-27",
+    "family": "mimo"
+  },
+  {
     "params_b": 1025.658,
     "active_b": null,
     "name": "Ling-2.6-1T",
@@ -1315,10 +1324,10 @@
   {
     "params_b": 1026.471,
     "active_b": null,
-    "name": "Kimi K2 0905",
+    "name": "Kimi K2 Instruct 0905",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-09-05",
+    "last_seen": "2026-05-27",
     "family": "kimi"
   },
   {

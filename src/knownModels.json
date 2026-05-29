@@ -317,10 +317,10 @@
   {
     "params_b": 9,
     "active_b": null,
-    "name": "AutoGLM-Phone-9B-Multilingual",
+    "name": "Qwen3.5-9B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-12-10",
+    "last_seen": "2026-02-15",
     "family": "other"
   },
   {
@@ -376,15 +376,6 @@
     "source": "models.dev:regex",
     "last_seen": "2026-01-19",
     "family": "gemma"
-  },
-  {
-    "params_b": 12,
-    "active_b": null,
-    "name": "gemma 3 12b it",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-04-25",
-    "family": "unsloth"
   },
   {
     "params_b": 12,
@@ -505,10 +496,10 @@
   {
     "params_b": 17,
     "active_b": null,
-    "name": "Llama 4 Maverick Instruct",
+    "name": "Llama 4 Scout 17B 16E Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-04-06",
+    "last_seen": "2025-04-16",
     "family": "llama"
   },
   {
@@ -519,6 +510,15 @@
     "source": "models.dev:regex",
     "last_seen": "2026-04-16",
     "family": "gpt-oss"
+  },
+  {
+    "params_b": 20,
+    "active_b": null,
+    "name": "OpenAI: GPT OSS 20B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-08-06",
+    "family": "other"
   },
   {
     "params_b": 20.905,
@@ -639,15 +639,6 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Qwen3.6 27B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-04-27",
-    "family": "qwen3.6"
-  },
-  {
-    "params_b": 27,
-    "active_b": null,
     "name": "Qwen3.6 27B TEE",
     "arch": "dense",
     "source": "models.dev:regex",
@@ -657,10 +648,10 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Google Gemma 3 27B Instruct",
+    "name": "gemma3:27b",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-03-12",
+    "last_seen": "2026-01-19",
     "family": "gemma"
   },
   {
@@ -709,6 +700,15 @@
     "family": "sarvam"
   },
   {
+    "params_b": 30,
+    "active_b": 3,
+    "name": "Qwen3-Coder-30B-A3B-Instruct",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2025-10-28",
+    "family": "other"
+  },
+  {
     "params_b": 31,
     "active_b": null,
     "name": "Google Gemma 4 31B Instruct",
@@ -725,6 +725,15 @@
     "source": "models.dev:hf",
     "last_seen": "2026-01-19",
     "family": "glm-flash"
+  },
+  {
+    "params_b": 31.221,
+    "active_b": null,
+    "name": "GLM-4.7-Flash",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2025-08-08",
+    "family": "glm"
   },
   {
     "params_b": 32,
@@ -856,7 +865,7 @@
     "name": "DeepSeek R1 Distill Llama 70B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-25",
+    "last_seen": "2025-01-23",
     "family": "deepseek-thinking"
   },
   {
@@ -891,7 +900,7 @@
     "name": "Qwen 2.5 72B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2024-09-19",
+    "last_seen": "2024-10-15",
     "family": "qwen"
   },
   {
@@ -962,17 +971,17 @@
     "name": "GLM 4.6V",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-12-08",
-    "family": "glmv"
+    "last_seen": "2026-04-25",
+    "family": "glm"
   },
   {
     "params_b": 107.711,
     "active_b": null,
-    "name": "GLM-4.6V",
+    "name": "GLM 4.5V",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-09-30",
-    "family": "glm"
+    "last_seen": "2025-08-11",
+    "family": "glmv"
   },
   {
     "params_b": 110.469,
@@ -1018,6 +1027,15 @@
     "source": "models.dev:regex",
     "last_seen": "2026-05-07",
     "family": "other"
+  },
+  {
+    "params_b": 120,
+    "active_b": null,
+    "name": "GPT-OSS 120B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-08-05",
+    "family": "gpt"
   },
   {
     "params_b": 122,
@@ -1270,10 +1288,10 @@
   {
     "params_b": 684.531,
     "active_b": null,
-    "name": "DeepSeek R1",
+    "name": "DeepSeek-R1-0528",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-01-20",
+    "last_seen": "2025-05-28",
     "family": "deepseek-thinking"
   },
   {
@@ -1338,6 +1356,15 @@
     "source": "models.dev:hf",
     "last_seen": "2025-11-07",
     "family": "kimi"
+  },
+  {
+    "params_b": 1058.118,
+    "active_b": null,
+    "name": "Kimi-K2-Thinking",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2025-11-06",
+    "family": "kimi-thinking"
   },
   {
     "params_b": 1058.589,

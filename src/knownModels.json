@@ -1090,6 +1090,15 @@
     "family": "other"
   },
   {
+    "params_b": 201.365,
+    "active_b": null,
+    "name": "Step 3.7 Flash",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-05-28",
+    "family": "other"
+  },
+  {
     "params_b": 228.704,
     "active_b": null,
     "name": "MiniMax M2.1",

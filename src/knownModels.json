@@ -809,10 +809,10 @@
   {
     "params_b": 35,
     "active_b": 3,
-    "name": "Qwen 3.5 35B A3B",
+    "name": "Qwen3.6-35B-A3B",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-05-25",
+    "last_seen": "2026-05-30",
     "family": "qwen"
   },
   {
@@ -1191,10 +1191,10 @@
   {
     "params_b": 397,
     "active_b": 17,
-    "name": "Qwen3.5-397B-A17B-fast",
+    "name": "Qwen3.5-397B-A17B",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-05-07",
+    "last_seen": "2026-05-30",
     "family": "qwen"
   },
   {

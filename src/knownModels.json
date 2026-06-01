@@ -396,6 +396,15 @@
     "family": "other"
   },
   {
+    "params_b": 12,
+    "active_b": null,
+    "name": "gemma 3 12b it",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-04-25",
+    "family": "unsloth"
+  },
+  {
     "params_b": 12.248,
     "active_b": null,
     "name": "Mistral Nemo",

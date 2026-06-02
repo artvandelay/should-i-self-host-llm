@@ -320,7 +320,7 @@
     "name": "Qwen3.5-9B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-02-15",
+    "last_seen": "2026-04-22",
     "family": "other"
   },
   {
@@ -640,10 +640,11 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Gemma 2 27B",
+    "name": "Qwen3.6-27B",
     "arch": "dense",
-    "source": "manual",
-    "last_seen": "2026-05-25"
+    "source": "models.dev:regex",
+    "last_seen": "2026-06-01",
+    "family": "other"
   },
   {
     "params_b": 27,
@@ -1203,7 +1204,7 @@
     "name": "Qwen3.5-397B-A17B",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-05-30",
+    "last_seen": "2026-06-01",
     "family": "qwen"
   },
   {

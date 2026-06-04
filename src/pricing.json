@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-06-03",
-  "gpu_last_updated": "2026-06-03",
+  "last_updated": "2026-06-04",
+  "gpu_last_updated": "2026-06-04",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -337,6 +337,11 @@
       "label": "Alibaba Qwen3-Omni Flash Realtime",
       "input_per_1m": 0.52,
       "output_per_1m": 1.99
+    },
+    "alibaba_qwen3_7_plus": {
+      "label": "Alibaba Qwen3.7 Plus",
+      "input_per_1m": 0.5,
+      "output_per_1m": 3
     },
     "alibaba_qwen_omni_turbo_realtime": {
       "label": "Alibaba Qwen-Omni Turbo Realtime",

@@ -652,7 +652,7 @@
     "name": "Qwen3.6 27B TEE",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-25",
+    "last_seen": "2026-04-22",
     "family": "qwen"
   },
   {
@@ -724,7 +724,7 @@
     "name": "Google Gemma 4 31B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-05-25",
+    "last_seen": "2026-06-04",
     "family": "gemma"
   },
   {
@@ -756,10 +756,10 @@
   {
     "params_b": 32,
     "active_b": null,
-    "name": "Qwen3 32B TEE",
+    "name": "Qwen3-32B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-25",
+    "last_seen": "2026-04-16",
     "family": "qwen"
   },
   {
@@ -1268,6 +1268,15 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-02-26",
     "family": "qwen"
+  },
+  {
+    "params_b": 550,
+    "active_b": 55,
+    "name": "Nemotron 3 Ultra (free)",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-06-04",
+    "family": "nemotron"
   },
   {
     "params_b": 671,

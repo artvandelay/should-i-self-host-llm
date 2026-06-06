@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-06-05",
-  "gpu_last_updated": "2026-06-05",
+  "last_updated": "2026-06-06",
+  "gpu_last_updated": "2026-06-06",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -553,6 +553,11 @@
       "input_per_1m": 0.5,
       "output_per_1m": 10
     },
+    "google_gemini_2_5_flash_tts": {
+      "label": "Google Gemini 2.5 Flash TTS",
+      "input_per_1m": 0.5,
+      "output_per_1m": 10
+    },
     "google_nano_banana": {
       "label": "Google Nano Banana",
       "input_per_1m": 0.3,
@@ -637,6 +642,11 @@
       "label": "Google Gemini 2.5 Pro Preview TTS",
       "input_per_1m": 1,
       "output_per_1m": 20
+    },
+    "google_nano_banana_pro": {
+      "label": "Google Nano Banana Pro",
+      "input_per_1m": 2,
+      "output_per_1m": 120
     },
     "google_nano_banana_2": {
       "label": "Google Nano Banana 2",

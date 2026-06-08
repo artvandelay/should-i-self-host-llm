@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-06-07",
-  "gpu_last_updated": "2026-06-07",
+  "last_updated": "2026-06-08",
+  "gpu_last_updated": "2026-06-08",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -550,11 +550,6 @@
     },
     "google_gemini_2_5_flash_preview_tts": {
       "label": "Google Gemini 2.5 Flash Preview TTS",
-      "input_per_1m": 0.5,
-      "output_per_1m": 10
-    },
-    "google_gemini_2_5_flash_tts": {
-      "label": "Google Gemini 2.5 Flash TTS",
       "input_per_1m": 0.5,
       "output_per_1m": 10
     },

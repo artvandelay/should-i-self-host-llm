@@ -329,7 +329,7 @@
     "name": "Nemotron Nano 9B V2 (free)",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-09-05",
+    "last_seen": "2025-08-18",
     "family": "nemotron"
   },
   {
@@ -1159,7 +1159,7 @@
     "name": "Hy3 preview",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-22",
+    "last_seen": "2026-04-20",
     "family": "Hy"
   },
   {

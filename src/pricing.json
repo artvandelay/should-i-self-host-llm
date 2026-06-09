@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-06-08",
-  "gpu_last_updated": "2026-06-08",
+  "last_updated": "2026-06-09",
+  "gpu_last_updated": "2026-06-09",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -838,11 +838,6 @@
       "input_per_1m": 1.75,
       "output_per_1m": 14
     },
-    "openai_o1_mini": {
-      "label": "OpenAI o1-mini",
-      "input_per_1m": 1.1,
-      "output_per_1m": 4.4
-    },
     "openai_gpt_5_1_codex": {
       "label": "OpenAI GPT-5.1 Codex",
       "input_per_1m": 1.25,
@@ -852,11 +847,6 @@
       "label": "OpenAI GPT-4o (2024-05-13)",
       "input_per_1m": 5,
       "output_per_1m": 15
-    },
-    "openai_o1_preview": {
-      "label": "OpenAI o1-preview",
-      "input_per_1m": 15,
-      "output_per_1m": 60
     },
     "openai_gpt_5_4_mini": {
       "label": "OpenAI GPT-5.4 mini",

@@ -227,10 +227,10 @@
   {
     "params_b": 8,
     "active_b": null,
-    "name": "Sao10K: Llama 3 8B Lunaris",
+    "name": "Llama 3.1 8B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-03-15",
+    "last_seen": "2026-05-27",
     "family": "llama"
   },
   {
@@ -724,7 +724,7 @@
     "name": "Google Gemma 4 31B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-06-04",
+    "last_seen": "2026-06-08",
     "family": "gemma"
   },
   {
@@ -1281,10 +1281,10 @@
   {
     "params_b": 550,
     "active_b": 55,
-    "name": "Nemotron 3 Ultra (free)",
+    "name": "NVIDIA Nemotron 3 Ultra",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-06-04",
+    "last_seen": "2026-06-08",
     "family": "nemotron"
   },
   {
@@ -1384,6 +1384,15 @@
     "source": "models.dev:hf",
     "last_seen": "2026-04-23",
     "family": "ling"
+  },
+  {
+    "params_b": 1025.658,
+    "active_b": null,
+    "name": "inclusionAI: Ring-2.6-1T",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-05-14",
+    "family": "other"
   },
   {
     "params_b": 1026.471,

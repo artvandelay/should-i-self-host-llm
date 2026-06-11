@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-06-10",
-  "gpu_last_updated": "2026-06-10",
+  "last_updated": "2026-06-11",
+  "gpu_last_updated": "2026-06-11",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -468,21 +468,6 @@
       "input_per_1m": 0,
       "output_per_1m": 0
     },
-    "nvidia_kimi_k2_instruct": {
-      "label": "Nvidia Kimi K2 Instruct",
-      "input_per_1m": 0,
-      "output_per_1m": 0
-    },
-    "nvidia_deepseek_v3_2": {
-      "label": "Nvidia DeepSeek V3.2",
-      "input_per_1m": 0,
-      "output_per_1m": 0
-    },
-    "nvidia_deepseek_v3_1_terminus": {
-      "label": "Nvidia DeepSeek V3.1 Terminus",
-      "input_per_1m": 0,
-      "output_per_1m": 0
-    },
     "nvidia_usdcode": {
       "label": "Nvidia usdcode",
       "input_per_1m": 0,
@@ -490,21 +475,6 @@
     },
     "nvidia_phi_4_multimodal": {
       "label": "Nvidia Phi 4 Multimodal",
-      "input_per_1m": 0,
-      "output_per_1m": 0
-    },
-    "nvidia_phi_4_mini": {
-      "label": "Nvidia Phi-4-Mini",
-      "input_per_1m": 0,
-      "output_per_1m": 0
-    },
-    "nvidia_gemma_3_27b_it": {
-      "label": "Nvidia Gemma-3-27B-IT",
-      "input_per_1m": 0,
-      "output_per_1m": 0
-    },
-    "nvidia_gpt_oss_120b": {
-      "label": "Nvidia GPT-OSS-120B",
       "input_per_1m": 0,
       "output_per_1m": 0
     },
@@ -522,36 +492,6 @@
       "label": "Zhipu AI GLM-5.1",
       "input_per_1m": 6,
       "output_per_1m": 24
-    },
-    "groq_mistral_saba_24b": {
-      "label": "Groq Mistral Saba 24B",
-      "input_per_1m": 0.79,
-      "output_per_1m": 0.79
-    },
-    "groq_allam_2_7b": {
-      "label": "Groq ALLaM-2-7b",
-      "input_per_1m": 0,
-      "output_per_1m": 0
-    },
-    "groq_compound_mini": {
-      "label": "Groq Compound Mini",
-      "input_per_1m": 0,
-      "output_per_1m": 0
-    },
-    "groq_compound": {
-      "label": "Groq Compound",
-      "input_per_1m": 0,
-      "output_per_1m": 0
-    },
-    "groq_orpheus_v1_english": {
-      "label": "Groq Orpheus V1 English",
-      "input_per_1m": 0,
-      "output_per_1m": 0
-    },
-    "groq_orpheus_arabic_saudi": {
-      "label": "Groq Orpheus Arabic Saudi",
-      "input_per_1m": 40,
-      "output_per_1m": 0
     },
     "google_gemini_2_5_flash_preview_tts": {
       "label": "Google Gemini 2.5 Flash Preview TTS",

@@ -59,7 +59,7 @@
     "name": "Llama 3.2 3B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-03-12",
+    "last_seen": "2026-06-11",
     "family": "llama"
   },
   {
@@ -119,10 +119,10 @@
   {
     "params_b": 4,
     "active_b": null,
-    "name": "riva-translate-4b-instruct-v1_1",
+    "name": "MedGemma 4B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-12-12",
+    "last_seen": "2026-04-26",
     "family": "other"
   },
   {
@@ -173,10 +173,10 @@
   {
     "params_b": 7,
     "active_b": null,
-    "name": "Qwen: Qwen2.5 7B Instruct",
+    "name": "Trendyol 7B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-04-16",
+    "last_seen": "2026-06-06",
     "family": "qwen"
   },
   {
@@ -311,7 +311,7 @@
     "name": "Qwen 3.5 9B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-19",
+    "last_seen": "2026-06-11",
     "family": "qwen"
   },
   {
@@ -598,7 +598,7 @@
     "name": "Mistral Small 3.2 24B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-03-16",
+    "last_seen": "2026-06-11",
     "family": "mistral-small"
   },
   {
@@ -625,7 +625,7 @@
     "name": "Google Gemma 4 26B A4B Instruct",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-04-12",
+    "last_seen": "2026-06-11",
     "family": "gemma"
   },
   {
@@ -685,10 +685,10 @@
   {
     "params_b": 30,
     "active_b": 3,
-    "name": "NVIDIA Nemotron 3 Nano Omni",
+    "name": "Nemotron Cascade 2 30B A3B",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-04-28",
+    "last_seen": "2026-06-11",
     "family": "nemotron"
   },
   {
@@ -724,7 +724,7 @@
     "name": "Google Gemma 4 31B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-06-08",
+    "last_seen": "2026-06-11",
     "family": "gemma"
   },
   {
@@ -819,10 +819,10 @@
   {
     "params_b": 35,
     "active_b": 3,
-    "name": "Qwen3.6-35B-A3B",
+    "name": "Qwen 3.5 35B A3B",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-05-30",
+    "last_seen": "2026-06-11",
     "family": "qwen"
   },
   {
@@ -863,10 +863,10 @@
   {
     "params_b": 70,
     "active_b": null,
-    "name": "Sao10K: Llama 3.1 70B Hanami x1",
+    "name": "Llama 3.3 70B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-03-15",
+    "last_seen": "2026-06-11",
     "family": "llama"
   },
   {
@@ -924,11 +924,11 @@
   },
   {
     "params_b": 80,
-    "active_b": 3,
-    "name": "Qwen3-Next-80B-A3B-Thinking-fast",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2026-05-07",
+    "active_b": null,
+    "name": "Qwen 3 Next 80b",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-06-11",
     "family": "qwen"
   },
   {
@@ -1219,10 +1219,10 @@
   {
     "params_b": 397,
     "active_b": 17,
-    "name": "Qwen3.5-397B-A17B",
+    "name": "Qwen 3.5 397B",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-06-01",
+    "last_seen": "2026-06-11",
     "family": "qwen"
   },
   {
@@ -1257,7 +1257,7 @@
     "name": "Hermes 3 Llama 3.1 405b",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-03-12",
+    "last_seen": "2026-06-11",
     "family": "hermes"
   },
   {
@@ -1275,7 +1275,7 @@
     "name": "Qwen 3 Coder 480B Turbo",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-02-26",
+    "last_seen": "2026-06-11",
     "family": "qwen"
   },
   {
@@ -1284,7 +1284,7 @@
     "name": "NVIDIA Nemotron 3 Ultra",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-06-08",
+    "last_seen": "2026-06-11",
     "family": "nemotron"
   },
   {

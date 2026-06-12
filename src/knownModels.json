@@ -18,6 +18,15 @@
     "family": "gemma"
   },
   {
+    "params_b": 1,
+    "active_b": null,
+    "name": "Llama 3.2 1B Instruct",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-04-25",
+    "family": "unsloth"
+  },
+  {
     "params_b": 1.2,
     "active_b": null,
     "name": "LFM2.5-1.2B-Thinking (free)",
@@ -70,6 +79,15 @@
     "source": "models.dev:regex",
     "last_seen": "2026-03-15",
     "family": "mistral"
+  },
+  {
+    "params_b": 3,
+    "active_b": null,
+    "name": "Llama 3.2 3B Instruct",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-04-25",
+    "family": "unsloth"
   },
   {
     "params_b": 3.191,
@@ -227,10 +245,10 @@
   {
     "params_b": 8,
     "active_b": null,
-    "name": "Llama 3.1 8B",
+    "name": "Sao10K: Llama 3 8B Lunaris",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-05-27",
+    "last_seen": "2026-03-15",
     "family": "llama"
   },
   {
@@ -317,15 +335,6 @@
   {
     "params_b": 9,
     "active_b": null,
-    "name": "Qwen3.5-9B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-04-22",
-    "family": "other"
-  },
-  {
-    "params_b": 9,
-    "active_b": null,
     "name": "Nemotron Nano 9B V2 (free)",
     "arch": "dense",
     "source": "models.dev:regex",
@@ -340,6 +349,15 @@
     "source": "models.dev:regex",
     "last_seen": "2024-06-27",
     "family": "gemma"
+  },
+  {
+    "params_b": 9,
+    "active_b": null,
+    "name": "AutoGLM-Phone-9B-Multilingual",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-12-10",
+    "family": "other"
   },
   {
     "params_b": 10.7,
@@ -505,10 +523,10 @@
   {
     "params_b": 17,
     "active_b": null,
-    "name": "Llama 4 Scout Instruct",
+    "name": "Llama 4 Maverick 17B 128E Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-04-06",
+    "last_seen": "2025-04-29",
     "family": "llama"
   },
   {
@@ -618,6 +636,15 @@
     "source": "models.dev:regex",
     "last_seen": "2025-06-01",
     "family": "magistral-small"
+  },
+  {
+    "params_b": 24,
+    "active_b": 2,
+    "name": "LFM2-24B-A2B",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-02-25",
+    "family": "liquid"
   },
   {
     "params_b": 26,
@@ -742,7 +769,7 @@
     "name": "GLM-4.7-Flash",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-08-08",
+    "last_seen": "2026-01-19",
     "family": "glm"
   },
   {
@@ -756,10 +783,10 @@
   {
     "params_b": 32,
     "active_b": null,
-    "name": "Qwen3-32B",
+    "name": "Qwen2.5 Coder 32B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-16",
+    "last_seen": "2026-04-25",
     "family": "qwen"
   },
   {
@@ -863,10 +890,10 @@
   {
     "params_b": 70,
     "active_b": null,
-    "name": "Llama 3.3 70B",
+    "name": "Sao10K: Llama 3.1 Euryale 70B v2.2",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-06-11",
+    "last_seen": "2026-03-15",
     "family": "llama"
   },
   {
@@ -875,7 +902,7 @@
     "name": "DeepSeek R1 Distill Llama 70B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-01-23",
+    "last_seen": "2026-04-25",
     "family": "deepseek-thinking"
   },
   {
@@ -910,7 +937,7 @@
     "name": "Qwen 2.5 72B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2024-10-15",
+    "last_seen": "2024-09-19",
     "family": "qwen"
   },
   {
@@ -1129,10 +1156,10 @@
   {
     "params_b": 235,
     "active_b": 22,
-    "name": "Qwen3-235B-A22B-Thinking-2507-fast",
+    "name": "Qwen 3 235B A22B Thinking 2507",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-05-07",
+    "last_seen": "2026-06-11",
     "family": "qwen"
   },
   {
@@ -1233,6 +1260,15 @@
     "source": "models.dev:hf",
     "last_seen": "2026-04-11",
     "family": "other"
+  },
+  {
+    "params_b": 398.635,
+    "active_b": null,
+    "name": "Trinity Large Thinking",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-04-03",
+    "family": "trinity"
   },
   {
     "params_b": 405,
@@ -1350,12 +1386,12 @@
     "family": "deepseek"
   },
   {
-    "params_b": 753.864,
+    "params_b": 753.91,
     "active_b": null,
     "name": "GLM-5.1",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-07",
+    "last_seen": "2026-03-27",
     "family": "glm"
   },
   {
@@ -1428,6 +1464,15 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-04-21",
+    "family": "kimi-k2.6"
+  },
+  {
+    "params_b": 1058.589,
+    "active_b": null,
+    "name": "Kimi-K2.6",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-04-20",
     "family": "kimi"
   }
 ]

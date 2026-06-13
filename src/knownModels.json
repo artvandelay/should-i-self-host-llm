@@ -1440,39 +1440,30 @@
     "family": "kimi"
   },
   {
+    "params_b": 1026.471,
+    "active_b": null,
+    "name": "Kimi K2 0905",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2025-09-05",
+    "family": "kimi-k2"
+  },
+  {
     "params_b": 1058.118,
     "active_b": null,
     "name": "Kimi K2 Thinking",
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2025-11-07",
-    "family": "kimi"
-  },
-  {
-    "params_b": 1058.118,
-    "active_b": null,
-    "name": "Kimi-K2-Thinking",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2025-11-06",
     "family": "kimi-thinking"
   },
   {
     "params_b": 1058.589,
     "active_b": null,
-    "name": "Kimi K2.6",
+    "name": "Kimi K2.7 Code",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-21",
-    "family": "kimi-k2.6"
-  },
-  {
-    "params_b": 1058.589,
-    "active_b": null,
-    "name": "Kimi-K2.6",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-04-20",
-    "family": "kimi"
+    "last_seen": "2026-06-12",
+    "family": "kimi-k2"
   }
 ]

@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-06-12",
-  "gpu_last_updated": "2026-06-12",
+  "last_updated": "2026-06-13",
+  "gpu_last_updated": "2026-06-13",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -113,10 +113,10 @@
       "input_per_1m": 1,
       "output_per_1m": 2
     },
-    "fireworks_ai_qwen_3_6_plus": {
-      "label": "Fireworks AI Qwen 3.6 Plus",
-      "input_per_1m": 0.5,
-      "output_per_1m": 3
+    "fireworks_ai_qwen_3_7_plus": {
+      "label": "Fireworks AI Qwen 3.7 Plus",
+      "input_per_1m": 0.4,
+      "output_per_1m": 1.6
     },
     "zhipu_ai_glm_5_1": {
       "label": "Zhipu AI GLM-5.1",

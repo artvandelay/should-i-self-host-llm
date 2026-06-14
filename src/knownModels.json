@@ -1297,6 +1297,15 @@
     "family": "hermes"
   },
   {
+    "params_b": 427.04,
+    "active_b": null,
+    "name": "MiniMax-M3",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-06-12",
+    "family": "minimax"
+  },
+  {
     "params_b": 456.09,
     "active_b": null,
     "name": "MiniMax M1",

@@ -38,10 +38,10 @@
   {
     "params_b": 2,
     "active_b": null,
-    "name": "Gemma 3n E2b It",
+    "name": "Gemma 4 E2B IT",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-06-12",
+    "last_seen": "2026-04-02",
     "family": "gemma"
   },
   {
@@ -1472,7 +1472,7 @@
     "name": "Kimi K2.7 Code",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-06-12",
+    "last_seen": "2026-06-14",
     "family": "kimi-k2"
   }
 ]

@@ -831,7 +831,7 @@
     "name": "Laguna XS.2",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-28",
+    "last_seen": "2026-06-13",
     "family": "other"
   },
   {
@@ -1472,7 +1472,7 @@
     "name": "Kimi K2.7 Code",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-06-14",
+    "last_seen": "2026-06-12",
     "family": "kimi-k2"
   }
 ]

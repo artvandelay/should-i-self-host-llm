@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-06-18",
-  "gpu_last_updated": "2026-06-18",
+  "last_updated": "2026-06-19",
+  "gpu_last_updated": "2026-06-19",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -122,6 +122,11 @@
       "label": "Zhipu AI GLM-5.1",
       "input_per_1m": 6,
       "output_per_1m": 24
+    },
+    "zhipu_ai_glm_5_2": {
+      "label": "Zhipu AI GLM-5.2",
+      "input_per_1m": 1.4,
+      "output_per_1m": 4.4
     },
     "zhipu_ai_glm_5v_turbo": {
       "label": "Zhipu AI GLM-5V-Turbo",
@@ -467,6 +472,11 @@
       "label": "OpenAI GPT-5.2 Codex",
       "input_per_1m": 1.75,
       "output_per_1m": 14
+    },
+    "openai_gpt_image_2": {
+      "label": "OpenAI gpt-image-2",
+      "input_per_1m": 5,
+      "output_per_1m": 30
     },
     "openai_gpt_5_1": {
       "label": "OpenAI GPT-5.1",

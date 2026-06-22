@@ -1253,6 +1253,15 @@
     "family": "deepseek"
   },
   {
+    "params_b": 396.802,
+    "active_b": null,
+    "name": "Nex-N2-Pro",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-06-08",
+    "family": "agi"
+  },
+  {
     "params_b": 397,
     "active_b": 17,
     "name": "Qwen 3.5 397B",

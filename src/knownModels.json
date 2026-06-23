@@ -1320,7 +1320,7 @@
     "name": "MiniMax-M3",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-06-12",
+    "last_seen": "2026-06-01",
     "family": "minimax"
   },
   {
@@ -1397,10 +1397,10 @@
   {
     "params_b": 684.531,
     "active_b": null,
-    "name": "DeepSeek-R1-0528",
+    "name": "DeepSeek-R1",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-05-28",
+    "last_seen": "2025-05-29",
     "family": "deepseek-thinking"
   },
   {

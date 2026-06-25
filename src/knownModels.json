@@ -254,15 +254,6 @@
   {
     "params_b": 8,
     "active_b": null,
-    "name": "Hermes 2 Pro Llama 3 8B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2024-05-27",
-    "family": "hermes"
-  },
-  {
-    "params_b": 8,
-    "active_b": null,
     "name": "Qwen: Qwen3 8B",
     "arch": "dense",
     "source": "models.dev:regex",
@@ -1181,15 +1172,6 @@
     "family": "nemotron"
   },
   {
-    "params_b": 253,
-    "active_b": null,
-    "name": "Llama 3.1 Nemotron Ultra 253B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-04-07",
-    "family": "llama"
-  },
-  {
     "params_b": 298.786,
     "active_b": null,
     "name": "Hy3 preview",
@@ -1454,7 +1436,7 @@
     "name": "MiMo-V2.5-Pro",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-22",
+    "last_seen": "2026-05-27",
     "family": "mimo"
   },
   {

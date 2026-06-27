@@ -18,15 +18,6 @@
     "family": "gemma"
   },
   {
-    "params_b": 1,
-    "active_b": null,
-    "name": "Llama 3.2 1B Instruct",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-04-25",
-    "family": "unsloth"
-  },
-  {
     "params_b": 1.2,
     "active_b": null,
     "name": "LFM2.5-1.2B-Thinking (free)",
@@ -79,15 +70,6 @@
     "source": "models.dev:regex",
     "last_seen": "2026-03-15",
     "family": "mistral"
-  },
-  {
-    "params_b": 3,
-    "active_b": null,
-    "name": "Llama 3.2 3B Instruct",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-04-25",
-    "family": "unsloth"
   },
   {
     "params_b": 3.191,
@@ -694,10 +676,10 @@
   {
     "params_b": 30,
     "active_b": 3,
-    "name": "Qwen3 30B A3B",
+    "name": "Qwen: Qwen3 30B A3B Instruct 2507",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-04-25",
+    "last_seen": "2026-03-15",
     "family": "qwen"
   },
   {
@@ -777,7 +759,7 @@
     "name": "Qwen2.5 Coder 32B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-25",
+    "last_seen": "2026-03-15",
     "family": "qwen"
   },
   {
@@ -893,7 +875,7 @@
     "name": "DeepSeek R1 Distill Llama 70B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-25",
+    "last_seen": "2025-01-23",
     "family": "deepseek-thinking"
   },
   {
@@ -999,17 +981,17 @@
     "name": "GLM 4.6V",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-25",
-    "family": "glm"
+    "last_seen": "2025-12-08",
+    "family": "glmv"
   },
   {
     "params_b": 107.711,
     "active_b": null,
-    "name": "GLM 4.5V",
+    "name": "GLM-4.5V",
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2025-08-11",
-    "family": "glmv"
+    "family": "glm"
   },
   {
     "params_b": 110.469,
@@ -1156,10 +1138,10 @@
   {
     "params_b": 235,
     "active_b": 22,
-    "name": "Qwen 3 235B A22B Thinking 2507",
+    "name": "Qwen3 235B A22B Thinking 2507 TEE",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-06-11",
+    "last_seen": "2026-06-21",
     "family": "qwen"
   },
   {

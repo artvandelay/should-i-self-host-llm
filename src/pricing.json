@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-06-26",
-  "gpu_last_updated": "2026-06-26",
+  "last_updated": "2026-06-27",
+  "gpu_last_updated": "2026-06-27",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -548,11 +548,6 @@
       "input_per_1m": 1,
       "output_per_1m": 5
     },
-    "anthropic_claude_haiku_3_5": {
-      "label": "Anthropic Claude Haiku 3.5",
-      "input_per_1m": 0.8,
-      "output_per_1m": 4
-    },
     "anthropic_claude_opus_4__latest_": {
       "label": "Anthropic Claude Opus 4 (latest)",
       "input_per_1m": 15,
@@ -657,11 +652,6 @@
       "label": "Anthropic Claude Sonnet 4.6",
       "input_per_1m": 3,
       "output_per_1m": 15
-    },
-    "anthropic_claude_haiku_3_5__latest_": {
-      "label": "Anthropic Claude Haiku 3.5 (latest)",
-      "input_per_1m": 0.8,
-      "output_per_1m": 4
     },
     "perplexity_sonar_reasoning_pro": {
       "label": "Perplexity Sonar Reasoning Pro",

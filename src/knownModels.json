@@ -1386,7 +1386,7 @@
     "family": "deepseek"
   },
   {
-    "params_b": 753.33,
+    "params_b": 753.376,
     "active_b": null,
     "name": "GLM-5.2",
     "arch": "dense",
@@ -1427,7 +1427,7 @@
     "name": "Ling-2.6-1T",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-23",
+    "last_seen": "2026-06-29",
     "family": "ling"
   },
   {
@@ -1463,7 +1463,7 @@
     "name": "Kimi K2 Thinking",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-11-07",
+    "last_seen": "2026-06-29",
     "family": "kimi-thinking"
   },
   {

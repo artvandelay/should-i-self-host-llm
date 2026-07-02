@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-07-01",
-  "gpu_last_updated": "2026-07-01",
+  "last_updated": "2026-07-02",
+  "gpu_last_updated": "2026-07-02",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -120,8 +120,8 @@
     },
     "zhipu_ai_glm_5_1": {
       "label": "Zhipu AI GLM-5.1",
-      "input_per_1m": 6,
-      "output_per_1m": 24
+      "input_per_1m": 1.4,
+      "output_per_1m": 4.4
     },
     "zhipu_ai_glm_5_2": {
       "label": "Zhipu AI GLM-5.2",

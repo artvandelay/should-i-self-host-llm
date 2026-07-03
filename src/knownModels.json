@@ -801,10 +801,10 @@
   {
     "params_b": 33.443,
     "active_b": null,
-    "name": "Laguna XS.2",
+    "name": "Laguna XS 2.1",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-06-13",
+    "last_seen": "2026-07-02",
     "family": "other"
   },
   {

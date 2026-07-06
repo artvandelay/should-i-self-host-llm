@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-07-05",
-  "gpu_last_updated": "2026-07-05",
+  "last_updated": "2026-07-06",
+  "gpu_last_updated": "2026-07-06",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -553,16 +553,6 @@
       "input_per_1m": 1,
       "output_per_1m": 5
     },
-    "anthropic_claude_opus_4__latest_": {
-      "label": "Anthropic Claude Opus 4 (latest)",
-      "input_per_1m": 15,
-      "output_per_1m": 75
-    },
-    "anthropic_claude_opus_3": {
-      "label": "Anthropic Claude Opus 3",
-      "input_per_1m": 15,
-      "output_per_1m": 75
-    },
     "anthropic_claude_opus_4_1": {
       "label": "Anthropic Claude Opus 4.1",
       "input_per_1m": 15,
@@ -588,55 +578,20 @@
       "input_per_1m": 5,
       "output_per_1m": 25
     },
-    "anthropic_claude_sonnet_3_5_v2": {
-      "label": "Anthropic Claude Sonnet 3.5 v2",
-      "input_per_1m": 3,
-      "output_per_1m": 15
-    },
     "anthropic_claude_opus_4_8": {
       "label": "Anthropic Claude Opus 4.8",
       "input_per_1m": 5,
       "output_per_1m": 25
-    },
-    "anthropic_claude_opus_4": {
-      "label": "Anthropic Claude Opus 4",
-      "input_per_1m": 15,
-      "output_per_1m": 75
-    },
-    "anthropic_claude_sonnet_3_5": {
-      "label": "Anthropic Claude Sonnet 3.5",
-      "input_per_1m": 3,
-      "output_per_1m": 15
-    },
-    "anthropic_claude_sonnet_4": {
-      "label": "Anthropic Claude Sonnet 4",
-      "input_per_1m": 3,
-      "output_per_1m": 15
     },
     "anthropic_claude_opus_4_1__latest_": {
       "label": "Anthropic Claude Opus 4.1 (latest)",
       "input_per_1m": 15,
       "output_per_1m": 75
     },
-    "anthropic_claude_haiku_3": {
-      "label": "Anthropic Claude Haiku 3",
-      "input_per_1m": 0.25,
-      "output_per_1m": 1.25
-    },
     "anthropic_claude_fable_5": {
       "label": "Anthropic Claude Fable 5",
       "input_per_1m": 10,
       "output_per_1m": 50
-    },
-    "anthropic_claude_sonnet_4__latest_": {
-      "label": "Anthropic Claude Sonnet 4 (latest)",
-      "input_per_1m": 3,
-      "output_per_1m": 15
-    },
-    "anthropic_claude_sonnet_3_7": {
-      "label": "Anthropic Claude Sonnet 3.7",
-      "input_per_1m": 3,
-      "output_per_1m": 15
     },
     "anthropic_claude_haiku_4_5__latest_": {
       "label": "Anthropic Claude Haiku 4.5 (latest)",
@@ -650,11 +605,6 @@
     },
     "anthropic_claude_sonnet_4_5": {
       "label": "Anthropic Claude Sonnet 4.5",
-      "input_per_1m": 3,
-      "output_per_1m": 15
-    },
-    "anthropic_claude_sonnet_3": {
-      "label": "Anthropic Claude Sonnet 3",
       "input_per_1m": 3,
       "output_per_1m": 15
     },

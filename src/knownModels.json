@@ -826,6 +826,15 @@
     "family": "qwen"
   },
   {
+    "params_b": 35.107,
+    "active_b": null,
+    "name": "Nex-N2-Mini",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-06-24",
+    "family": "agi"
+  },
+  {
     "params_b": 36,
     "active_b": null,
     "name": "TheDrummer: Skyfall 36B V2",
@@ -1161,6 +1170,15 @@
     "source": "models.dev:hf",
     "last_seen": "2026-04-20",
     "family": "Hy"
+  },
+  {
+    "params_b": 298.786,
+    "active_b": null,
+    "name": "Hy3",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-06",
+    "family": "hy3"
   },
   {
     "params_b": 300,

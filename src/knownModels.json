@@ -1413,12 +1413,12 @@
     "family": "glm"
   },
   {
-    "params_b": 753.91,
+    "params_b": 753.864,
     "active_b": null,
     "name": "GLM-5.1",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-07",
+    "last_seen": "2026-03-27",
     "family": "glm"
   },
   {

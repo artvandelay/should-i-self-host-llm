@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-07-08",
-  "gpu_last_updated": "2026-07-08",
+  "last_updated": "2026-07-10",
+  "gpu_last_updated": "2026-07-10",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -102,6 +102,11 @@
       "label": "xAI Grok 4.3",
       "input_per_1m": 1.25,
       "output_per_1m": 2.5
+    },
+    "xai_grok_4_5": {
+      "label": "xAI Grok 4.5",
+      "input_per_1m": 2,
+      "output_per_1m": 6
     },
     "xai_grok_4_20__reasoning_": {
       "label": "xAI Grok 4.20 (Reasoning)",
@@ -218,6 +223,11 @@
       "input_per_1m": 0.1,
       "output_per_1m": 0.4
     },
+    "google_gemini_omni_flash_preview": {
+      "label": "Google Gemini Omni Flash Preview",
+      "input_per_1m": 1.5,
+      "output_per_1m": 17.5
+    },
     "google_nano_banana_2": {
       "label": "Google Nano Banana 2",
       "input_per_1m": 0.5,
@@ -272,6 +282,11 @@
       "label": "OpenAI GPT-5.2 Pro",
       "input_per_1m": 21,
       "output_per_1m": 168
+    },
+    "openai_gpt_5_6": {
+      "label": "OpenAI GPT-5.6",
+      "input_per_1m": 5,
+      "output_per_1m": 30
     },
     "openai_gpt_5": {
       "label": "OpenAI GPT-5",
@@ -373,10 +388,20 @@
       "input_per_1m": 0.02,
       "output_per_1m": 0
     },
+    "openai_gpt_5_6_luna": {
+      "label": "OpenAI GPT-5.6 Luna",
+      "input_per_1m": 1,
+      "output_per_1m": 6
+    },
     "openai_gpt_5_1_codex_mini": {
       "label": "OpenAI GPT-5.1 Codex mini",
       "input_per_1m": 0.25,
       "output_per_1m": 2
+    },
+    "openai_gpt_5_6_terra": {
+      "label": "OpenAI GPT-5.6 Terra",
+      "input_per_1m": 2.5,
+      "output_per_1m": 15
     },
     "openai_gpt_5_1_chat": {
       "label": "OpenAI GPT-5.1 Chat",
@@ -467,6 +492,11 @@
       "label": "OpenAI GPT-4o mini",
       "input_per_1m": 0.15,
       "output_per_1m": 0.6
+    },
+    "openai_gpt_5_6_sol": {
+      "label": "OpenAI GPT-5.6 Sol",
+      "input_per_1m": 5,
+      "output_per_1m": 30
     },
     "openai_gpt_5_codex": {
       "label": "OpenAI GPT-5-Codex",

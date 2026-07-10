@@ -275,7 +275,7 @@
     "name": "Granite 4.1 8B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-30",
+    "last_seen": "2026-04-29",
     "family": "granite"
   },
   {
@@ -379,11 +379,11 @@
   },
   {
     "params_b": 12,
-    "active_b": null,
-    "name": "TheDrummer: UnslopNemo 12B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-03-15",
+    "active_b": 2.5,
+    "name": "Mellum2 12B A2.5B",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-06-01",
     "family": "other"
   },
   {
@@ -721,10 +721,10 @@
   {
     "params_b": 31,
     "active_b": null,
-    "name": "Google Gemma 4 31B Instruct",
+    "name": "Gemma 4 31B IT",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-06-11",
+    "last_seen": "2026-07-01",
     "family": "gemma"
   },
   {
@@ -805,7 +805,7 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-07-02",
-    "family": "other"
+    "family": "laguna"
   },
   {
     "params_b": 35,
@@ -1123,8 +1123,8 @@
     "name": "Laguna M.1",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-28",
-    "family": "other"
+    "last_seen": "2026-06-13",
+    "family": "laguna"
   },
   {
     "params_b": 228.704,
@@ -1395,12 +1395,12 @@
     "family": "deepseek-thinking"
   },
   {
-    "params_b": 684.531,
+    "params_b": 685.397,
     "active_b": null,
-    "name": "DeepSeek V3.1",
+    "name": "DeepSeek-V3.2",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-03-12",
+    "last_seen": "2025-12-01",
     "family": "deepseek"
   },
   {

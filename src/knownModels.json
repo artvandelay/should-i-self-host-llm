@@ -396,15 +396,6 @@
     "family": "unsloth"
   },
   {
-    "params_b": 12.248,
-    "active_b": null,
-    "name": "Mistral Nemo",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2024-07-01",
-    "family": "mistral"
-  },
-  {
     "params_b": 13,
     "active_b": null,
     "name": "ReMM SLERP 13B",
@@ -622,10 +613,10 @@
   {
     "params_b": 26,
     "active_b": 4,
-    "name": "Google Gemma 4 26B A4B Instruct",
+    "name": "Gemma 4 26B-A4B",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-06-11",
+    "last_seen": "2026-06-12",
     "family": "gemma"
   },
   {
@@ -721,10 +712,10 @@
   {
     "params_b": 31,
     "active_b": null,
-    "name": "Gemma 4 31B IT",
+    "name": "Google Gemma 4 31B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-07-01",
+    "last_seen": "2026-06-11",
     "family": "gemma"
   },
   {
@@ -1019,6 +1010,15 @@
     "source": "models.dev:regex",
     "last_seen": "2026-03-16",
     "family": "mistral"
+  },
+  {
+    "params_b": 119,
+    "active_b": null,
+    "name": "Mistral Small 4",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-03-16",
+    "family": "mistral-small"
   },
   {
     "params_b": 120,

@@ -1,5 +1,14 @@
 [
   {
+    "params_b": 0.001,
+    "active_b": null,
+    "name": "Qwen3 Coder Next FP8 1M",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-02-03",
+    "family": "qwen"
+  },
+  {
     "params_b": 1,
     "active_b": null,
     "name": "Meta: Llama 3.2 1B Instruct",

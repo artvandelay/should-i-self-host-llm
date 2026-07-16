@@ -371,10 +371,10 @@
   {
     "params_b": 12,
     "active_b": null,
-    "name": "gemma3:12b",
+    "name": "Google: Gemma 3 12B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-01-19",
+    "last_seen": "2026-03-15",
     "family": "gemma"
   },
   {
@@ -496,10 +496,10 @@
   {
     "params_b": 17,
     "active_b": null,
-    "name": "Llama 4 Maverick 17B 128E Instruct",
+    "name": "Llama 4 Scout Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-04-29",
+    "last_seen": "2025-04-06",
     "family": "llama"
   },
   {
@@ -658,10 +658,10 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "gemma3:27b",
+    "name": "Google Gemma 3 27B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-01-19",
+    "last_seen": "2026-06-11",
     "family": "gemma"
   },
   {
@@ -742,7 +742,7 @@
     "name": "GLM-4.7-Flash",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-01-19",
+    "last_seen": "2025-08-08",
     "family": "glm"
   },
   {
@@ -756,10 +756,10 @@
   {
     "params_b": 32,
     "active_b": null,
-    "name": "Qwen2.5 Coder 32B Instruct",
+    "name": "Qwen3-32B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-03-15",
+    "last_seen": "2026-04-16",
     "family": "qwen"
   },
   {
@@ -872,10 +872,10 @@
   {
     "params_b": 70,
     "active_b": null,
-    "name": "Sao10K: Llama 3.1 Euryale 70B v2.2",
+    "name": "Llama 3.3 70B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-03-15",
+    "last_seen": "2026-06-11",
     "family": "llama"
   },
   {
@@ -884,7 +884,7 @@
     "name": "DeepSeek R1 Distill Llama 70B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-01-23",
+    "last_seen": "2025-01-30",
     "family": "deepseek-thinking"
   },
   {
@@ -987,10 +987,10 @@
   {
     "params_b": 107.711,
     "active_b": null,
-    "name": "GLM 4.6V",
+    "name": "GLM 4.5V",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-12-08",
+    "last_seen": "2026-01",
     "family": "glmv"
   },
   {
@@ -1032,10 +1032,10 @@
   {
     "params_b": 120,
     "active_b": null,
-    "name": "gpt oss 120b TEE",
+    "name": "OpenAI GPT OSS 120B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-25",
+    "last_seen": "2026-06-11",
     "family": "gpt-oss"
   },
   {
@@ -1138,15 +1138,6 @@
   {
     "params_b": 228.704,
     "active_b": null,
-    "name": "MiniMax M2.1",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2025-12-23",
-    "family": "other"
-  },
-  {
-    "params_b": 228.704,
-    "active_b": null,
     "name": "MiniMax-M2.7",
     "arch": "dense",
     "source": "models.dev:hf",
@@ -1199,12 +1190,21 @@
     "family": "other"
   },
   {
+    "params_b": 300,
+    "active_b": 47,
+    "name": "ERNIE 4.5 300B A47B",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-01",
+    "family": "ernie"
+  },
+  {
     "params_b": 309.785,
     "active_b": null,
     "name": "XiaomiMiMo/MiMo-V2-Flash",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-12-19",
+    "last_seen": "2026-01",
     "family": "mimo"
   },
   {
@@ -1329,7 +1329,7 @@
     "name": "MiniMax M1",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-06-17",
+    "last_seen": "2026-01",
     "family": "minimax"
   },
   {
@@ -1413,7 +1413,7 @@
     "family": "deepseek"
   },
   {
-    "params_b": 753.376,
+    "params_b": 753.33,
     "active_b": null,
     "name": "GLM-5.2",
     "arch": "dense",
@@ -1427,7 +1427,7 @@
     "name": "GLM-5.1",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-03-27",
+    "last_seen": "2026-04-07",
     "family": "glm"
   },
   {
@@ -1478,10 +1478,10 @@
   {
     "params_b": 1026.471,
     "active_b": null,
-    "name": "Kimi K2 0905",
+    "name": "Kimi K2 Instruct",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-09-05",
+    "last_seen": "2026-01",
     "family": "kimi-k2"
   },
   {
@@ -1490,7 +1490,7 @@
     "name": "Kimi K2 Thinking",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-06-29",
+    "last_seen": "2025-11-06",
     "family": "kimi-thinking"
   },
   {

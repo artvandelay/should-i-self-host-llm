@@ -819,10 +819,10 @@
   {
     "params_b": 35,
     "active_b": 3,
-    "name": "Qwen 3.5 35B A3B",
+    "name": "Qwen 3.6 35B A3B",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-06-11",
+    "last_seen": "2026-07-22",
     "family": "qwen"
   },
   {
@@ -1012,6 +1012,15 @@
     "family": "glm-air"
   },
   {
+    "params_b": 117.562,
+    "active_b": null,
+    "name": "Laguna S 2.1",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-21",
+    "family": "laguna-s"
+  },
+  {
     "params_b": 119,
     "active_b": null,
     "name": "mistral-small-4-119b-2603",
@@ -1142,6 +1151,15 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-04-11",
+    "family": "minimax"
+  },
+  {
+    "params_b": 230,
+    "active_b": null,
+    "name": "MiniMax-M2.5",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-02-12",
     "family": "minimax"
   },
   {
@@ -1505,9 +1523,18 @@
   {
     "params_b": 1058.589,
     "active_b": null,
-    "name": "Kimi K2.7 Code",
+    "name": "Kimi K2.6",
     "arch": "dense",
     "source": "models.dev:hf",
+    "last_seen": "2026-04-21",
+    "family": "kimi-k2"
+  },
+  {
+    "params_b": 1100,
+    "active_b": null,
+    "name": "Kimi K2.7 Code",
+    "arch": "dense",
+    "source": "models.dev:regex",
     "last_seen": "2026-06-12",
     "family": "kimi-k2"
   }

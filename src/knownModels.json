@@ -1183,20 +1183,11 @@
   {
     "params_b": 298.786,
     "active_b": null,
-    "name": "Hy3 preview",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-04-20",
-    "family": "Hy"
-  },
-  {
-    "params_b": 298.786,
-    "active_b": null,
     "name": "Hy3",
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-07-06",
-    "family": "hy3"
+    "family": "Hy"
   },
   {
     "params_b": 300,

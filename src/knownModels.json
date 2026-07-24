@@ -203,7 +203,7 @@
     "name": "Cohere: Command R7B (12-2024)",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2024-02-27",
+    "last_seen": "2024-12-02",
     "family": "command"
   },
   {
@@ -496,10 +496,10 @@
   {
     "params_b": 17,
     "active_b": null,
-    "name": "Llama 4 Scout Instruct",
+    "name": "Llama 4 Maverick 17B 128E Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-04-06",
+    "last_seen": "2025-04-29",
     "family": "llama"
   },
   {
@@ -658,10 +658,10 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Google Gemma 3 27B Instruct",
+    "name": "Gemma-3-27b-it",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-06-11",
+    "last_seen": "2026-02-04",
     "family": "gemma"
   },
   {
@@ -674,6 +674,15 @@
     "family": "unsloth"
   },
   {
+    "params_b": 27,
+    "active_b": null,
+    "name": "Qwen3.5-27B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-02-24",
+    "family": "qwen3.5"
+  },
+  {
     "params_b": 30,
     "active_b": 3,
     "name": "Qwen: Qwen3 30B A3B Instruct 2507",
@@ -684,11 +693,11 @@
   },
   {
     "params_b": 30,
-    "active_b": 3,
-    "name": "Nemotron Cascade 2 30B A3B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2026-06-11",
+    "active_b": null,
+    "name": "Nemotron 3 Nano Omni 30B TEE",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-07-23",
     "family": "nemotron"
   },
   {
@@ -721,10 +730,10 @@
   {
     "params_b": 31,
     "active_b": null,
-    "name": "Google Gemma 4 31B Instruct",
+    "name": "Gemma 4 31B IT",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-06-11",
+    "last_seen": "2026-07-01",
     "family": "gemma"
   },
   {
@@ -756,10 +765,10 @@
   {
     "params_b": 32,
     "active_b": null,
-    "name": "Qwen3-32B",
+    "name": "Qwen2.5 Coder 32B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-16",
+    "last_seen": "2026-03-15",
     "family": "qwen"
   },
   {
@@ -826,6 +835,15 @@
     "family": "qwen"
   },
   {
+    "params_b": 35,
+    "active_b": 3,
+    "name": "Qwen3.5-35B-A3B",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-02-24",
+    "family": "qwen3.5"
+  },
+  {
     "params_b": 35.107,
     "active_b": null,
     "name": "Nex-N2-Mini",
@@ -872,10 +890,10 @@
   {
     "params_b": 70,
     "active_b": null,
-    "name": "Llama 3.3 70B",
+    "name": "Nous: Hermes 3 70B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-06-11",
+    "last_seen": "2026-03-15",
     "family": "llama"
   },
   {
@@ -987,10 +1005,10 @@
   {
     "params_b": 107.711,
     "active_b": null,
-    "name": "GLM 4.5V",
+    "name": "GLM 4.6V",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-01",
+    "last_seen": "2025-12-08",
     "family": "glmv"
   },
   {
@@ -1018,7 +1036,7 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-07-21",
-    "family": "laguna-s"
+    "family": "laguna"
   },
   {
     "params_b": 119,
@@ -1123,7 +1141,7 @@
     "name": "Step 3.5 Flash",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-02-02",
+    "last_seen": "2026-02-13",
     "family": "other"
   },
   {
@@ -1132,7 +1150,7 @@
     "name": "Step 3.7 Flash",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-05-28",
+    "last_seen": "2026-05-29",
     "family": "other"
   },
   {
@@ -1150,8 +1168,17 @@
     "name": "MiniMax-M2.7",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-11",
+    "last_seen": "2026-03-18",
     "family": "minimax"
+  },
+  {
+    "params_b": 228.704,
+    "active_b": null,
+    "name": "MiniMax M2.5",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-02-12",
+    "family": "minimax-m2.5"
   },
   {
     "params_b": 230,
@@ -1199,21 +1226,12 @@
     "family": "other"
   },
   {
-    "params_b": 300,
-    "active_b": 47,
-    "name": "ERNIE 4.5 300B A47B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2026-01",
-    "family": "ernie"
-  },
-  {
     "params_b": 309.785,
     "active_b": null,
     "name": "XiaomiMiMo/MiMo-V2-Flash",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-01",
+    "last_seen": "2025-12-19",
     "family": "mimo"
   },
   {
@@ -1329,7 +1347,7 @@
     "name": "MiniMax M3",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-06-01",
+    "last_seen": "2026-06-12",
     "family": "minimax-m3"
   },
   {
@@ -1338,7 +1356,7 @@
     "name": "MiniMax M1",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-01",
+    "last_seen": "2025-06-17",
     "family": "minimax"
   },
   {
@@ -1418,13 +1436,13 @@
     "name": "DeepSeek-V3.2",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-12-01",
+    "last_seen": "2026-02-04",
     "family": "deepseek"
   },
   {
     "params_b": 753.33,
     "active_b": null,
-    "name": "GLM-5.2",
+    "name": "GLM 5.2",
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-06-13",
@@ -1496,10 +1514,10 @@
   {
     "params_b": 1026.471,
     "active_b": null,
-    "name": "Kimi K2 Instruct",
+    "name": "Kimi K2 0905",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-01",
+    "last_seen": "2025-09-05",
     "family": "kimi-k2"
   },
   {
@@ -1512,6 +1530,15 @@
     "family": "kimi-thinking"
   },
   {
+    "params_b": 1058.118,
+    "active_b": null,
+    "name": "MoonshotAI: Kimi K2 Thinking",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-03-15",
+    "family": "kimi"
+  },
+  {
     "params_b": 1058.589,
     "active_b": null,
     "name": "Kimi K2.6",
@@ -1519,6 +1546,15 @@
     "source": "models.dev:hf",
     "last_seen": "2026-04-21",
     "family": "kimi-k2"
+  },
+  {
+    "params_b": 1058.589,
+    "active_b": null,
+    "name": "MoonshotAI: Kimi K2.5",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-03-15",
+    "family": "kimi"
   },
   {
     "params_b": 1100,

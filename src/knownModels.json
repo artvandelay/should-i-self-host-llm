@@ -119,15 +119,6 @@
   {
     "params_b": 4,
     "active_b": null,
-    "name": "gemma 3 4b it",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-04-25",
-    "family": "unsloth"
-  },
-  {
-    "params_b": 4,
-    "active_b": null,
     "name": "MedGemma 4B",
     "arch": "dense",
     "source": "models.dev:regex",
@@ -297,6 +288,15 @@
     "family": "rnj"
   },
   {
+    "params_b": 8,
+    "active_b": null,
+    "name": "Llama 3.1 Nemotron Nano 8B v1",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-03-18",
+    "family": "nemotron"
+  },
+  {
     "params_b": 8.311,
     "active_b": null,
     "name": "EssentialAI: Rnj 1 Instruct",
@@ -394,15 +394,6 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-06-01",
     "family": "other"
-  },
-  {
-    "params_b": 12,
-    "active_b": null,
-    "name": "gemma 3 12b it",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-04-25",
-    "family": "unsloth"
   },
   {
     "params_b": 13,
@@ -924,6 +915,15 @@
     "family": "other"
   },
   {
+    "params_b": 70,
+    "active_b": null,
+    "name": "Llama 3.1 Nemotron 70B Instruct",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-04-15",
+    "family": "nemotron"
+  },
+  {
     "params_b": 72,
     "active_b": null,
     "name": "Qwen2.5 72B",
@@ -1362,10 +1362,10 @@
   {
     "params_b": 480,
     "active_b": 35,
-    "name": "Qwen 3 Coder 480B Turbo",
+    "name": "Qwen3-Coder 480B-A35B Instruct",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-06-11",
+    "last_seen": "2026-07-22",
     "family": "qwen"
   },
   {
@@ -1456,15 +1456,6 @@
     "source": "models.dev:hf",
     "last_seen": "2026-04-07",
     "family": "glm"
-  },
-  {
-    "params_b": 861.608,
-    "active_b": null,
-    "name": "DeepSeek V4 Pro",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-04-24",
-    "family": "deepseek-thinking"
   },
   {
     "params_b": 952.378,
@@ -1564,5 +1555,23 @@
     "source": "models.dev:regex",
     "last_seen": "2026-06-12",
     "family": "kimi-k2"
+  },
+  {
+    "params_b": 1598.84,
+    "active_b": null,
+    "name": "DeepSeek V4 Pro",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-04-24",
+    "family": "deepseek-thinking"
+  },
+  {
+    "params_b": 2779.932,
+    "active_b": null,
+    "name": "Kimi K3",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-16",
+    "family": "kimi-k3"
   }
 ]

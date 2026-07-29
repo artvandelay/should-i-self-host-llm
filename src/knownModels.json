@@ -1378,6 +1378,15 @@
     "family": "nemotron"
   },
   {
+    "params_b": 552.845,
+    "active_b": null,
+    "name": "Inkling",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-15",
+    "family": "ling"
+  },
+  {
     "params_b": 671,
     "active_b": 37,
     "name": "DeepSeek V3 671B-A37B",
@@ -1456,15 +1465,6 @@
     "source": "models.dev:hf",
     "last_seen": "2026-04-07",
     "family": "glm"
-  },
-  {
-    "params_b": 952.378,
-    "active_b": null,
-    "name": "Inkling",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-07-15",
-    "family": "ling"
   },
   {
     "params_b": 1023.245,

@@ -712,10 +712,10 @@
   {
     "params_b": 30,
     "active_b": 3,
-    "name": "Qwen3-Coder-30B-A3B-Instruct",
+    "name": "Holo2 30B A3B",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2025-10-28",
+    "last_seen": "2025-11",
     "family": "other"
   },
   {

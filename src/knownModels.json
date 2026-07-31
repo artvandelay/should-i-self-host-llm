@@ -9,6 +9,15 @@
     "family": "qwen"
   },
   {
+    "params_b": 0.8,
+    "active_b": null,
+    "name": "Qwen3.5 0.8B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-11-01",
+    "family": "qwen"
+  },
+  {
     "params_b": 1,
     "active_b": null,
     "name": "Meta: Llama 3.2 1B Instruct",
@@ -52,6 +61,15 @@
     "source": "models.dev:regex",
     "last_seen": "2026-02-26",
     "family": "other"
+  },
+  {
+    "params_b": 2,
+    "active_b": null,
+    "name": "Qwen3.5 2B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-11-01",
+    "family": "qwen"
   },
   {
     "params_b": 3,
@@ -721,10 +739,10 @@
   {
     "params_b": 31,
     "active_b": null,
-    "name": "Gemma 4 31B IT",
+    "name": "Google Gemma 4 31B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-07-01",
+    "last_seen": "2026-06-11",
     "family": "gemma"
   },
   {

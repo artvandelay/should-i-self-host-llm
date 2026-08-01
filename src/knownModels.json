@@ -9,6 +9,15 @@
     "family": "qwen"
   },
   {
+    "params_b": 0.001,
+    "active_b": null,
+    "name": "GLM-5.2 Highspeed",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-06-13",
+    "family": "glm"
+  },
+  {
     "params_b": 0.8,
     "active_b": null,
     "name": "Qwen3.5 0.8B",
@@ -1224,6 +1233,15 @@
     "source": "models.dev:regex",
     "last_seen": "2026-02-04",
     "family": "nemotron"
+  },
+  {
+    "params_b": 265.956,
+    "active_b": null,
+    "name": "Inkling Small",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-30",
+    "family": "other"
   },
   {
     "params_b": 298.786,

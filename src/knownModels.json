@@ -1241,7 +1241,7 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-07-30",
-    "family": "other"
+    "family": "ling"
   },
   {
     "params_b": 298.786,
@@ -1260,6 +1260,15 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-01",
     "family": "other"
+  },
+  {
+    "params_b": 304.18,
+    "active_b": null,
+    "name": "DeepSeek V4 Flash 0731",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-04-24",
+    "family": "deepseek-flash"
   },
   {
     "params_b": 309.785,

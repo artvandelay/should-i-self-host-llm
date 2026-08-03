@@ -425,10 +425,10 @@
   {
     "params_b": 13,
     "active_b": null,
-    "name": "ReMM SLERP 13B",
+    "name": "Mythomax L2 13B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-03-15",
+    "last_seen": "2024-04-25",
     "family": "other"
   },
   {
@@ -544,8 +544,8 @@
     "name": "Reka Flash 3",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-11",
-    "family": "other"
+    "last_seen": "2025-03-12",
+    "family": "reka"
   },
   {
     "params_b": 21,
@@ -783,10 +783,10 @@
   {
     "params_b": 32,
     "active_b": null,
-    "name": "Qwen2.5 Coder 32B Instruct",
+    "name": "Qwen3 32B (dense)",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-03-15",
+    "last_seen": "2025-09-18",
     "family": "qwen"
   },
   {
@@ -801,10 +801,10 @@
   {
     "params_b": 32,
     "active_b": null,
-    "name": "Deepseek R1 Distill Qwen 32B",
+    "name": "DeepSeek R1 Distill Qwen 32B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-05-29",
+    "last_seen": "2025-01-20",
     "family": "deepseek-thinking"
   },
   {
@@ -824,6 +824,15 @@
     "source": "models.dev:regex",
     "last_seen": "2026-03-15",
     "family": "olmo"
+  },
+  {
+    "params_b": 32,
+    "active_b": null,
+    "name": "Olmo 3 32B Think",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-11-21",
+    "family": "allenai"
   },
   {
     "params_b": 33.443,
@@ -917,10 +926,10 @@
   {
     "params_b": 70,
     "active_b": null,
-    "name": "DeepSeek R1 Distill Llama 70B",
+    "name": "DeepSeek R1 Distill LLama 70B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-01-30",
+    "last_seen": "2025-01-27",
     "family": "deepseek-thinking"
   },
   {
@@ -951,6 +960,15 @@
     "family": "nemotron"
   },
   {
+    "params_b": 70,
+    "active_b": null,
+    "name": "Hermes 3 70B Instruct",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2024-08-18",
+    "family": "nousresearch"
+  },
+  {
     "params_b": 72,
     "active_b": null,
     "name": "Qwen2.5 72B",
@@ -964,7 +982,7 @@
     "name": "Qwen 2.5 72B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2024-09-19",
+    "last_seen": "2024-10-15",
     "family": "qwen"
   },
   {
@@ -1264,10 +1282,10 @@
   {
     "params_b": 304.18,
     "active_b": null,
-    "name": "DeepSeek V4 Flash 0731",
+    "name": "Deepseek V4 Flash 0731",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-24",
+    "last_seen": "2026-07-31",
     "family": "deepseek-flash"
   },
   {
@@ -1376,6 +1394,15 @@
     "source": "models.dev:regex",
     "last_seen": "2026-06-11",
     "family": "hermes"
+  },
+  {
+    "params_b": 405,
+    "active_b": null,
+    "name": "Hermes 3 405B Instruct",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2024-08-16",
+    "family": "nousresearch"
   },
   {
     "params_b": 427.04,

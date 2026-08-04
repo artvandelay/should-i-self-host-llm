@@ -162,6 +162,15 @@
     "family": "nemotron"
   },
   {
+    "params_b": 4,
+    "active_b": null,
+    "name": "Gemma 3 4B IT",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-03-10",
+    "family": "unsloth"
+  },
+  {
     "params_b": 5,
     "active_b": null,
     "name": "cosmos-predict1-5b",
@@ -369,6 +378,24 @@
     "family": "other"
   },
   {
+    "params_b": 9,
+    "active_b": null,
+    "name": "GLM Z1 9B 0414",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-04-14",
+    "family": "glm-z"
+  },
+  {
+    "params_b": 9,
+    "active_b": null,
+    "name": "GLM 4 9B 0414",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-04-14",
+    "family": "glm"
+  },
+  {
     "params_b": 10.7,
     "active_b": null,
     "name": "solar-10.7b-instruct",
@@ -398,10 +425,10 @@
   {
     "params_b": 12,
     "active_b": null,
-    "name": "Google: Gemma 3 12B",
+    "name": "Gemma 4 12B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-03-15",
+    "last_seen": "2026-08-01",
     "family": "gemma"
   },
   {
@@ -423,6 +450,24 @@
     "family": "other"
   },
   {
+    "params_b": 12,
+    "active_b": null,
+    "name": "Gemma 3 12B IT",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-03-10",
+    "family": "unsloth"
+  },
+  {
+    "params_b": 12,
+    "active_b": null,
+    "name": "Veiled Calla 12B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-04-13",
+    "family": "llama"
+  },
+  {
     "params_b": 13,
     "active_b": null,
     "name": "Mythomax L2 13B",
@@ -439,6 +484,15 @@
     "source": "models.dev:regex",
     "last_seen": "2025-07-08",
     "family": "hunyuan"
+  },
+  {
+    "params_b": 13,
+    "active_b": null,
+    "name": "MythoMax 13B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-08-08",
+    "family": "llama"
   },
   {
     "params_b": 13.96,
@@ -503,12 +557,12 @@
     "family": "nousresearch"
   },
   {
-    "params_b": 15,
+    "params_b": 14.66,
     "active_b": null,
-    "name": "Phi-4 15B",
+    "name": "Phi 4",
     "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-01-01",
+    "source": "models.dev:hf",
+    "last_seen": "2025-01-10",
     "family": "phi"
   },
   {
@@ -523,7 +577,7 @@
   {
     "params_b": 20,
     "active_b": null,
-    "name": "gpt-oss-20b",
+    "name": "OpenAI GPT-oss-20b",
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2026-04-16",
@@ -584,6 +638,15 @@
     "family": "mistral"
   },
   {
+    "params_b": 22,
+    "active_b": null,
+    "name": "WizardLM-2 8x22B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-04-15",
+    "family": "gpt"
+  },
+  {
     "params_b": 24,
     "active_b": 2,
     "name": "LiquidAI: LFM2-24B-A2B",
@@ -638,6 +701,15 @@
     "family": "liquid"
   },
   {
+    "params_b": 24,
+    "active_b": null,
+    "name": "Omega Directive 24B Unslop v2.0",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-12-08",
+    "family": "llama"
+  },
+  {
     "params_b": 26,
     "active_b": 4,
     "name": "Gemma 4 26B-A4B",
@@ -685,19 +757,19 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "gemma 3 27b it",
+    "name": "Gemma 3 27B IT",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-25",
+    "last_seen": "2025-03-10",
     "family": "unsloth"
   },
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Qwen3.5-27B",
+    "name": "Qwen3.5 27B Omega Evolution v2.2 Derestricted Lite",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-02-24",
+    "last_seen": "2026-05-02",
     "family": "qwen3.5"
   },
   {
@@ -755,6 +827,15 @@
     "family": "gemma"
   },
   {
+    "params_b": 31,
+    "active_b": null,
+    "name": "Gemma 4 31B Claude 4.6 Opus Reasoning Distilled",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-05-01",
+    "family": "claude"
+  },
+  {
     "params_b": 31.221,
     "active_b": null,
     "name": "GLM 4.7 Flash",
@@ -783,10 +864,10 @@
   {
     "params_b": 32,
     "active_b": null,
-    "name": "Qwen3 32B (dense)",
+    "name": "Qwen3-32B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-09-18",
+    "last_seen": "2026-02-04",
     "family": "qwen"
   },
   {
@@ -835,6 +916,24 @@
     "family": "allenai"
   },
   {
+    "params_b": 32,
+    "active_b": null,
+    "name": "OpenReasoning Nemotron 32B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-08-21",
+    "family": "nemotron"
+  },
+  {
+    "params_b": 32.764,
+    "active_b": null,
+    "name": "K2-Think",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2025-07-26",
+    "family": "kimi-thinking"
+  },
+  {
     "params_b": 33.443,
     "active_b": null,
     "name": "Laguna XS 2.1",
@@ -842,15 +941,6 @@
     "source": "models.dev:hf",
     "last_seen": "2026-07-02",
     "family": "laguna"
-  },
-  {
-    "params_b": 35,
-    "active_b": 3,
-    "name": "Qwen3.6 35B A3B Thinking",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2026-04-21",
-    "family": "qwen3.6"
   },
   {
     "params_b": 35,
@@ -869,6 +959,24 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-02-24",
     "family": "qwen3.5"
+  },
+  {
+    "params_b": 35,
+    "active_b": 3,
+    "name": "Holo3-35B-A3B Thinking",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2024-01-01",
+    "family": "other"
+  },
+  {
+    "params_b": 35,
+    "active_b": 3,
+    "name": "Qwen3.6 35B A3B Uncensored TEE",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-05-23",
+    "family": "qwen3.6"
   },
   {
     "params_b": 35.107,
@@ -900,10 +1008,10 @@
   {
     "params_b": 49,
     "active_b": null,
-    "name": "Llama 3.3 Nemotron Super 49B v1.5",
+    "name": "Nvidia Nemotron Super 49B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-07-25",
+    "last_seen": "2025-08-08",
     "family": "nemotron"
   },
   {
@@ -962,28 +1070,47 @@
   {
     "params_b": 70,
     "active_b": null,
-    "name": "Hermes 3 70B Instruct",
+    "name": "Hermes 3 70B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2024-08-18",
+    "last_seen": "2026-01-07",
     "family": "nousresearch"
   },
   {
-    "params_b": 72,
+    "params_b": 70,
     "active_b": null,
-    "name": "Qwen2.5 72B",
+    "name": "DeepSeek R1 Llama 70B Abliterated",
     "arch": "dense",
-    "source": "manual",
-    "last_seen": "2026-05-25"
+    "source": "models.dev:regex",
+    "last_seen": "2025-01-20",
+    "family": "deepseek"
   },
   {
     "params_b": 72,
     "active_b": null,
-    "name": "Qwen 2.5 72B Instruct",
+    "name": "EVA-Qwen2.5-72B-v0.2",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2024-10-15",
+    "last_seen": "2025-09-25",
     "family": "qwen"
+  },
+  {
+    "params_b": 72,
+    "active_b": null,
+    "name": "Qwerky 72B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-03-20",
+    "family": "qwerky"
+  },
+  {
+    "params_b": 72,
+    "active_b": null,
+    "name": "Magnum v4 72B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-01-01",
+    "family": "llama"
   },
   {
     "params_b": 72.706,
@@ -1054,16 +1181,16 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2025-12-08",
-    "family": "glmv"
+    "family": "glm"
   },
   {
     "params_b": 107.711,
     "active_b": null,
-    "name": "GLM-4.5V",
+    "name": "GLM 4.5V",
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2025-08-11",
-    "family": "glm"
+    "family": "glmv"
   },
   {
     "params_b": 110.469,
@@ -1095,10 +1222,10 @@
   {
     "params_b": 119,
     "active_b": null,
-    "name": "Mistral Small 4",
+    "name": "Mistral Small 4 119B Thinking",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-03-16",
+    "last_seen": "2026-03-17",
     "family": "mistral-small"
   },
   {
@@ -1170,15 +1297,6 @@
     "arch": "moe",
     "source": "manual",
     "last_seen": "2026-05-25"
-  },
-  {
-    "params_b": 158.069,
-    "active_b": null,
-    "name": "DeepSeek V4 Flash",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-04-24",
-    "family": "deepseek-flash"
   },
   {
     "params_b": 199.384,
@@ -1260,6 +1378,15 @@
     "source": "models.dev:hf",
     "last_seen": "2026-07-30",
     "family": "ling"
+  },
+  {
+    "params_b": 290.945,
+    "active_b": null,
+    "name": "DeepSeek V4 Flash",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-04-24",
+    "family": "deepseek-flash"
   },
   {
     "params_b": 298.786,
@@ -1366,7 +1493,7 @@
     "name": "Trinity Large Thinking",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-03",
+    "last_seen": "2026-04-01",
     "family": "trinity"
   },
   {
@@ -1398,10 +1525,10 @@
   {
     "params_b": 405,
     "active_b": null,
-    "name": "Hermes 3 405B Instruct",
+    "name": "Hermes 4 Large",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2024-08-16",
+    "last_seen": "2025-08-26",
     "family": "nousresearch"
   },
   {
@@ -1457,6 +1584,15 @@
     "source": "models.dev:hf",
     "last_seen": "2026-07-15",
     "family": "ling"
+  },
+  {
+    "params_b": 581.154,
+    "active_b": null,
+    "name": "Kimi K2 0711 Instruct FP4",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2025-07-11",
+    "family": "kimi-k2"
   },
   {
     "params_b": 671,
@@ -1580,7 +1716,7 @@
     "name": "Kimi K2 0905",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-09-05",
+    "last_seen": "2025-09-25",
     "family": "kimi-k2"
   },
   {

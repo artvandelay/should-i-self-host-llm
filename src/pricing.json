@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-08-04",
-  "gpu_last_updated": "2026-08-04",
+  "last_updated": "2026-08-05",
+  "gpu_last_updated": "2026-08-05",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -446,6 +446,11 @@
     "alibaba_qwen3_max": {
       "label": "Alibaba Qwen3 Max",
       "input_per_1m": 1.2,
+      "output_per_1m": 6
+    },
+    "alibaba_qwen3_8_max": {
+      "label": "Alibaba Qwen3.8 Max",
+      "input_per_1m": 2,
       "output_per_1m": 6
     },
     "alibaba_qwen3_coder_flash": {

@@ -517,7 +517,7 @@
     "name": "Ministral 3 14B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-30",
+    "last_seen": "2026-08-01",
     "family": "ministral"
   },
   {
@@ -783,11 +783,11 @@
   },
   {
     "params_b": 30,
-    "active_b": null,
-    "name": "Nemotron 3 Nano Omni 30B TEE",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-07-23",
+    "active_b": 3,
+    "name": "Nemotron 3 Nano 30B A3B FP8",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-08-01",
     "family": "nemotron"
   },
   {
@@ -1052,10 +1052,10 @@
   {
     "params_b": 70,
     "active_b": null,
-    "name": "L31 70B Euryale V2.2",
+    "name": "Apertus v1.5 70B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2024-09-19",
+    "last_seen": "2026-08-01",
     "family": "other"
   },
   {
@@ -1267,10 +1267,10 @@
   {
     "params_b": 122,
     "active_b": 10,
-    "name": "Qwen3.5-122B-A10B",
+    "name": "Qwen3.5 122B-A10B FP8",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-02-26",
+    "last_seen": "2026-08-01",
     "family": "qwen"
   },
   {
@@ -1409,11 +1409,11 @@
   {
     "params_b": 304.18,
     "active_b": null,
-    "name": "Deepseek V4 Flash 0731",
+    "name": "DeepSeek V4 Flash 0731",
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-07-31",
-    "family": "deepseek-flash"
+    "family": "deepseek"
   },
   {
     "params_b": 309.785,
@@ -1472,10 +1472,10 @@
   {
     "params_b": 397,
     "active_b": 17,
-    "name": "Qwen 3.5 397B",
+    "name": "Qwen3.5 397B-A17B FP8",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-06-11",
+    "last_seen": "2026-08-01",
     "family": "qwen"
   },
   {

@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-08-05",
-  "gpu_last_updated": "2026-08-05",
+  "last_updated": "2026-08-06",
+  "gpu_last_updated": "2026-08-06",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -553,11 +553,6 @@
       "input_per_1m": 5,
       "output_per_1m": 25
     },
-    "anthropic_claude_opus_4_1__latest_": {
-      "label": "Anthropic Claude Opus 4.1 (latest)",
-      "input_per_1m": 15,
-      "output_per_1m": 75
-    },
     "anthropic_claude_sonnet_4_5__latest_": {
       "label": "Anthropic Claude Sonnet 4.5 (latest)",
       "input_per_1m": 3,
@@ -597,11 +592,6 @@
       "label": "Anthropic Claude Opus 5",
       "input_per_1m": 5,
       "output_per_1m": 25
-    },
-    "anthropic_claude_opus_4_1": {
-      "label": "Anthropic Claude Opus 4.1",
-      "input_per_1m": 15,
-      "output_per_1m": 75
     },
     "stepfun__global__step_2__16k_": {
       "label": "StepFun (Global) Step 2 (16K)",

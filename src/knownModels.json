@@ -647,6 +647,15 @@
     "family": "gpt"
   },
   {
+    "params_b": 23.572,
+    "active_b": null,
+    "name": "Magistral Small",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2025-06-10",
+    "family": "magistral"
+  },
+  {
     "params_b": 24,
     "active_b": 2,
     "name": "LiquidAI: LFM2-24B-A2B",
@@ -1280,6 +1289,15 @@
     "arch": "dense",
     "source": "manual",
     "last_seen": "2026-05-25"
+  },
+  {
+    "params_b": 127.486,
+    "active_b": null,
+    "name": "Ling-3.0-flash",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-23",
+    "family": "ling"
   },
   {
     "params_b": 128,

@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-08-06",
-  "gpu_last_updated": "2026-08-06",
+  "last_updated": "2026-08-07",
+  "gpu_last_updated": "2026-08-07",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -342,6 +342,11 @@
       "label": "Upstage solar-pro2",
       "input_per_1m": 0.25,
       "output_per_1m": 0.25
+    },
+    "upstage_solar_pro_4": {
+      "label": "Upstage Solar Pro 4",
+      "input_per_1m": 0.3,
+      "output_per_1m": 1.2
     },
     "xai_grok_4_3": {
       "label": "xAI Grok 4.3",

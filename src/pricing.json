@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-08-10",
-  "gpu_last_updated": "2026-08-10",
+  "last_updated": "2026-08-11",
+  "gpu_last_updated": "2026-08-11",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -263,11 +263,6 @@
       "input_per_1m": 0.15,
       "output_per_1m": 0
     },
-    "google_gemini_2_0_flash": {
-      "label": "Google Gemini 2.0 Flash",
-      "input_per_1m": 0.1,
-      "output_per_1m": 0.4
-    },
     "google_gemini_3_6_flash": {
       "label": "Google Gemini 3.6 Flash",
       "input_per_1m": 1.5,
@@ -303,11 +298,6 @@
       "input_per_1m": 1.25,
       "output_per_1m": 10
     },
-    "google_gemini_3_pro_preview": {
-      "label": "Google Gemini 3 Pro Preview",
-      "input_per_1m": 2,
-      "output_per_1m": 12
-    },
     "google_gemini_2_5_flash_lite": {
       "label": "Google Gemini 2.5 Flash-Lite",
       "input_per_1m": 0.1,
@@ -317,11 +307,6 @@
       "label": "Google Gemini 2.5 Pro Preview TTS",
       "input_per_1m": 1,
       "output_per_1m": 20
-    },
-    "google_gemini_2_0_flash_lite": {
-      "label": "Google Gemini 2.0 Flash-Lite",
-      "input_per_1m": 0.075,
-      "output_per_1m": 0.3
     },
     "google_gemini_3_1_flash_live_preview": {
       "label": "Google Gemini 3.1 Flash Live Preview",

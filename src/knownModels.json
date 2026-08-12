@@ -81,6 +81,15 @@
     "family": "qwen"
   },
   {
+    "params_b": 2.6,
+    "active_b": null,
+    "name": "LFM2.5-2.6B (free)",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-08-11",
+    "family": "liquid"
+  },
+  {
     "params_b": 3,
     "active_b": null,
     "name": "Ministral 3 3B Reasoning 2512",

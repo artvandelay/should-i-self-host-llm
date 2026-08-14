@@ -755,6 +755,15 @@
     "family": "other"
   },
   {
+    "params_b": 26.124,
+    "active_b": null,
+    "name": "Trinity Mini",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2025-12",
+    "family": "trinity"
+  },
+  {
     "params_b": 27,
     "active_b": null,
     "name": "Qwen3.6-27B",
@@ -1168,10 +1177,10 @@
   {
     "params_b": 95,
     "active_b": null,
-    "name": "Qwen3.8 2.4T A95B",
+    "name": "Qwen 3.8 2.4T",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-08-12",
+    "last_seen": "2026-08-13",
     "family": "qwen"
   },
   {
@@ -1538,7 +1547,7 @@
     "name": "Trinity Large Thinking",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-01",
+    "last_seen": "2026-05-28",
     "family": "trinity"
   },
   {

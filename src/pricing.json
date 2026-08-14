@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-08-13",
-  "gpu_last_updated": "2026-08-13",
+  "last_updated": "2026-08-14",
+  "gpu_last_updated": "2026-08-14",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -297,6 +297,11 @@
       "label": "Google Gemini 3.1 Flash Live Preview",
       "input_per_1m": 0.75,
       "output_per_1m": 4.5
+    },
+    "google_gemini_3_7_flash": {
+      "label": "Google Gemini 3.7 Flash",
+      "input_per_1m": 0.75,
+      "output_per_1m": 3.75
     },
     "anthropic_claude_opus_4_7": {
       "label": "Anthropic Claude Opus 4.7",
@@ -832,6 +837,11 @@
       "label": "Upstage solar-pro3",
       "input_per_1m": 0.25,
       "output_per_1m": 0.25
+    },
+    "fireworks_ai_qwen3_8_max": {
+      "label": "Fireworks AI Qwen3.8 Max",
+      "input_per_1m": 2,
+      "output_per_1m": 6
     },
     "fireworks_ai_qwen_3_7_plus": {
       "label": "Fireworks AI Qwen 3.7 Plus",

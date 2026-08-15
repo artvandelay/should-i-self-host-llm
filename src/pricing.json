@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-08-14",
-  "gpu_last_updated": "2026-08-14",
+  "last_updated": "2026-08-15",
+  "gpu_last_updated": "2026-08-15",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -842,6 +842,11 @@
       "label": "Fireworks AI Qwen3.8 Max",
       "input_per_1m": 2,
       "output_per_1m": 6
+    },
+    "fireworks_ai_deepseek_v4_pro_0813": {
+      "label": "Fireworks AI DeepSeek V4 Pro 0813",
+      "input_per_1m": 1.32,
+      "output_per_1m": 3.96
     },
     "fireworks_ai_qwen_3_7_plus": {
       "label": "Fireworks AI Qwen 3.7 Plus",

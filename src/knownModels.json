@@ -775,10 +775,10 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Qwen3.6 27B TEE",
+    "name": "Qwen3.8 27B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-22",
+    "last_seen": "2026-08-14",
     "family": "qwen"
   },
   {
@@ -1825,6 +1825,15 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-04-24",
+    "family": "deepseek-thinking"
+  },
+  {
+    "params_b": 1650.498,
+    "active_b": null,
+    "name": "DeepSeek V4 Pro 0813",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-08-12",
     "family": "deepseek-thinking"
   },
   {

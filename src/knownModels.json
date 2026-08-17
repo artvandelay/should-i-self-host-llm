@@ -158,7 +158,7 @@
     "name": "MedGemma 4B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-26",
+    "last_seen": "2026-08-16",
     "family": "other"
   },
   {
@@ -775,10 +775,10 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Qwen3.8 27B",
+    "name": "Qwen3.8 27B TEE",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-08-14",
+    "last_seen": "2026-08-16",
     "family": "qwen"
   },
   {
@@ -1013,6 +1013,15 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-05-23",
     "family": "qwen3.6"
+  },
+  {
+    "params_b": 35,
+    "active_b": null,
+    "name": "Ornith-1.0-35B-FP8",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-06-25",
+    "family": "ornith"
   },
   {
     "params_b": 35.107,

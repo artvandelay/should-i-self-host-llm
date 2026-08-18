@@ -775,10 +775,10 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Qwen3.8 27B TEE",
+    "name": "Qwen 3.8 27B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-08-16",
+    "last_seen": "2026-08-18",
     "family": "qwen"
   },
   {

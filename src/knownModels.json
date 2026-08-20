@@ -405,6 +405,15 @@
     "family": "glm"
   },
   {
+    "params_b": 10.293,
+    "active_b": null,
+    "name": "GLM-4.6V-Flash",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2025-12-08",
+    "family": "glm"
+  },
+  {
     "params_b": 10.7,
     "active_b": null,
     "name": "solar-10.7b-instruct",

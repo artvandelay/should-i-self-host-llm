@@ -54,6 +54,15 @@
     "family": "liquid"
   },
   {
+    "params_b": 1.8,
+    "active_b": null,
+    "name": "Hy-MT2-1.8B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-08-20",
+    "family": "Hy"
+  },
+  {
     "params_b": 2,
     "active_b": null,
     "name": "Gemma 4 E2B IT",
@@ -872,6 +881,15 @@
     "family": "muse"
   },
   {
+    "params_b": 30,
+    "active_b": 3,
+    "name": "Hy-MT2-30B-A3B",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-08-20",
+    "family": "Hy"
+  },
+  {
     "params_b": 31,
     "active_b": null,
     "name": "Google Gemma 4 31B Instruct",
@@ -1025,11 +1043,11 @@
   },
   {
     "params_b": 35,
-    "active_b": null,
-    "name": "Ornith-1.0-35B-FP8",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-06-25",
+    "active_b": 3,
+    "name": "Ornith 1.5 35B",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-08-20",
     "family": "ornith"
   },
   {

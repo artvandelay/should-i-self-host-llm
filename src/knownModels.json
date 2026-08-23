@@ -270,6 +270,15 @@
     "family": "other"
   },
   {
+    "params_b": 7,
+    "active_b": null,
+    "name": "Hy-MT2-7B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-08-19",
+    "family": "Hy"
+  },
+  {
     "params_b": 7.392,
     "active_b": null,
     "name": "Phi-3-small instruct (128k)",
@@ -757,10 +766,10 @@
   {
     "params_b": 26,
     "active_b": 4,
-    "name": "Gemma 4 26B-A4B",
+    "name": "Gemma 4 26B A4B Uncensored",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-06-12",
+    "last_seen": "2026-08-22",
     "family": "gemma"
   },
   {
@@ -1860,7 +1869,7 @@
     "name": "DeepSeek V4 Pro 0813",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-08-12",
+    "last_seen": "2026-08-22",
     "family": "deepseek-thinking"
   },
   {

@@ -423,6 +423,15 @@
     "family": "glm"
   },
   {
+    "params_b": 9,
+    "active_b": null,
+    "name": "Ornith 1.5 9B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-08-23",
+    "family": "ornith"
+  },
+  {
     "params_b": 10.293,
     "active_b": null,
     "name": "GLM-4.6V-Flash",
@@ -901,10 +910,10 @@
   {
     "params_b": 31,
     "active_b": null,
-    "name": "Google Gemma 4 31B Instruct",
+    "name": "Gemma 4 31B MeroMero v2",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-06-11",
+    "last_seen": "2026-08-23",
     "family": "gemma"
   },
   {
@@ -1470,6 +1479,15 @@
     "family": "ling"
   },
   {
+    "params_b": 284,
+    "active_b": null,
+    "name": "DeepSeek V4 Flash 0731",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-07-31",
+    "family": "deepseek-flash"
+  },
+  {
     "params_b": 290.945,
     "active_b": null,
     "name": "DeepSeek V4 Flash",
@@ -1504,15 +1522,6 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-01",
     "family": "ernie"
-  },
-  {
-    "params_b": 304.18,
-    "active_b": null,
-    "name": "DeepSeek V4 Flash 0731",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-07-31",
-    "family": "deepseek-flash"
   },
   {
     "params_b": 309.785,

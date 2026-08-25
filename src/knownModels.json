@@ -425,10 +425,10 @@
   {
     "params_b": 9,
     "active_b": null,
-    "name": "Ornith 1.5 9B",
+    "name": "Ornith 1.5 9B Thinking",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-08-23",
+    "last_seen": "2026-08-24",
     "family": "ornith"
   },
   {
@@ -775,10 +775,10 @@
   {
     "params_b": 26,
     "active_b": 4,
-    "name": "Gemma 4 26B A4B Uncensored",
+    "name": "Gemma 4 26B A4B Uncensored Thinking",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-08-22",
+    "last_seen": "2026-08-24",
     "family": "gemma"
   },
   {
@@ -811,10 +811,10 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Qwen 3.8 27B Uncensored",
+    "name": "Qwen 3.8 27B Obliterated",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-08-21",
+    "last_seen": "2026-08-24",
     "family": "qwen"
   },
   {
@@ -910,10 +910,10 @@
   {
     "params_b": 31,
     "active_b": null,
-    "name": "Gemma 4 31B MeroMero v2",
+    "name": "Gemma 4 31B MeroMero v2 Thinking",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-08-23",
+    "last_seen": "2026-08-24",
     "family": "gemma"
   },
   {
@@ -1053,10 +1053,10 @@
   {
     "params_b": 35,
     "active_b": 3,
-    "name": "Qwen 3.6 35B A3B Uncensored",
+    "name": "Qwen 3.6 35B A3B Uncensored Thinking",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-08-21",
+    "last_seen": "2026-08-24",
     "family": "qwen3.6"
   },
   {
@@ -1576,6 +1576,15 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-08-01",
     "family": "qwen"
+  },
+  {
+    "params_b": 397,
+    "active_b": null,
+    "name": "Ornith 1.5 397B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-08-24",
+    "family": "ornith"
   },
   {
     "params_b": 398.635,

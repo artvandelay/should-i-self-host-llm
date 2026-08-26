@@ -335,10 +335,10 @@
   {
     "params_b": 8,
     "active_b": null,
-    "name": "Granite 4.1 8B",
+    "name": "Granite 4.2 8B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-29",
+    "last_seen": "2026-08-24",
     "family": "granite"
   },
   {
@@ -811,10 +811,10 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Qwen 3.8 27B Obliterated",
+    "name": "Qwen 3.8 27B Uncensored Thinking",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-08-24",
+    "last_seen": "2026-08-25",
     "family": "qwen"
   },
   {

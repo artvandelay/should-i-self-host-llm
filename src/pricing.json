@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-08-26",
-  "gpu_last_updated": "2026-08-26",
+  "last_updated": "2026-08-27",
+  "gpu_last_updated": "2026-08-27",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -793,6 +793,11 @@
       "input_per_1m": 5,
       "output_per_1m": 22
     },
+    "zhipu_ai_glm_5_3": {
+      "label": "Zhipu AI GLM-5.3",
+      "input_per_1m": 1.4,
+      "output_per_1m": 4.4
+    },
     "zhipu_ai_glm_5_2": {
       "label": "Zhipu AI GLM-5.2",
       "input_per_1m": 1.4,
@@ -802,6 +807,11 @@
       "label": "Zhipu AI GLM-5.1",
       "input_per_1m": 1.4,
       "output_per_1m": 4.4
+    },
+    "zhipu_ai_glm_5_3_flash": {
+      "label": "Zhipu AI GLM-5.3-Flash",
+      "input_per_1m": 0.075,
+      "output_per_1m": 0.25
     },
     "mistral_mistral_medium_3_1": {
       "label": "Mistral Mistral Medium 3.1",

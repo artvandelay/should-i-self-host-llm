@@ -775,10 +775,10 @@
   {
     "params_b": 26,
     "active_b": 4,
-    "name": "Gemma 4 26B A4B Uncensored Thinking",
+    "name": "Gemma 4 26B A4B MeroMero",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-08-24",
+    "last_seen": "2026-08-26",
     "family": "gemma"
   },
   {
@@ -1542,6 +1542,15 @@
     "family": "mimo"
   },
   {
+    "params_b": 321.323,
+    "active_b": null,
+    "name": "GLM-5.3-Flash",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-08-26",
+    "family": "glm"
+  },
+  {
     "params_b": 356.786,
     "active_b": null,
     "name": "GLM-4.6",
@@ -1810,6 +1819,15 @@
     "family": "other"
   },
   {
+    "params_b": 1026.408,
+    "active_b": null,
+    "name": "Kimi K2 Thinking",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2025-11-06",
+    "family": "kimi-thinking"
+  },
+  {
     "params_b": 1026.471,
     "active_b": null,
     "name": "Kimi K2 0905",
@@ -1835,15 +1853,6 @@
     "source": "models.dev:hf",
     "last_seen": "2026-04-21",
     "family": "kimi-k2"
-  },
-  {
-    "params_b": 1058.118,
-    "active_b": null,
-    "name": "Kimi K2 Thinking",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2025-11-06",
-    "family": "kimi-thinking"
   },
   {
     "params_b": 1058.118,

@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-08-28",
-  "gpu_last_updated": "2026-08-28",
+  "last_updated": "2026-08-29",
+  "gpu_last_updated": "2026-08-29",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -698,6 +698,11 @@
       "input_per_1m": 0.72,
       "output_per_1m": 0.72
     },
+    "alibaba_qwen3_8_flash": {
+      "label": "Alibaba Qwen3.8 Flash",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.47
+    },
     "alibaba_qwen_mt_turbo": {
       "label": "Alibaba Qwen-MT Turbo",
       "input_per_1m": 0.16,
@@ -857,6 +862,11 @@
       "label": "Fireworks AI Qwen 3.7 Plus",
       "input_per_1m": 0.4,
       "output_per_1m": 1.6
+    },
+    "fireworks_ai_glm_5_3": {
+      "label": "Fireworks AI GLM 5.3",
+      "input_per_1m": 1.4,
+      "output_per_1m": 4.4
     },
     "custom": {
       "label": "Custom (enter rates)",

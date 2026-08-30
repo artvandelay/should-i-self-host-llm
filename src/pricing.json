@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-08-29",
-  "gpu_last_updated": "2026-08-29",
+  "last_updated": "2026-08-30",
+  "gpu_last_updated": "2026-08-30",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -857,6 +857,11 @@
       "label": "Fireworks AI Qwen3.8 Max",
       "input_per_1m": 2,
       "output_per_1m": 6
+    },
+    "fireworks_ai_glm_5_3_flash": {
+      "label": "Fireworks AI GLM 5.3 Flash",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.5
     },
     "fireworks_ai_qwen_3_7_plus": {
       "label": "Fireworks AI Qwen 3.7 Plus",

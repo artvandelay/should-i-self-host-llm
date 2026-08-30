@@ -775,10 +775,10 @@
   {
     "params_b": 26,
     "active_b": 4,
-    "name": "Moonlight Dusk",
+    "name": "Gemma 4 26B A4B MeroMero",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-08-28",
+    "last_seen": "2026-08-26",
     "family": "gemma"
   },
   {
@@ -910,10 +910,10 @@
   {
     "params_b": 31,
     "active_b": null,
-    "name": "Gemsicle",
+    "name": "Gemma 4 31B MeroMero v2 Thinking",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-08-29",
+    "last_seen": "2026-08-24",
     "family": "gemma"
   },
   {
@@ -933,6 +933,15 @@
     "source": "models.dev:hf",
     "last_seen": "2026-01-19",
     "family": "glm-flash"
+  },
+  {
+    "params_b": 31.221,
+    "active_b": null,
+    "name": "GLM-4.7-Flash",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-01",
+    "family": "glm"
   },
   {
     "params_b": 32,

@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-08-30",
-  "gpu_last_updated": "2026-08-30",
+  "last_updated": "2026-08-31",
+  "gpu_last_updated": "2026-08-31",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -798,11 +798,6 @@
       "input_per_1m": 5,
       "output_per_1m": 22
     },
-    "zhipu_ai_glm_5_3": {
-      "label": "Zhipu AI GLM-5.3",
-      "input_per_1m": 1.4,
-      "output_per_1m": 4.4
-    },
     "zhipu_ai_glm_5_2": {
       "label": "Zhipu AI GLM-5.2",
       "input_per_1m": 1.4,
@@ -867,11 +862,6 @@
       "label": "Fireworks AI Qwen 3.7 Plus",
       "input_per_1m": 0.4,
       "output_per_1m": 1.6
-    },
-    "fireworks_ai_glm_5_3": {
-      "label": "Fireworks AI GLM 5.3",
-      "input_per_1m": 1.4,
-      "output_per_1m": 4.4
     },
     "custom": {
       "label": "Custom (enter rates)",

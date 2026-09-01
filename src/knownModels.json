@@ -338,7 +338,7 @@
     "name": "Granite 4.2 8B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-08-24",
+    "last_seen": "2026-08-31",
     "family": "granite"
   },
   {

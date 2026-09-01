@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-08-31",
-  "gpu_last_updated": "2026-08-31",
+  "last_updated": "2026-09-01",
+  "gpu_last_updated": "2026-09-01",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -187,11 +187,6 @@
       "label": "Google Gemini 2.5 Flash-Lite",
       "input_per_1m": 0.1,
       "output_per_1m": 0.4
-    },
-    "google_gemini_robotics_er_1_6_preview": {
-      "label": "Google Gemini Robotics-ER 1.6 Preview",
-      "input_per_1m": 1,
-      "output_per_1m": 5
     },
     "google_gemini_2_5_computer_use_preview_10_2025": {
       "label": "Google Gemini 2.5 Computer Use Preview 10-2025",

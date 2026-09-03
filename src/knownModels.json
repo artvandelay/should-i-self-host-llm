@@ -18,13 +18,22 @@
     "family": "glm"
   },
   {
+    "params_b": 0.5,
+    "active_b": null,
+    "name": "Qwen2.5-Coder-0.5B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2024-11-12",
+    "family": "qwen"
+  },
+  {
     "params_b": 0.8,
     "active_b": null,
     "name": "Qwen3.5 0.8B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-11-01",
-    "family": "qwen"
+    "last_seen": "2026-08-16",
+    "family": "qwen3.5"
   },
   {
     "params_b": 1,
@@ -86,8 +95,8 @@
     "name": "Qwen3.5 2B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-11-01",
-    "family": "qwen"
+    "last_seen": "2026-08-16",
+    "family": "qwen3.5"
   },
   {
     "params_b": 2.6,
@@ -178,15 +187,6 @@
     "source": "models.dev:regex",
     "last_seen": "2024-08-26",
     "family": "nemotron"
-  },
-  {
-    "params_b": 4,
-    "active_b": null,
-    "name": "Gemma 3 4B IT",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-03-10",
-    "family": "unsloth"
   },
   {
     "params_b": 5,
@@ -542,10 +542,10 @@
   {
     "params_b": 13,
     "active_b": null,
-    "name": "ReMM SLERP 13B",
+    "name": "MythoMax 13B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-01-01",
+    "last_seen": "2025-08-08",
     "family": "llama"
   },
   {
@@ -622,10 +622,10 @@
   {
     "params_b": 17,
     "active_b": null,
-    "name": "Llama 4 Maverick 17B 128E Instruct",
+    "name": "Llama 4 Scout Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-04-29",
+    "last_seen": "2025-04-06",
     "family": "llama"
   },
   {
@@ -733,7 +733,7 @@
     "name": "Mistral Small 3.2 24B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-06-11",
+    "last_seen": "2025-06-20",
     "family": "mistral-small"
   },
   {
@@ -820,10 +820,10 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Google Gemma 3 27B Instruct",
+    "name": "Gemma Sea Lion V4 27B It",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-06-11",
+    "last_seen": "2025-09-23",
     "family": "gemma"
   },
   {
@@ -940,7 +940,7 @@
     "name": "GLM-4.7-Flash",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-01",
+    "last_seen": "2025-08-08",
     "family": "glm"
   },
   {
@@ -954,10 +954,10 @@
   {
     "params_b": 32,
     "active_b": null,
-    "name": "Qwen3 32B",
+    "name": "Qwen3 32B (dense)",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-16",
+    "last_seen": "2025-09-18",
     "family": "qwen"
   },
   {
@@ -972,10 +972,10 @@
   {
     "params_b": 32,
     "active_b": null,
-    "name": "DeepSeek R1 Distill Qwen 32B",
+    "name": "Deepseek R1 Distill Qwen 32B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-01-20",
+    "last_seen": "2025-05-29",
     "family": "deepseek-thinking"
   },
   {
@@ -1124,10 +1124,10 @@
   {
     "params_b": 70,
     "active_b": null,
-    "name": "Llama 3.3 70B",
+    "name": "EVA-LLaMA-3.33-70B-v0.1",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-06-11",
+    "last_seen": "2025-09-25",
     "family": "llama"
   },
   {
@@ -1289,16 +1289,16 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2025-12-08",
-    "family": "glm"
+    "family": "glmv"
   },
   {
     "params_b": 107.711,
     "active_b": null,
-    "name": "GLM 4.5V",
+    "name": "GLM-4.5V",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-01",
-    "family": "glmv"
+    "last_seen": "2025-08-11",
+    "family": "glm"
   },
   {
     "params_b": 110.469,
@@ -1306,7 +1306,7 @@
     "name": "GLM 4.5 Air",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-07-28",
+    "last_seen": "2025-10-13",
     "family": "glm-air"
   },
   {
@@ -1339,10 +1339,10 @@
   {
     "params_b": 120,
     "active_b": null,
-    "name": "GPT OSS 120B",
+    "name": "OpenAI GPT-oss-120b",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-06-16",
+    "last_seen": "2026-04-16",
     "family": "gpt-oss"
   },
   {
@@ -1430,7 +1430,7 @@
     "name": "Step 3.7 Flash",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-05-29",
+    "last_seen": "2026-05-28",
     "family": "other"
   },
   {
@@ -1448,16 +1448,7 @@
     "name": "MiniMax-M2.7",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-03-18",
-    "family": "minimax"
-  },
-  {
-    "params_b": 230,
-    "active_b": null,
-    "name": "MiniMax-M2.5",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-02-12",
+    "last_seen": "2026-04-11",
     "family": "minimax"
   },
   {
@@ -1488,15 +1479,6 @@
     "family": "ling"
   },
   {
-    "params_b": 284,
-    "active_b": null,
-    "name": "DeepSeek V4 Flash 0731",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-07-31",
-    "family": "deepseek-flash"
-  },
-  {
     "params_b": 290.945,
     "active_b": null,
     "name": "DeepSeek V4 Flash",
@@ -1524,13 +1506,13 @@
     "family": "other"
   },
   {
-    "params_b": 300,
-    "active_b": 47,
-    "name": "ERNIE 4.5 300B A47B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2026-01",
-    "family": "ernie"
+    "params_b": 304.18,
+    "active_b": null,
+    "name": "DeepSeek V4 Flash 0731",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-31",
+    "family": "deepseek-flash"
   },
   {
     "params_b": 309.785,
@@ -1538,7 +1520,7 @@
     "name": "XiaomiMiMo/MiMo-V2-Flash",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-01",
+    "last_seen": "2025-12-19",
     "family": "mimo"
   },
   {
@@ -1576,6 +1558,15 @@
     "source": "models.dev:hf",
     "last_seen": "2026-04-25",
     "family": "glm"
+  },
+  {
+    "params_b": 394.498,
+    "active_b": null,
+    "name": "DeepSeek V3.2",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2025-12-01",
+    "family": "deepseek"
   },
   {
     "params_b": 396.802,
@@ -1681,7 +1672,7 @@
     "name": "MiniMax M1",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-01",
+    "last_seen": "2025-06-17",
     "family": "minimax"
   },
   {
@@ -1779,7 +1770,7 @@
     "name": "DeepSeek-V3.2",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-02-04",
+    "last_seen": "2025-12-01",
     "family": "deepseek"
   },
   {
@@ -1815,7 +1806,7 @@
     "name": "MiMo-V2.5-Pro",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-22",
+    "last_seen": "2026-05-27",
     "family": "mimo"
   },
   {
@@ -1851,7 +1842,7 @@
     "name": "Kimi K2 0905",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-09-25",
+    "last_seen": "2025-09-05",
     "family": "kimi-k2"
   },
   {

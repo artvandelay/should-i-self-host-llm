@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-09-04",
-  "gpu_last_updated": "2026-09-04",
+  "last_updated": "2026-09-05",
+  "gpu_last_updated": "2026-09-05",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -88,18 +88,163 @@
     }
   ],
   "apis": {
-    "nvidia_usdcode": {
-      "label": "Nvidia usdcode",
-      "input_per_1m": 0,
-      "output_per_1m": 0
+    "stepfun__global__step_1__32k_": {
+      "label": "StepFun (Global) Step 1 (32K)",
+      "input_per_1m": 2.05,
+      "output_per_1m": 9.59
     },
-    "nvidia_phi_4_multimodal": {
-      "label": "Nvidia Phi 4 Multimodal",
-      "input_per_1m": 0,
-      "output_per_1m": 0
+    "stepfun__global__step_2__16k_": {
+      "label": "StepFun (Global) Step 2 (16K)",
+      "input_per_1m": 5.21,
+      "output_per_1m": 16.44
     },
-    "nvidia_bytedance_seed_seed_oss_36b_instruct": {
-      "label": "Nvidia ByteDance-Seed/Seed-OSS-36B-Instruct",
+    "alibaba_qwen3_7_max": {
+      "label": "Alibaba Qwen3.7 Max",
+      "input_per_1m": 2.5,
+      "output_per_1m": 7.5
+    },
+    "alibaba_qwen_mt_turbo": {
+      "label": "Alibaba Qwen-MT Turbo",
+      "input_per_1m": 0.16,
+      "output_per_1m": 0.49
+    },
+    "alibaba_qwen_vl_max": {
+      "label": "Alibaba Qwen-VL Max",
+      "input_per_1m": 0.8,
+      "output_per_1m": 3.2
+    },
+    "alibaba_qwen3_coder_flash": {
+      "label": "Alibaba Qwen3 Coder Flash",
+      "input_per_1m": 0.3,
+      "output_per_1m": 1.5
+    },
+    "alibaba_qwen_max": {
+      "label": "Alibaba Qwen Max",
+      "input_per_1m": 1.6,
+      "output_per_1m": 6.4
+    },
+    "alibaba_qwen3_6_plus": {
+      "label": "Alibaba Qwen3.6 Plus",
+      "input_per_1m": 0.5,
+      "output_per_1m": 3
+    },
+    "alibaba_qwen_vl_plus": {
+      "label": "Alibaba Qwen-VL Plus",
+      "input_per_1m": 0.21,
+      "output_per_1m": 0.63
+    },
+    "alibaba_qwen_omni_turbo_realtime": {
+      "label": "Alibaba Qwen-Omni Turbo Realtime",
+      "input_per_1m": 0.27,
+      "output_per_1m": 1.07
+    },
+    "alibaba_qwen_flash": {
+      "label": "Alibaba Qwen Flash",
+      "input_per_1m": 0.05,
+      "output_per_1m": 0.4
+    },
+    "alibaba_qwen_turbo": {
+      "label": "Alibaba Qwen Turbo",
+      "input_per_1m": 0.05,
+      "output_per_1m": 0.2
+    },
+    "alibaba_qwen3_livetranslate_flash_realtime": {
+      "label": "Alibaba Qwen3-LiveTranslate Flash Realtime",
+      "input_per_1m": 10,
+      "output_per_1m": 10
+    },
+    "alibaba_qwen_vl_ocr": {
+      "label": "Alibaba Qwen-VL OCR",
+      "input_per_1m": 0.72,
+      "output_per_1m": 0.72
+    },
+    "alibaba_qwq_plus": {
+      "label": "Alibaba QwQ Plus",
+      "input_per_1m": 0.8,
+      "output_per_1m": 2.4
+    },
+    "alibaba_qwen3_vl_plus": {
+      "label": "Alibaba Qwen3-VL Plus",
+      "input_per_1m": 0.2,
+      "output_per_1m": 1.6
+    },
+    "alibaba_qwen3_asr_flash": {
+      "label": "Alibaba Qwen3-ASR Flash",
+      "input_per_1m": 0.035,
+      "output_per_1m": 0.035
+    },
+    "alibaba_qwen3_omni_flash": {
+      "label": "Alibaba Qwen3-Omni Flash",
+      "input_per_1m": 0.43,
+      "output_per_1m": 1.66
+    },
+    "alibaba_qwen3_max": {
+      "label": "Alibaba Qwen3 Max",
+      "input_per_1m": 1.2,
+      "output_per_1m": 6
+    },
+    "alibaba_qwen_plus": {
+      "label": "Alibaba Qwen Plus",
+      "input_per_1m": 0.4,
+      "output_per_1m": 1.2
+    },
+    "alibaba_qwen3_omni_flash_realtime": {
+      "label": "Alibaba Qwen3-Omni Flash Realtime",
+      "input_per_1m": 0.52,
+      "output_per_1m": 1.99
+    },
+    "alibaba_qwen3_6_flash": {
+      "label": "Alibaba Qwen3.6 Flash",
+      "input_per_1m": 0.1875,
+      "output_per_1m": 1.125
+    },
+    "alibaba_qwen3_8_flash": {
+      "label": "Alibaba Qwen3.8 Flash",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.47
+    },
+    "alibaba_qwen3_6_max_preview": {
+      "label": "Alibaba Qwen3.6 Max Preview",
+      "input_per_1m": 1.3,
+      "output_per_1m": 7.8
+    },
+    "alibaba_qwen_plus_character__japanese_": {
+      "label": "Alibaba Qwen Plus Character (Japanese)",
+      "input_per_1m": 0.5,
+      "output_per_1m": 1.4
+    },
+    "alibaba_qwen3_8_max": {
+      "label": "Alibaba Qwen3.8 Max",
+      "input_per_1m": 2,
+      "output_per_1m": 6
+    },
+    "alibaba_qwen3_7_plus": {
+      "label": "Alibaba Qwen3.7 Plus",
+      "input_per_1m": 0.5,
+      "output_per_1m": 3
+    },
+    "alibaba_qwen_omni_turbo": {
+      "label": "Alibaba Qwen-Omni Turbo",
+      "input_per_1m": 0.07,
+      "output_per_1m": 0.27
+    },
+    "alibaba_qwen3_5_plus": {
+      "label": "Alibaba Qwen3.5 Plus",
+      "input_per_1m": 0.4,
+      "output_per_1m": 2.4
+    },
+    "alibaba_qwen_mt_plus": {
+      "label": "Alibaba Qwen-MT Plus",
+      "input_per_1m": 2.46,
+      "output_per_1m": 7.37
+    },
+    "alibaba_qvq_max": {
+      "label": "Alibaba QVQ Max",
+      "input_per_1m": 1.2,
+      "output_per_1m": 4.8
+    },
+    "nvidia_qwen3_next_80b_a3b_instruct": {
+      "label": "Nvidia Qwen3-Next-80B-A3B-Instruct",
       "input_per_1m": 0,
       "output_per_1m": 0
     },
@@ -113,18 +258,8 @@
       "input_per_1m": 0,
       "output_per_1m": 0
     },
-    "nvidia_qwen3_next_80b_a3b_instruct": {
-      "label": "Nvidia Qwen3-Next-80B-A3B-Instruct",
-      "input_per_1m": 0,
-      "output_per_1m": 0
-    },
     "nvidia_qwen_image_edit": {
       "label": "Nvidia Qwen Image Edit",
-      "input_per_1m": 0,
-      "output_per_1m": 0
-    },
-    "nvidia_magistral_small_2506": {
-      "label": "Nvidia Magistral Small 2506",
       "input_per_1m": 0,
       "output_per_1m": 0
     },
@@ -133,48 +268,133 @@
       "input_per_1m": 0,
       "output_per_1m": 0
     },
+    "nvidia_magistral_small_2506": {
+      "label": "Nvidia Magistral Small 2506",
+      "input_per_1m": 0,
+      "output_per_1m": 0
+    },
+    "nvidia_usdcode": {
+      "label": "Nvidia usdcode",
+      "input_per_1m": 0,
+      "output_per_1m": 0
+    },
+    "nvidia_bytedance_seed_seed_oss_36b_instruct": {
+      "label": "Nvidia ByteDance-Seed/Seed-OSS-36B-Instruct",
+      "input_per_1m": 0,
+      "output_per_1m": 0
+    },
+    "nvidia_phi_4_multimodal": {
+      "label": "Nvidia Phi 4 Multimodal",
+      "input_per_1m": 0,
+      "output_per_1m": 0
+    },
     "nvidia_flux_1_dev": {
       "label": "Nvidia FLUX.1-dev",
       "input_per_1m": 0,
       "output_per_1m": 0
     },
-    "deepseek_deepseek_v4_flash_vision_exp": {
-      "label": "DeepSeek DeepSeek V4 Flash Vision Exp",
-      "input_per_1m": 0.14,
-      "output_per_1m": 0.28
+    "anthropic_claude_sonnet_4_6": {
+      "label": "Anthropic Claude Sonnet 4.6",
+      "input_per_1m": 3,
+      "output_per_1m": 15
     },
-    "google_gemini_3_1_flash_tts_preview": {
-      "label": "Google Gemini 3.1 Flash TTS Preview",
+    "anthropic_claude_opus_5": {
+      "label": "Anthropic Claude Opus 5",
+      "input_per_1m": 5,
+      "output_per_1m": 25
+    },
+    "anthropic_claude_opus_4_5__latest_": {
+      "label": "Anthropic Claude Opus 4.5 (latest)",
+      "input_per_1m": 5,
+      "output_per_1m": 25
+    },
+    "anthropic_claude_fable_5_1": {
+      "label": "Anthropic Claude Fable 5.1",
+      "input_per_1m": 10,
+      "output_per_1m": 50
+    },
+    "anthropic_claude_opus_4_6": {
+      "label": "Anthropic Claude Opus 4.6",
+      "input_per_1m": 5,
+      "output_per_1m": 25
+    },
+    "anthropic_claude_sonnet_4_5": {
+      "label": "Anthropic Claude Sonnet 4.5",
+      "input_per_1m": 3,
+      "output_per_1m": 15
+    },
+    "anthropic_claude_opus_4_7": {
+      "label": "Anthropic Claude Opus 4.7",
+      "input_per_1m": 5,
+      "output_per_1m": 25
+    },
+    "anthropic_claude_haiku_4_5": {
+      "label": "Anthropic Claude Haiku 4.5",
       "input_per_1m": 1,
-      "output_per_1m": 20
+      "output_per_1m": 5
     },
-    "google_nano_banana_pro": {
-      "label": "Google Nano Banana Pro",
+    "anthropic_claude_fable_5": {
+      "label": "Anthropic Claude Fable 5",
+      "input_per_1m": 10,
+      "output_per_1m": 50
+    },
+    "anthropic_claude_haiku_4_5__latest_": {
+      "label": "Anthropic Claude Haiku 4.5 (latest)",
+      "input_per_1m": 1,
+      "output_per_1m": 5
+    },
+    "anthropic_claude_sonnet_4_5__latest_": {
+      "label": "Anthropic Claude Sonnet 4.5 (latest)",
+      "input_per_1m": 3,
+      "output_per_1m": 15
+    },
+    "anthropic_claude_opus_4_8": {
+      "label": "Anthropic Claude Opus 4.8",
+      "input_per_1m": 5,
+      "output_per_1m": 25
+    },
+    "anthropic_claude_sonnet_5": {
+      "label": "Anthropic Claude Sonnet 5",
       "input_per_1m": 2,
-      "output_per_1m": 120
+      "output_per_1m": 10
     },
-    "google_gemini_flash_lite_latest": {
-      "label": "Google Gemini Flash-Lite Latest",
-      "input_per_1m": 0.3,
-      "output_per_1m": 2.5
+    "anthropic_claude_opus_4_5": {
+      "label": "Anthropic Claude Opus 4.5",
+      "input_per_1m": 5,
+      "output_per_1m": 25
     },
-    "google_gemini_3_5_flash_lite": {
-      "label": "Google Gemini 3.5 Flash Lite",
-      "input_per_1m": 0.3,
-      "output_per_1m": 2.5
+    "google_gemini_3_1_pro_preview_custom_tools": {
+      "label": "Google Gemini 3.1 Pro Preview Custom Tools",
+      "input_per_1m": 2,
+      "output_per_1m": 12
     },
     "google_nano_banana_2_lite": {
       "label": "Google Nano Banana 2 Lite",
       "input_per_1m": 0.25,
       "output_per_1m": 30
     },
-    "google_gemini_3_1_pro_preview": {
-      "label": "Google Gemini 3.1 Pro Preview",
+    "google_lyria_3_clip_preview": {
+      "label": "Google Lyria 3 Clip Preview",
+      "input_per_1m": 0,
+      "output_per_1m": 0
+    },
+    "google_nano_banana": {
+      "label": "Google Nano Banana",
+      "input_per_1m": 0.3,
+      "output_per_1m": 30
+    },
+    "google_deep_research_max_preview__apr_21_2026_": {
+      "label": "Google Deep Research Max Preview (Apr-21-2026)",
       "input_per_1m": 2,
       "output_per_1m": 12
     },
-    "google_gemini_3_1_pro_preview_custom_tools": {
-      "label": "Google Gemini 3.1 Pro Preview Custom Tools",
+    "google_nano_banana_pro": {
+      "label": "Google Nano Banana Pro",
+      "input_per_1m": 2,
+      "output_per_1m": 120
+    },
+    "google_gemini_3_1_pro_preview": {
+      "label": "Google Gemini 3.1 Pro Preview",
       "input_per_1m": 2,
       "output_per_1m": 12
     },
@@ -193,623 +413,118 @@
       "input_per_1m": 1.25,
       "output_per_1m": 10
     },
-    "google_lyria_3_clip_preview": {
-      "label": "Google Lyria 3 Clip Preview",
-      "input_per_1m": 0,
-      "output_per_1m": 0
-    },
-    "google_gemini_embedding_001": {
-      "label": "Google Gemini Embedding 001",
-      "input_per_1m": 0.15,
-      "output_per_1m": 0
-    },
-    "google_gemini_2_5_pro_preview_tts": {
-      "label": "Google Gemini 2.5 Pro Preview TTS",
-      "input_per_1m": 1,
-      "output_per_1m": 20
-    },
-    "google_gemini_flash_latest": {
-      "label": "Google Gemini Flash Latest",
+    "google_gemini_3_6_flash": {
+      "label": "Google Gemini 3.6 Flash",
       "input_per_1m": 0.75,
       "output_per_1m": 3.75
-    },
-    "google_gemini_3_5_flash": {
-      "label": "Google Gemini 3.5 Flash",
-      "input_per_1m": 1.5,
-      "output_per_1m": 9
-    },
-    "google_gemini_3_5_live_translate_preview": {
-      "label": "Google Gemini 3.5 Live Translate Preview",
-      "input_per_1m": 3.5,
-      "output_per_1m": 21
-    },
-    "google_gemini_omni_flash_preview": {
-      "label": "Google Gemini Omni Flash Preview",
-      "input_per_1m": 1.5,
-      "output_per_1m": 17.5
     },
     "google_gemini_3_1_flash_lite": {
       "label": "Google Gemini 3.1 Flash Lite",
       "input_per_1m": 0.25,
       "output_per_1m": 1.5
     },
-    "google_gemini_2_5_flash": {
-      "label": "Google Gemini 2.5 Flash",
-      "input_per_1m": 0.3,
-      "output_per_1m": 2.5
-    },
-    "google_gemini_2_5_flash_preview_tts": {
-      "label": "Google Gemini 2.5 Flash Preview TTS",
-      "input_per_1m": 0.5,
-      "output_per_1m": 10
-    },
-    "google_gemini_embedding_2": {
-      "label": "Google Gemini Embedding 2",
-      "input_per_1m": 0.2,
-      "output_per_1m": 0
-    },
-    "google_gemini_3_6_flash": {
-      "label": "Google Gemini 3.6 Flash",
+    "google_gemini_3_1_flash_live_preview": {
+      "label": "Google Gemini 3.1 Flash Live Preview",
       "input_per_1m": 0.75,
-      "output_per_1m": 3.75
+      "output_per_1m": 4.5
     },
-    "google_nano_banana_2": {
-      "label": "Google Nano Banana 2",
-      "input_per_1m": 0.5,
-      "output_per_1m": 60
+    "google_gemini_2_5_pro_preview_tts": {
+      "label": "Google Gemini 2.5 Pro Preview TTS",
+      "input_per_1m": 1,
+      "output_per_1m": 20
     },
-    "google_lyria_3_pro_preview": {
-      "label": "Google Lyria 3 Pro Preview",
-      "input_per_1m": 0,
-      "output_per_1m": 0
+    "google_gemini_3_5_flash": {
+      "label": "Google Gemini 3.5 Flash",
+      "input_per_1m": 1.5,
+      "output_per_1m": 9
     },
     "google_gemini_3_1_flash_lite_preview": {
       "label": "Google Gemini 3.1 Flash Lite Preview",
       "input_per_1m": 0.25,
       "output_per_1m": 1.5
     },
-    "google_gemini_3_8_flash": {
-      "label": "Google Gemini 3.8 Flash",
-      "input_per_1m": 0.75,
-      "output_per_1m": 3.75
+    "google_gemini_2_5_flash_preview_tts": {
+      "label": "Google Gemini 2.5 Flash Preview TTS",
+      "input_per_1m": 0.5,
+      "output_per_1m": 10
+    },
+    "google_gemini_embedding_001": {
+      "label": "Google Gemini Embedding 001",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0
+    },
+    "google_nano_banana_2": {
+      "label": "Google Nano Banana 2",
+      "input_per_1m": 0.5,
+      "output_per_1m": 60
+    },
+    "google_gemini_3_5_flash_lite": {
+      "label": "Google Gemini 3.5 Flash Lite",
+      "input_per_1m": 0.3,
+      "output_per_1m": 2.5
+    },
+    "google_gemini_3_1_flash_tts_preview": {
+      "label": "Google Gemini 3.1 Flash TTS Preview",
+      "input_per_1m": 1,
+      "output_per_1m": 20
+    },
+    "google_gemini_flash_lite_latest": {
+      "label": "Google Gemini Flash-Lite Latest",
+      "input_per_1m": 0.3,
+      "output_per_1m": 2.5
+    },
+    "google_gemini_embedding_2": {
+      "label": "Google Gemini Embedding 2",
+      "input_per_1m": 0.2,
+      "output_per_1m": 0
     },
     "google_gemini_3_flash_preview": {
       "label": "Google Gemini 3 Flash Preview",
       "input_per_1m": 0.5,
       "output_per_1m": 3
     },
-    "google_nano_banana": {
-      "label": "Google Nano Banana",
-      "input_per_1m": 0.3,
-      "output_per_1m": 30
-    },
-    "google_gemini_2_5_pro": {
-      "label": "Google Gemini 2.5 Pro",
-      "input_per_1m": 1.25,
-      "output_per_1m": 10
-    },
-    "google_deep_research_max_preview__apr_21_2026_": {
-      "label": "Google Deep Research Max Preview (Apr-21-2026)",
-      "input_per_1m": 2,
-      "output_per_1m": 12
-    },
-    "google_gemini_3_1_flash_live_preview": {
-      "label": "Google Gemini 3.1 Flash Live Preview",
+    "google_gemini_3_8_flash": {
+      "label": "Google Gemini 3.8 Flash",
       "input_per_1m": 0.75,
-      "output_per_1m": 4.5
+      "output_per_1m": 3.75
+    },
+    "google_gemini_3_5_live_translate_preview": {
+      "label": "Google Gemini 3.5 Live Translate Preview",
+      "input_per_1m": 3.5,
+      "output_per_1m": 21
+    },
+    "google_lyria_3_pro_preview": {
+      "label": "Google Lyria 3 Pro Preview",
+      "input_per_1m": 0,
+      "output_per_1m": 0
     },
     "google_gemini_3_7_flash": {
       "label": "Google Gemini 3.7 Flash",
       "input_per_1m": 0.75,
       "output_per_1m": 3.75
     },
-    "anthropic_claude_opus_4_7": {
-      "label": "Anthropic Claude Opus 4.7",
-      "input_per_1m": 5,
-      "output_per_1m": 25
-    },
-    "anthropic_claude_opus_4_8": {
-      "label": "Anthropic Claude Opus 4.8",
-      "input_per_1m": 5,
-      "output_per_1m": 25
-    },
-    "anthropic_claude_fable_5_1": {
-      "label": "Anthropic Claude Fable 5.1",
-      "input_per_1m": 10,
-      "output_per_1m": 50
-    },
-    "anthropic_claude_sonnet_5": {
-      "label": "Anthropic Claude Sonnet 5",
-      "input_per_1m": 2,
-      "output_per_1m": 10
-    },
-    "anthropic_claude_sonnet_4_5": {
-      "label": "Anthropic Claude Sonnet 4.5",
-      "input_per_1m": 3,
-      "output_per_1m": 15
-    },
-    "anthropic_claude_opus_4_5__latest_": {
-      "label": "Anthropic Claude Opus 4.5 (latest)",
-      "input_per_1m": 5,
-      "output_per_1m": 25
-    },
-    "anthropic_claude_sonnet_4_6": {
-      "label": "Anthropic Claude Sonnet 4.6",
-      "input_per_1m": 3,
-      "output_per_1m": 15
-    },
-    "anthropic_claude_haiku_4_5": {
-      "label": "Anthropic Claude Haiku 4.5",
-      "input_per_1m": 1,
-      "output_per_1m": 5
-    },
-    "anthropic_claude_sonnet_4_5__latest_": {
-      "label": "Anthropic Claude Sonnet 4.5 (latest)",
-      "input_per_1m": 3,
-      "output_per_1m": 15
-    },
-    "anthropic_claude_opus_4_5": {
-      "label": "Anthropic Claude Opus 4.5",
-      "input_per_1m": 5,
-      "output_per_1m": 25
-    },
-    "anthropic_claude_fable_5": {
-      "label": "Anthropic Claude Fable 5",
-      "input_per_1m": 10,
-      "output_per_1m": 50
-    },
-    "anthropic_claude_haiku_4_5__latest_": {
-      "label": "Anthropic Claude Haiku 4.5 (latest)",
-      "input_per_1m": 1,
-      "output_per_1m": 5
-    },
-    "anthropic_claude_opus_4_6": {
-      "label": "Anthropic Claude Opus 4.6",
-      "input_per_1m": 5,
-      "output_per_1m": 25
-    },
-    "anthropic_claude_opus_5": {
-      "label": "Anthropic Claude Opus 5",
-      "input_per_1m": 5,
-      "output_per_1m": 25
-    },
-    "openai_gpt_4o": {
-      "label": "OpenAI GPT-4o",
-      "input_per_1m": 2.5,
-      "output_per_1m": 10
-    },
-    "openai_gpt_5_3_chat__latest_": {
-      "label": "OpenAI GPT-5.3 Chat (latest)",
-      "input_per_1m": 1.75,
-      "output_per_1m": 14
-    },
-    "openai_gpt_5_nano": {
-      "label": "OpenAI GPT-5 Nano",
-      "input_per_1m": 0.05,
-      "output_per_1m": 0.4
-    },
-    "openai_gpt_4o_mini": {
-      "label": "OpenAI GPT-4o mini",
-      "input_per_1m": 0.15,
-      "output_per_1m": 0.6
-    },
-    "openai_gpt_3_5_turbo": {
-      "label": "OpenAI GPT-3.5-turbo",
-      "input_per_1m": 0.5,
-      "output_per_1m": 1.5
-    },
-    "openai_o1_pro": {
-      "label": "OpenAI o1-pro",
-      "input_per_1m": 150,
-      "output_per_1m": 600
-    },
-    "openai_gpt_5_5_pro": {
-      "label": "OpenAI GPT-5.5 Pro",
-      "input_per_1m": 30,
-      "output_per_1m": 180
-    },
-    "openai_gpt_4_turbo": {
-      "label": "OpenAI GPT-4 Turbo",
-      "input_per_1m": 10,
-      "output_per_1m": 30
-    },
-    "openai_gpt_4": {
-      "label": "OpenAI GPT-4",
-      "input_per_1m": 30,
-      "output_per_1m": 60
-    },
-    "openai_gpt_5_6_sol": {
-      "label": "OpenAI GPT-5.6 Sol",
-      "input_per_1m": 4,
-      "output_per_1m": 20
-    },
-    "openai_o3_pro": {
-      "label": "OpenAI o3-pro",
-      "input_per_1m": 20,
-      "output_per_1m": 80
-    },
-    "openai_gpt_5_4_pro": {
-      "label": "OpenAI GPT-5.4 Pro",
-      "input_per_1m": 30,
-      "output_per_1m": 180
-    },
-    "openai_gpt_5": {
-      "label": "OpenAI GPT-5",
+    "google_gemini_2_5_pro": {
+      "label": "Google Gemini 2.5 Pro",
       "input_per_1m": 1.25,
       "output_per_1m": 10
     },
-    "openai_gpt_5_6": {
-      "label": "OpenAI GPT-5.6",
-      "input_per_1m": 4,
-      "output_per_1m": 20
-    },
-    "openai_gpt_5_mini": {
-      "label": "OpenAI GPT-5 Mini",
-      "input_per_1m": 0.25,
-      "output_per_1m": 2
-    },
-    "openai_gpt_5_6_luna": {
-      "label": "OpenAI GPT-5.6 Luna",
-      "input_per_1m": 0.2,
-      "output_per_1m": 1.2
-    },
-    "openai_text_embedding_ada_002": {
-      "label": "OpenAI text-embedding-ada-002",
-      "input_per_1m": 0.1,
-      "output_per_1m": 0
-    },
-    "openai_gpt_5_3_codex": {
-      "label": "OpenAI GPT-5.3 Codex",
-      "input_per_1m": 1.75,
-      "output_per_1m": 14
-    },
-    "openai_gpt_5_3_codex_spark": {
-      "label": "OpenAI GPT-5.3 Codex Spark",
-      "input_per_1m": 1.75,
-      "output_per_1m": 14
-    },
-    "openai_gpt_4_1_nano": {
-      "label": "OpenAI GPT-4.1 nano",
-      "input_per_1m": 0.1,
-      "output_per_1m": 0.4
-    },
-    "openai_o1": {
-      "label": "OpenAI o1",
-      "input_per_1m": 15,
-      "output_per_1m": 60
-    },
-    "openai_gpt_5_2": {
-      "label": "OpenAI GPT-5.2",
-      "input_per_1m": 1.75,
-      "output_per_1m": 14
-    },
-    "openai_gpt_realtime_2_1": {
-      "label": "OpenAI GPT-Realtime-2.1",
-      "input_per_1m": 4,
-      "output_per_1m": 24
-    },
-    "openai_gpt_5_4_mini": {
-      "label": "OpenAI GPT-5.4 mini",
+    "google_gemini_flash_latest": {
+      "label": "Google Gemini Flash Latest",
       "input_per_1m": 0.75,
-      "output_per_1m": 4.5
+      "output_per_1m": 3.75
     },
-    "openai_gpt_4o__2024_05_13_": {
-      "label": "OpenAI GPT-4o (2024-05-13)",
-      "input_per_1m": 5,
-      "output_per_1m": 15
+    "google_gemini_omni_flash_preview": {
+      "label": "Google Gemini Omni Flash Preview",
+      "input_per_1m": 1.5,
+      "output_per_1m": 17.5
     },
-    "openai_o3": {
-      "label": "OpenAI o3",
-      "input_per_1m": 2,
-      "output_per_1m": 8
-    },
-    "openai_text_embedding_3_small": {
-      "label": "OpenAI text-embedding-3-small",
-      "input_per_1m": 0.02,
-      "output_per_1m": 0
-    },
-    "openai_gpt_5_pro": {
-      "label": "OpenAI GPT-5 Pro",
-      "input_per_1m": 15,
-      "output_per_1m": 120
-    },
-    "openai_gpt_5_5": {
-      "label": "OpenAI GPT-5.5",
-      "input_per_1m": 5,
-      "output_per_1m": 30
-    },
-    "openai_gpt_4_1": {
-      "label": "OpenAI GPT-4.1",
-      "input_per_1m": 2,
-      "output_per_1m": 8
-    },
-    "openai_gpt_4o__2024_08_06_": {
-      "label": "OpenAI GPT-4o (2024-08-06)",
-      "input_per_1m": 2.5,
-      "output_per_1m": 10
-    },
-    "openai_gpt_5_6_terra": {
-      "label": "OpenAI GPT-5.6 Terra",
-      "input_per_1m": 2,
-      "output_per_1m": 12
-    },
-    "openai_o4_mini": {
-      "label": "OpenAI o4-mini",
-      "input_per_1m": 1.1,
-      "output_per_1m": 4.4
-    },
-    "openai_gpt_5_4": {
-      "label": "OpenAI GPT-5.4",
-      "input_per_1m": 2.5,
-      "output_per_1m": 15
-    },
-    "openai_o3_mini": {
-      "label": "OpenAI o3-mini",
-      "input_per_1m": 1.1,
-      "output_per_1m": 4.4
-    },
-    "openai_gpt_4o__2024_11_20_": {
-      "label": "OpenAI GPT-4o (2024-11-20)",
-      "input_per_1m": 2.5,
-      "output_per_1m": 10
-    },
-    "openai_text_embedding_3_large": {
-      "label": "OpenAI text-embedding-3-large",
-      "input_per_1m": 0.13,
-      "output_per_1m": 0
-    },
-    "openai_gpt_5_2_chat": {
-      "label": "OpenAI GPT-5.2 Chat",
-      "input_per_1m": 1.75,
-      "output_per_1m": 14
-    },
-    "openai_gpt_5_2_pro": {
-      "label": "OpenAI GPT-5.2 Pro",
-      "input_per_1m": 21,
-      "output_per_1m": 168
-    },
-    "openai_gpt_image_2": {
-      "label": "OpenAI gpt-image-2",
-      "input_per_1m": 5,
-      "output_per_1m": 30
-    },
-    "openai_gpt_4_1_mini": {
-      "label": "OpenAI GPT-4.1 mini",
-      "input_per_1m": 0.4,
-      "output_per_1m": 1.6
-    },
-    "openai_gpt_5_4_nano": {
-      "label": "OpenAI GPT-5.4 nano",
-      "input_per_1m": 0.2,
-      "output_per_1m": 1.25
-    },
-    "openai_gpt_5_1": {
-      "label": "OpenAI GPT-5.1",
-      "input_per_1m": 1.25,
-      "output_per_1m": 10
-    },
-    "xai_grok_4_6": {
-      "label": "xAI Grok 4.6",
-      "input_per_1m": 2,
-      "output_per_1m": 6
-    },
-    "xai_grok_4_5": {
-      "label": "xAI Grok 4.5",
-      "input_per_1m": 2,
-      "output_per_1m": 6
-    },
-    "xai_grok_4_20__non_reasoning_": {
-      "label": "xAI Grok 4.20 (Non-Reasoning)",
-      "input_per_1m": 1.25,
-      "output_per_1m": 2.5
-    },
-    "xai_grok_4_20__reasoning_": {
-      "label": "xAI Grok 4.20 (Reasoning)",
-      "input_per_1m": 1.25,
-      "output_per_1m": 2.5
-    },
-    "xai_grok_4_20_multi_agent": {
-      "label": "xAI Grok 4.20 Multi-Agent",
-      "input_per_1m": 1.25,
-      "output_per_1m": 2.5
-    },
-    "xai_grok_build_0_1": {
-      "label": "xAI Grok Build 0.1",
-      "input_per_1m": 1,
-      "output_per_1m": 2
-    },
-    "xai_grok_4_3": {
-      "label": "xAI Grok 4.3",
-      "input_per_1m": 1.25,
-      "output_per_1m": 2.5
-    },
-    "stepfun__global__step_1__32k_": {
-      "label": "StepFun (Global) Step 1 (32K)",
-      "input_per_1m": 2.05,
-      "output_per_1m": 9.59
-    },
-    "stepfun__global__step_2__16k_": {
-      "label": "StepFun (Global) Step 2 (16K)",
-      "input_per_1m": 5.21,
-      "output_per_1m": 16.44
-    },
-    "alibaba_qwen3_vl_plus": {
-      "label": "Alibaba Qwen3-VL Plus",
-      "input_per_1m": 0.2,
-      "output_per_1m": 1.6
-    },
-    "alibaba_qwen3_7_max": {
-      "label": "Alibaba Qwen3.7 Max",
-      "input_per_1m": 2.5,
-      "output_per_1m": 7.5
-    },
-    "alibaba_qwen_turbo": {
-      "label": "Alibaba Qwen Turbo",
-      "input_per_1m": 0.05,
-      "output_per_1m": 0.2
-    },
-    "alibaba_qwen_omni_turbo": {
-      "label": "Alibaba Qwen-Omni Turbo",
-      "input_per_1m": 0.07,
-      "output_per_1m": 0.27
-    },
-    "alibaba_qwen_vl_max": {
-      "label": "Alibaba Qwen-VL Max",
-      "input_per_1m": 0.8,
-      "output_per_1m": 3.2
-    },
-    "alibaba_qwen_max": {
-      "label": "Alibaba Qwen Max",
-      "input_per_1m": 1.6,
-      "output_per_1m": 6.4
-    },
-    "alibaba_qwen_plus": {
-      "label": "Alibaba Qwen Plus",
-      "input_per_1m": 0.4,
-      "output_per_1m": 1.2
-    },
-    "alibaba_qwen3_5_plus": {
-      "label": "Alibaba Qwen3.5 Plus",
-      "input_per_1m": 0.4,
-      "output_per_1m": 2.4
-    },
-    "alibaba_qwen3_livetranslate_flash_realtime": {
-      "label": "Alibaba Qwen3-LiveTranslate Flash Realtime",
-      "input_per_1m": 10,
-      "output_per_1m": 10
-    },
-    "alibaba_qwen3_coder_flash": {
-      "label": "Alibaba Qwen3 Coder Flash",
+    "google_gemini_2_5_flash": {
+      "label": "Google Gemini 2.5 Flash",
       "input_per_1m": 0.3,
-      "output_per_1m": 1.5
-    },
-    "alibaba_qwen3_6_max_preview": {
-      "label": "Alibaba Qwen3.6 Max Preview",
-      "input_per_1m": 1.3,
-      "output_per_1m": 7.8
-    },
-    "alibaba_qwen3_8_max": {
-      "label": "Alibaba Qwen3.8 Max",
-      "input_per_1m": 2,
-      "output_per_1m": 6
-    },
-    "alibaba_qwen3_7_plus": {
-      "label": "Alibaba Qwen3.7 Plus",
-      "input_per_1m": 0.5,
-      "output_per_1m": 3
-    },
-    "alibaba_qwen_vl_ocr": {
-      "label": "Alibaba Qwen-VL OCR",
-      "input_per_1m": 0.72,
-      "output_per_1m": 0.72
-    },
-    "alibaba_qwen3_8_flash": {
-      "label": "Alibaba Qwen3.8 Flash",
-      "input_per_1m": 0.15,
-      "output_per_1m": 0.47
-    },
-    "alibaba_qwen_mt_turbo": {
-      "label": "Alibaba Qwen-MT Turbo",
-      "input_per_1m": 0.16,
-      "output_per_1m": 0.49
-    },
-    "alibaba_qwen3_omni_flash": {
-      "label": "Alibaba Qwen3-Omni Flash",
-      "input_per_1m": 0.43,
-      "output_per_1m": 1.66
-    },
-    "alibaba_qwen_flash": {
-      "label": "Alibaba Qwen Flash",
-      "input_per_1m": 0.05,
-      "output_per_1m": 0.4
-    },
-    "alibaba_qwen3_max": {
-      "label": "Alibaba Qwen3 Max",
-      "input_per_1m": 1.2,
-      "output_per_1m": 6
-    },
-    "alibaba_qvq_max": {
-      "label": "Alibaba QVQ Max",
-      "input_per_1m": 1.2,
-      "output_per_1m": 4.8
-    },
-    "alibaba_qwen3_omni_flash_realtime": {
-      "label": "Alibaba Qwen3-Omni Flash Realtime",
-      "input_per_1m": 0.52,
-      "output_per_1m": 1.99
-    },
-    "alibaba_qwen3_6_plus": {
-      "label": "Alibaba Qwen3.6 Plus",
-      "input_per_1m": 0.5,
-      "output_per_1m": 3
-    },
-    "alibaba_qwen_mt_plus": {
-      "label": "Alibaba Qwen-MT Plus",
-      "input_per_1m": 2.46,
-      "output_per_1m": 7.37
-    },
-    "alibaba_qwen_plus_character__japanese_": {
-      "label": "Alibaba Qwen Plus Character (Japanese)",
-      "input_per_1m": 0.5,
-      "output_per_1m": 1.4
-    },
-    "alibaba_qwq_plus": {
-      "label": "Alibaba QwQ Plus",
-      "input_per_1m": 0.8,
-      "output_per_1m": 2.4
-    },
-    "alibaba_qwen_omni_turbo_realtime": {
-      "label": "Alibaba Qwen-Omni Turbo Realtime",
-      "input_per_1m": 0.27,
-      "output_per_1m": 1.07
-    },
-    "alibaba_qwen3_asr_flash": {
-      "label": "Alibaba Qwen3-ASR Flash",
-      "input_per_1m": 0.035,
-      "output_per_1m": 0.035
-    },
-    "alibaba_qwen_vl_plus": {
-      "label": "Alibaba Qwen-VL Plus",
-      "input_per_1m": 0.21,
-      "output_per_1m": 0.63
-    },
-    "alibaba_qwen3_6_flash": {
-      "label": "Alibaba Qwen3.6 Flash",
-      "input_per_1m": 0.1875,
-      "output_per_1m": 1.125
-    },
-    "perplexity_perplexity_sonar_deep_research": {
-      "label": "Perplexity Perplexity Sonar Deep Research",
-      "input_per_1m": 2,
-      "output_per_1m": 8
-    },
-    "perplexity_sonar": {
-      "label": "Perplexity Sonar",
-      "input_per_1m": 1,
-      "output_per_1m": 1
-    },
-    "perplexity_sonar_reasoning_pro": {
-      "label": "Perplexity Sonar Reasoning Pro",
-      "input_per_1m": 2,
-      "output_per_1m": 8
-    },
-    "perplexity_sonar_pro": {
-      "label": "Perplexity Sonar Pro",
-      "input_per_1m": 3,
-      "output_per_1m": 15
-    },
-    "zhipu_ai_glm_5v_turbo": {
-      "label": "Zhipu AI GLM-5V-Turbo",
-      "input_per_1m": 5,
-      "output_per_1m": 22
+      "output_per_1m": 2.5
     },
     "zhipu_ai_glm_5_2": {
       "label": "Zhipu AI GLM-5.2",
-      "input_per_1m": 1.4,
-      "output_per_1m": 4.4
-    },
-    "zhipu_ai_glm_5_1": {
-      "label": "Zhipu AI GLM-5.1",
       "input_per_1m": 1.4,
       "output_per_1m": 4.4
     },
@@ -818,25 +533,260 @@
       "input_per_1m": 0.075,
       "output_per_1m": 0.25
     },
-    "mistral_mistral_medium_3_1": {
-      "label": "Mistral Mistral Medium 3.1",
-      "input_per_1m": 0.4,
-      "output_per_1m": 2
+    "zhipu_ai_glm_5_1": {
+      "label": "Zhipu AI GLM-5.1",
+      "input_per_1m": 1.4,
+      "output_per_1m": 4.4
     },
-    "mistral_mistral_medium_3": {
-      "label": "Mistral Mistral Medium 3",
-      "input_per_1m": 0.4,
-      "output_per_1m": 2
+    "zhipu_ai_glm_5v_turbo": {
+      "label": "Zhipu AI GLM-5V-Turbo",
+      "input_per_1m": 5,
+      "output_per_1m": 22
     },
-    "mistral_mistral_embed": {
-      "label": "Mistral Mistral Embed",
+    "fireworks_ai_qwen_3_7_plus": {
+      "label": "Fireworks AI Qwen 3.7 Plus",
+      "input_per_1m": 0.4,
+      "output_per_1m": 1.6
+    },
+    "fireworks_ai_deepseek_v4_flash_vision_exp": {
+      "label": "Fireworks AI DeepSeek V4 Flash Vision Exp",
+      "input_per_1m": 0.22,
+      "output_per_1m": 0.66
+    },
+    "fireworks_ai_glm_5_3_flash": {
+      "label": "Fireworks AI GLM 5.3 Flash",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.5
+    },
+    "fireworks_ai_qwen3_8_max": {
+      "label": "Fireworks AI Qwen3.8 Max",
+      "input_per_1m": 2,
+      "output_per_1m": 6
+    },
+    "deepseek_deepseek_v4_flash_vision_exp": {
+      "label": "DeepSeek DeepSeek V4 Flash Vision Exp",
+      "input_per_1m": 0.14,
+      "output_per_1m": 0.28
+    },
+    "openai_gpt_5_nano": {
+      "label": "OpenAI GPT-5 Nano",
+      "input_per_1m": 0.05,
+      "output_per_1m": 0.4
+    },
+    "openai_gpt_4_1_nano": {
+      "label": "OpenAI GPT-4.1 nano",
+      "input_per_1m": 0.1,
+      "output_per_1m": 0.4
+    },
+    "openai_gpt_4o__2024_05_13_": {
+      "label": "OpenAI GPT-4o (2024-05-13)",
+      "input_per_1m": 5,
+      "output_per_1m": 15
+    },
+    "openai_gpt_5_pro": {
+      "label": "OpenAI GPT-5 Pro",
+      "input_per_1m": 15,
+      "output_per_1m": 120
+    },
+    "openai_gpt_5_6_sol": {
+      "label": "OpenAI GPT-5.6 Sol",
+      "input_per_1m": 4,
+      "output_per_1m": 20
+    },
+    "openai_gpt_4o__2024_08_06_": {
+      "label": "OpenAI GPT-4o (2024-08-06)",
+      "input_per_1m": 2.5,
+      "output_per_1m": 10
+    },
+    "openai_gpt_6_astra": {
+      "label": "OpenAI GPT-6 Astra",
+      "input_per_1m": 10,
+      "output_per_1m": 50
+    },
+    "openai_gpt_5_2_pro": {
+      "label": "OpenAI GPT-5.2 Pro",
+      "input_per_1m": 21,
+      "output_per_1m": 168
+    },
+    "openai_gpt_5_3_codex_spark": {
+      "label": "OpenAI GPT-5.3 Codex Spark",
+      "input_per_1m": 1.75,
+      "output_per_1m": 14
+    },
+    "openai_gpt_4_1_mini": {
+      "label": "OpenAI GPT-4.1 mini",
+      "input_per_1m": 0.4,
+      "output_per_1m": 1.6
+    },
+    "openai_gpt_5_4": {
+      "label": "OpenAI GPT-5.4",
+      "input_per_1m": 2.5,
+      "output_per_1m": 15
+    },
+    "openai_gpt_4_turbo": {
+      "label": "OpenAI GPT-4 Turbo",
+      "input_per_1m": 10,
+      "output_per_1m": 30
+    },
+    "openai_gpt_5_1": {
+      "label": "OpenAI GPT-5.1",
+      "input_per_1m": 1.25,
+      "output_per_1m": 10
+    },
+    "openai_o1": {
+      "label": "OpenAI o1",
+      "input_per_1m": 15,
+      "output_per_1m": 60
+    },
+    "openai_gpt_4o": {
+      "label": "OpenAI GPT-4o",
+      "input_per_1m": 2.5,
+      "output_per_1m": 10
+    },
+    "openai_gpt_5_6_luna": {
+      "label": "OpenAI GPT-5.6 Luna",
+      "input_per_1m": 0.2,
+      "output_per_1m": 1.2
+    },
+    "openai_gpt_5_3_codex": {
+      "label": "OpenAI GPT-5.3 Codex",
+      "input_per_1m": 1.75,
+      "output_per_1m": 14
+    },
+    "openai_gpt_4o_mini": {
+      "label": "OpenAI GPT-4o mini",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.6
+    },
+    "openai_o1_pro": {
+      "label": "OpenAI o1-pro",
+      "input_per_1m": 150,
+      "output_per_1m": 600
+    },
+    "openai_gpt_4_1": {
+      "label": "OpenAI GPT-4.1",
+      "input_per_1m": 2,
+      "output_per_1m": 8
+    },
+    "openai_text_embedding_ada_002": {
+      "label": "OpenAI text-embedding-ada-002",
       "input_per_1m": 0.1,
       "output_per_1m": 0
     },
-    "upstage_solar_pro2": {
-      "label": "Upstage solar-pro2",
+    "openai_gpt_5_4_nano": {
+      "label": "OpenAI GPT-5.4 nano",
+      "input_per_1m": 0.2,
+      "output_per_1m": 1.25
+    },
+    "openai_gpt_5_5_pro": {
+      "label": "OpenAI GPT-5.5 Pro",
+      "input_per_1m": 30,
+      "output_per_1m": 180
+    },
+    "openai_gpt_5_4_mini": {
+      "label": "OpenAI GPT-5.4 mini",
+      "input_per_1m": 0.75,
+      "output_per_1m": 4.5
+    },
+    "openai_gpt_image_2": {
+      "label": "OpenAI gpt-image-2",
+      "input_per_1m": 5,
+      "output_per_1m": 30
+    },
+    "openai_gpt_3_5_turbo": {
+      "label": "OpenAI GPT-3.5-turbo",
+      "input_per_1m": 0.5,
+      "output_per_1m": 1.5
+    },
+    "openai_gpt_5_6": {
+      "label": "OpenAI GPT-5.6",
+      "input_per_1m": 4,
+      "output_per_1m": 20
+    },
+    "openai_text_embedding_3_small": {
+      "label": "OpenAI text-embedding-3-small",
+      "input_per_1m": 0.02,
+      "output_per_1m": 0
+    },
+    "openai_gpt_5_mini": {
+      "label": "OpenAI GPT-5 Mini",
       "input_per_1m": 0.25,
-      "output_per_1m": 0.25
+      "output_per_1m": 2
+    },
+    "openai_gpt_5_4_pro": {
+      "label": "OpenAI GPT-5.4 Pro",
+      "input_per_1m": 30,
+      "output_per_1m": 180
+    },
+    "openai_text_embedding_3_large": {
+      "label": "OpenAI text-embedding-3-large",
+      "input_per_1m": 0.13,
+      "output_per_1m": 0
+    },
+    "openai_gpt_5_6_terra": {
+      "label": "OpenAI GPT-5.6 Terra",
+      "input_per_1m": 2,
+      "output_per_1m": 12
+    },
+    "openai_gpt_4": {
+      "label": "OpenAI GPT-4",
+      "input_per_1m": 30,
+      "output_per_1m": 60
+    },
+    "openai_gpt_5_2": {
+      "label": "OpenAI GPT-5.2",
+      "input_per_1m": 1.75,
+      "output_per_1m": 14
+    },
+    "openai_gpt_5": {
+      "label": "OpenAI GPT-5",
+      "input_per_1m": 1.25,
+      "output_per_1m": 10
+    },
+    "openai_gpt_5_2_chat": {
+      "label": "OpenAI GPT-5.2 Chat",
+      "input_per_1m": 1.75,
+      "output_per_1m": 14
+    },
+    "openai_o4_mini": {
+      "label": "OpenAI o4-mini",
+      "input_per_1m": 1.1,
+      "output_per_1m": 4.4
+    },
+    "openai_gpt_realtime_2_1": {
+      "label": "OpenAI GPT-Realtime-2.1",
+      "input_per_1m": 4,
+      "output_per_1m": 24
+    },
+    "openai_o3_mini": {
+      "label": "OpenAI o3-mini",
+      "input_per_1m": 1.1,
+      "output_per_1m": 4.4
+    },
+    "openai_o3": {
+      "label": "OpenAI o3",
+      "input_per_1m": 2,
+      "output_per_1m": 8
+    },
+    "openai_o3_pro": {
+      "label": "OpenAI o3-pro",
+      "input_per_1m": 20,
+      "output_per_1m": 80
+    },
+    "openai_gpt_5_3_chat__latest_": {
+      "label": "OpenAI GPT-5.3 Chat (latest)",
+      "input_per_1m": 1.75,
+      "output_per_1m": 14
+    },
+    "openai_gpt_5_5": {
+      "label": "OpenAI GPT-5.5",
+      "input_per_1m": 5,
+      "output_per_1m": 30
+    },
+    "openai_gpt_4o__2024_11_20_": {
+      "label": "OpenAI GPT-4o (2024-11-20)",
+      "input_per_1m": 2.5,
+      "output_per_1m": 10
     },
     "upstage_solar_mini": {
       "label": "Upstage solar-mini",
@@ -853,25 +803,80 @@
       "input_per_1m": 0.25,
       "output_per_1m": 0.25
     },
-    "fireworks_ai_qwen3_8_max": {
-      "label": "Fireworks AI Qwen3.8 Max",
+    "upstage_solar_pro2": {
+      "label": "Upstage solar-pro2",
+      "input_per_1m": 0.25,
+      "output_per_1m": 0.25
+    },
+    "xai_grok_4_3": {
+      "label": "xAI Grok 4.3",
+      "input_per_1m": 1.25,
+      "output_per_1m": 2.5
+    },
+    "xai_grok_4_20__reasoning_": {
+      "label": "xAI Grok 4.20 (Reasoning)",
+      "input_per_1m": 1.25,
+      "output_per_1m": 2.5
+    },
+    "xai_grok_4_20_multi_agent": {
+      "label": "xAI Grok 4.20 Multi-Agent",
+      "input_per_1m": 1.25,
+      "output_per_1m": 2.5
+    },
+    "xai_grok_4_5": {
+      "label": "xAI Grok 4.5",
       "input_per_1m": 2,
       "output_per_1m": 6
     },
-    "fireworks_ai_glm_5_3_flash": {
-      "label": "Fireworks AI GLM 5.3 Flash",
-      "input_per_1m": 0.15,
-      "output_per_1m": 0.5
+    "xai_grok_build_0_1": {
+      "label": "xAI Grok Build 0.1",
+      "input_per_1m": 1,
+      "output_per_1m": 2
     },
-    "fireworks_ai_qwen_3_7_plus": {
-      "label": "Fireworks AI Qwen 3.7 Plus",
+    "xai_grok_4_6": {
+      "label": "xAI Grok 4.6",
+      "input_per_1m": 2,
+      "output_per_1m": 6
+    },
+    "xai_grok_4_20__non_reasoning_": {
+      "label": "xAI Grok 4.20 (Non-Reasoning)",
+      "input_per_1m": 1.25,
+      "output_per_1m": 2.5
+    },
+    "mistral_mistral_embed": {
+      "label": "Mistral Mistral Embed",
+      "input_per_1m": 0.1,
+      "output_per_1m": 0
+    },
+    "mistral_mistral_medium_3": {
+      "label": "Mistral Mistral Medium 3",
       "input_per_1m": 0.4,
-      "output_per_1m": 1.6
+      "output_per_1m": 2
     },
-    "fireworks_ai_deepseek_v4_flash_vision_exp": {
-      "label": "Fireworks AI DeepSeek V4 Flash Vision Exp",
-      "input_per_1m": 0.22,
-      "output_per_1m": 0.66
+    "mistral_mistral_medium_3_1": {
+      "label": "Mistral Mistral Medium 3.1",
+      "input_per_1m": 0.4,
+      "output_per_1m": 2
+    },
+    "perplexity_sonar": {
+      "label": "Perplexity Sonar",
+      "input_per_1m": 1,
+      "output_per_1m": 1
+    },
+    "perplexity_sonar_reasoning_pro": {
+      "label": "Perplexity Sonar Reasoning Pro",
+      "input_per_1m": 2,
+      "output_per_1m": 8
+    },
+    "perplexity_sonar_pro": {
+      "label": "Perplexity Sonar Pro",
+      "input_per_1m": 3,
+      "output_per_1m": 15
+    },
+    "perplexity_perplexity_sonar_deep_research": {
+      "label": "Perplexity Perplexity Sonar Deep Research",
+      "input_per_1m": 2,
+      "output_per_1m": 8
     },
     "custom": {
       "label": "Custom (enter rates)",

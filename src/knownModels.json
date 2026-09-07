@@ -1765,7 +1765,7 @@
     "family": "mistral"
   },
   {
-    "params_b": 684.531,
+    "params_b": 684.49,
     "active_b": null,
     "name": "DeepSeek-R1",
     "arch": "dense",

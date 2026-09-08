@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-09-07",
-  "gpu_last_updated": "2026-09-07",
+  "last_updated": "2026-09-08",
+  "gpu_last_updated": "2026-09-08",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -528,11 +528,6 @@
       "input_per_1m": 1.4,
       "output_per_1m": 4.4
     },
-    "zhipu_ai_glm_5_3_flash": {
-      "label": "Zhipu AI GLM-5.3-Flash",
-      "input_per_1m": 0.075,
-      "output_per_1m": 0.25
-    },
     "zhipu_ai_glm_5_1": {
       "label": "Zhipu AI GLM-5.1",
       "input_per_1m": 1.4,
@@ -552,11 +547,6 @@
       "label": "Fireworks AI DeepSeek V4 Flash Vision Exp",
       "input_per_1m": 0.22,
       "output_per_1m": 0.66
-    },
-    "fireworks_ai_glm_5_3_flash": {
-      "label": "Fireworks AI GLM 5.3 Flash",
-      "input_per_1m": 0.15,
-      "output_per_1m": 0.5
     },
     "fireworks_ai_qwen3_8_max": {
       "label": "Fireworks AI Qwen3.8 Max",

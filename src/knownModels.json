@@ -272,10 +272,10 @@
   {
     "params_b": 7,
     "active_b": null,
-    "name": "UI-TARS 7B ",
+    "name": "K2-Horizon-7B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-07-22",
+    "last_seen": "2026-09-09",
     "family": "other"
   },
   {
@@ -479,10 +479,10 @@
   {
     "params_b": 12,
     "active_b": null,
-    "name": "Gemma 4 12B Instruct",
+    "name": "Gemma 4 12B Semancer",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-08-01",
+    "last_seen": "2026-09-09",
     "family": "gemma"
   },
   {
@@ -820,10 +820,10 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Qwen 3.8 27B Fable",
+    "name": "Qwen 3.8 27B Queen",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-08-28",
+    "last_seen": "2026-09-09",
     "family": "qwen"
   },
   {

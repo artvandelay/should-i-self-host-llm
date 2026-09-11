@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-09-10",
-  "gpu_last_updated": "2026-09-10",
+  "last_updated": "2026-09-11",
+  "gpu_last_updated": "2026-09-11",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -552,11 +552,6 @@
       "label": "Fireworks AI Qwen3.8 Max",
       "input_per_1m": 2,
       "output_per_1m": 6
-    },
-    "deepseek_deepseek_v4_flash_vision_exp": {
-      "label": "DeepSeek DeepSeek V4 Flash Vision Exp",
-      "input_per_1m": 0.14,
-      "output_per_1m": 0.28
     },
     "openai_gpt_5_nano": {
       "label": "OpenAI GPT-5 Nano",

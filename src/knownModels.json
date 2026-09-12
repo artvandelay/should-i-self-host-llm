@@ -730,10 +730,10 @@
   {
     "params_b": 24,
     "active_b": null,
-    "name": "Mistral Small 3.2 24B Instruct",
+    "name": "Mistral Small 24B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-06-20",
+    "last_seen": "2026-09-10",
     "family": "mistral-small"
   },
   {
@@ -1609,16 +1609,8 @@
     "active_b": null,
     "name": "Llama 3.1 405B",
     "arch": "dense",
-    "source": "manual",
-    "last_seen": "2026-05-25"
-  },
-  {
-    "params_b": 405,
-    "active_b": null,
-    "name": "Nous: Hermes 3 405B Instruct",
-    "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2024-08-16",
+    "last_seen": "2026-09-10",
     "family": "llama"
   },
   {
@@ -1669,10 +1661,10 @@
   {
     "params_b": 480,
     "active_b": 35,
-    "name": "Qwen3-Coder 480B-A35B Instruct",
+    "name": "Qwen 3 Coder 480B Turbo",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-07-22",
+    "last_seen": "2026-06-11",
     "family": "qwen"
   },
   {
@@ -1736,15 +1728,6 @@
     "source": "models.dev:regex",
     "last_seen": "2026-01-19",
     "family": "mistral-large"
-  },
-  {
-    "params_b": 675,
-    "active_b": null,
-    "name": "Mistral Large 3",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-12-02",
-    "family": "mistral"
   },
   {
     "params_b": 684.49,

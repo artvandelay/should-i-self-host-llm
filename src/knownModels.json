@@ -18,22 +18,13 @@
     "family": "glm"
   },
   {
-    "params_b": 0.5,
-    "active_b": null,
-    "name": "Qwen2.5-Coder-0.5B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2024-11-12",
-    "family": "qwen"
-  },
-  {
     "params_b": 0.8,
     "active_b": null,
     "name": "Qwen3.5 0.8B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-08-16",
-    "family": "qwen3.5"
+    "last_seen": "2025-11-01",
+    "family": "qwen"
   },
   {
     "params_b": 1,
@@ -92,10 +83,10 @@
   {
     "params_b": 2,
     "active_b": null,
-    "name": "cosmos-transfer2.5-2b",
+    "name": "MiniCPM5-2B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-02-26",
+    "last_seen": "2026-09-12",
     "family": "other"
   },
   {
@@ -104,8 +95,8 @@
     "name": "Qwen3.5 2B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-08-16",
-    "family": "qwen3.5"
+    "last_seen": "2025-11-01",
+    "family": "qwen"
   },
   {
     "params_b": 2.6,
@@ -1750,19 +1741,19 @@
   {
     "params_b": 753.33,
     "active_b": null,
-    "name": "GLM-5.3",
+    "name": "GLM-5.2",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-08-14",
+    "last_seen": "2026-06-13",
     "family": "glm"
   },
   {
-    "params_b": 753.864,
+    "params_b": 754,
     "active_b": null,
-    "name": "GLM-5.1",
+    "name": "GLM-5.3",
     "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-04-07",
+    "source": "models.dev:regex",
+    "last_seen": "2026-08-14",
     "family": "glm"
   },
   {
@@ -1840,10 +1831,10 @@
   {
     "params_b": 1026.879,
     "active_b": null,
-    "name": "Kimi K2.6",
+    "name": "Kimi K2.7 Code",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-21",
+    "last_seen": "2026-06-12",
     "family": "kimi-k2"
   },
   {
@@ -1863,15 +1854,6 @@
     "source": "models.dev:hf",
     "last_seen": "2026-03-15",
     "family": "kimi"
-  },
-  {
-    "params_b": 1100,
-    "active_b": null,
-    "name": "Kimi K2.7 Code",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-06-12",
-    "family": "kimi-k2"
   },
   {
     "params_b": 1598.84,

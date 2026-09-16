@@ -438,7 +438,7 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2025-12-08",
-    "family": "glm"
+    "family": "glm-flash"
   },
   {
     "params_b": 10.7,
@@ -915,15 +915,6 @@
     "source": "models.dev:hf",
     "last_seen": "2026-01-19",
     "family": "glm-flash"
-  },
-  {
-    "params_b": 31.221,
-    "active_b": null,
-    "name": "GLM-4.7-Flash",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2025-08-08",
-    "family": "glm"
   },
   {
     "params_b": 32,
@@ -1521,7 +1512,7 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-08-26",
-    "family": "glm"
+    "family": "glm-flash"
   },
   {
     "params_b": 356.786,
@@ -1730,7 +1721,7 @@
     "family": "deepseek-thinking"
   },
   {
-    "params_b": 685.397,
+    "params_b": 685.355,
     "active_b": null,
     "name": "DeepSeek-V3.2",
     "arch": "dense",

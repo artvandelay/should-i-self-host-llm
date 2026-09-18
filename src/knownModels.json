@@ -892,10 +892,10 @@
   {
     "params_b": 31,
     "active_b": null,
-    "name": "Gemma 4 31B MeroMero v2 Thinking",
+    "name": "Gemma 4 31B Split-Untied",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-08-24",
+    "last_seen": "2026-09-17",
     "family": "gemma"
   },
   {

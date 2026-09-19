@@ -793,10 +793,10 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Qwen3.6-27B",
+    "name": "Ternary Bonsai 2 27B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-06-01",
+    "last_seen": "2026-09-18",
     "family": "other"
   },
   {

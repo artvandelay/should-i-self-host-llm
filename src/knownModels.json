@@ -766,10 +766,10 @@
   {
     "params_b": 26,
     "active_b": 4,
-    "name": "Gemma 4 26B A4B MeroMero",
+    "name": "Gemma 4 26B A4B Cybersecurity",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-08-26",
+    "last_seen": "2026-09-19",
     "family": "gemma"
   },
   {
@@ -802,10 +802,10 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Qwen 3.8 27B Queen",
+    "name": "Qwen 3.8 27B Cybersecurity",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-09-09",
+    "last_seen": "2026-09-19",
     "family": "qwen"
   },
   {
@@ -1387,6 +1387,15 @@
     "arch": "moe",
     "source": "manual",
     "last_seen": "2026-05-25"
+  },
+  {
+    "params_b": 180,
+    "active_b": null,
+    "name": "Qwen3.8 Flash Next",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-08-27",
+    "family": "qwen"
   },
   {
     "params_b": 199.384,

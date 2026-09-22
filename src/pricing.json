@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-09-21",
-  "gpu_last_updated": "2026-09-21",
+  "last_updated": "2026-09-22",
+  "gpu_last_updated": "2026-09-22",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -88,6 +88,11 @@
     }
   ],
   "apis": {
+    "stepfun__global__step_5_preview": {
+      "label": "StepFun (Global) Step 5 Preview",
+      "input_per_1m": 1,
+      "output_per_1m": 2.7
+    },
     "stepfun__global__step_1__32k_": {
       "label": "StepFun (Global) Step 1 (32K)",
       "input_per_1m": 2.05,
@@ -820,6 +825,11 @@
     },
     "xai_grok_4_6": {
       "label": "xAI Grok 4.6",
+      "input_per_1m": 2,
+      "output_per_1m": 6
+    },
+    "xai_grok_4_7": {
+      "label": "xAI Grok 4.7",
       "input_per_1m": 2,
       "output_per_1m": 6
     },

@@ -802,10 +802,10 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Qwen 3.8 27B Cybersecurity",
+    "name": "Qwen 3.8 27B Hemingway",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-09-19",
+    "last_seen": "2026-09-21",
     "family": "qwen"
   },
   {

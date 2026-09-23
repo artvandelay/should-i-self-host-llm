@@ -18,6 +18,15 @@
     "family": "glm"
   },
   {
+    "params_b": 0.287,
+    "active_b": null,
+    "name": "GLiNER 2.5 Multi",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-08-24",
+    "family": "other"
+  },
+  {
     "params_b": 0.8,
     "active_b": null,
     "name": "Qwen3.5 0.8B",
@@ -1668,15 +1677,6 @@
     "family": "nemotron"
   },
   {
-    "params_b": 552.845,
-    "active_b": null,
-    "name": "Inkling",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-07-15",
-    "family": "ling"
-  },
-  {
     "params_b": 581.154,
     "active_b": null,
     "name": "Kimi K2 0711 Instruct FP4",
@@ -1775,7 +1775,16 @@
     "family": "Hy"
   },
   {
-    "params_b": 1023.245,
+    "params_b": 952.378,
+    "active_b": null,
+    "name": "Inkling",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-15",
+    "family": "ling"
+  },
+  {
+    "params_b": 1023.183,
     "active_b": null,
     "name": "MiMo-V2.5-Pro",
     "arch": "dense",

@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-09-22",
-  "gpu_last_updated": "2026-09-22",
+  "last_updated": "2026-09-23",
+  "gpu_last_updated": "2026-09-23",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -303,6 +303,11 @@
       "input_per_1m": 3,
       "output_per_1m": 15
     },
+    "anthropic_claude_opus_5_5": {
+      "label": "Anthropic Claude Opus 5.5",
+      "input_per_1m": 4,
+      "output_per_1m": 20
+    },
     "anthropic_claude_opus_5": {
       "label": "Anthropic Claude Opus 5",
       "input_per_1m": 5,
@@ -578,6 +583,11 @@
       "input_per_1m": 15,
       "output_per_1m": 120
     },
+    "openai_gpt_6_sol": {
+      "label": "OpenAI GPT-6 Sol",
+      "input_per_1m": 2,
+      "output_per_1m": 10
+    },
     "openai_gpt_5_6_sol": {
       "label": "OpenAI GPT-5.6 Sol",
       "input_per_1m": 4,
@@ -632,6 +642,11 @@
       "label": "OpenAI GPT-4o",
       "input_per_1m": 2.5,
       "output_per_1m": 10
+    },
+    "openai_gpt_6_luna": {
+      "label": "OpenAI GPT-6 Luna",
+      "input_per_1m": 0.1,
+      "output_per_1m": 0.5
     },
     "openai_gpt_5_6_luna": {
       "label": "OpenAI GPT-5.6 Luna",

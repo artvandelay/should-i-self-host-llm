@@ -802,10 +802,10 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Ternary Bonsai 2 27B",
+    "name": "Qwen3.8 27B Uncensored TEE",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-09-18",
+    "last_seen": "2026-09-25",
     "family": "other"
   },
   {
@@ -1421,7 +1421,7 @@
     "name": "Step 3.7 Flash",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-05-28",
+    "last_seen": "2026-05-29",
     "family": "other"
   },
   {
@@ -1439,7 +1439,7 @@
     "name": "MiniMax-M2.7",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-11",
+    "last_seen": "2026-03-18",
     "family": "minimax"
   },
   {
@@ -1834,7 +1834,7 @@
     "name": "Kimi K2 0905",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-09-05",
+    "last_seen": "2025-09-25",
     "family": "kimi-k2"
   },
   {

@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-09-26",
-  "gpu_last_updated": "2026-09-26",
+  "last_updated": "2026-09-27",
+  "gpu_last_updated": "2026-09-27",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -552,11 +552,6 @@
       "label": "Fireworks AI Ember-1",
       "input_per_1m": 3,
       "output_per_1m": 15
-    },
-    "fireworks_ai_qwen_3_7_plus": {
-      "label": "Fireworks AI Qwen 3.7 Plus",
-      "input_per_1m": 0.4,
-      "output_per_1m": 1.6
     },
     "fireworks_ai_qwen3_8_max": {
       "label": "Fireworks AI Qwen3.8 Max",

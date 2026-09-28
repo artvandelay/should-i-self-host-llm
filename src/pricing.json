@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-09-27",
-  "gpu_last_updated": "2026-09-27",
+  "last_updated": "2026-09-28",
+  "gpu_last_updated": "2026-09-28",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -188,6 +188,11 @@
       "input_per_1m": 0.05,
       "output_per_1m": 0.4
     },
+    "alibaba_qwen3_5_flash": {
+      "label": "Alibaba Qwen3.5 Flash",
+      "input_per_1m": 0.1,
+      "output_per_1m": 0.4
+    },
     "alibaba_qwen3_7_max": {
       "label": "Alibaba Qwen3.7 Max",
       "input_per_1m": 2.5,
@@ -233,6 +238,11 @@
       "input_per_1m": 0.4,
       "output_per_1m": 1.2
     },
+    "alibaba_qwen3_7_flash": {
+      "label": "Alibaba Qwen3.7 Flash",
+      "input_per_1m": 0.03,
+      "output_per_1m": 0.13
+    },
     "alibaba_qwen3_max": {
       "label": "Alibaba Qwen3 Max",
       "input_per_1m": 1.2,
@@ -247,6 +257,11 @@
       "label": "Alibaba Qwen Turbo",
       "input_per_1m": 0.05,
       "output_per_1m": 0.2
+    },
+    "alibaba_qwen3_8_omni_flash": {
+      "label": "Alibaba Qwen3.8 Omni Flash",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.47
     },
     "alibaba_qvq_max": {
       "label": "Alibaba QVQ Max",
@@ -320,8 +335,8 @@
     },
     "alibaba_qwen3_7_plus": {
       "label": "Alibaba Qwen3.7 Plus",
-      "input_per_1m": 0.5,
-      "output_per_1m": 3
+      "input_per_1m": 0.4,
+      "output_per_1m": 1.6
     },
     "alibaba_qwen_vl_ocr": {
       "label": "Alibaba Qwen-VL OCR",
@@ -808,6 +823,11 @@
       "input_per_1m": 20,
       "output_per_1m": 80
     },
+    "openai_daybreak_blue": {
+      "label": "OpenAI Daybreak Blue",
+      "input_per_1m": 4,
+      "output_per_1m": 20
+    },
     "openai_gpt_5_4_mini": {
       "label": "OpenAI GPT-5.4 mini",
       "input_per_1m": 0.75,
@@ -862,6 +882,11 @@
       "label": "OpenAI GPT-4 Turbo",
       "input_per_1m": 10,
       "output_per_1m": 30
+    },
+    "openai_daybreak_red": {
+      "label": "OpenAI Daybreak Red",
+      "input_per_1m": 12.5,
+      "output_per_1m": 75
     },
     "openai_o3": {
       "label": "OpenAI o3",

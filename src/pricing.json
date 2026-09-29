@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-09-28",
-  "gpu_last_updated": "2026-09-28",
+  "last_updated": "2026-09-29",
+  "gpu_last_updated": "2026-09-29",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -157,6 +157,11 @@
       "label": "Anthropic Claude Sonnet 4.6",
       "input_per_1m": 3,
       "output_per_1m": 15
+    },
+    "anthropic_claude_sonnet_5_5": {
+      "label": "Anthropic Claude Sonnet 5.5",
+      "input_per_1m": 2,
+      "output_per_1m": 10
     },
     "anthropic_claude_opus_4_7": {
       "label": "Anthropic Claude Opus 4.7",

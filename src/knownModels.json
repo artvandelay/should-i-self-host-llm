@@ -18,9 +18,9 @@
     "family": "glm"
   },
   {
-    "params_b": 0.287,
+    "params_b": 0.194,
     "active_b": null,
-    "name": "GLiNER 2.5 Multi",
+    "name": "GLiNER 2.5 Base",
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-08-24",
@@ -1421,7 +1421,7 @@
     "name": "Step 3.7 Flash",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-05-29",
+    "last_seen": "2026-05-28",
     "family": "other"
   },
   {
@@ -1439,7 +1439,7 @@
     "name": "MiniMax-M2.7",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-03-18",
+    "last_seen": "2026-04-11",
     "family": "minimax"
   },
   {
@@ -1558,15 +1558,6 @@
     "source": "models.dev:hf",
     "last_seen": "2026-04-25",
     "family": "glm"
-  },
-  {
-    "params_b": 394.498,
-    "active_b": null,
-    "name": "DeepSeek V3.2",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2025-12-01",
-    "family": "deepseek"
   },
   {
     "params_b": 396.802,

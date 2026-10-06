@@ -811,10 +811,10 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Qwen 3.8 27B Hemingway",
+    "name": "Qwen 3.8 27B Kiwen",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-09-21",
+    "last_seen": "2026-10-05",
     "family": "qwen"
   },
   {
@@ -1470,15 +1470,6 @@
     "family": "ling"
   },
   {
-    "params_b": 284,
-    "active_b": null,
-    "name": "DeepSeek V4 Flash 0731",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-07-31",
-    "family": "deepseek-flash"
-  },
-  {
     "params_b": 290.945,
     "active_b": null,
     "name": "DeepSeek V4 Flash",
@@ -1504,6 +1495,15 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-01",
     "family": "other"
+  },
+  {
+    "params_b": 304.18,
+    "active_b": null,
+    "name": "DeepSeek V4 Flash 0731",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-31",
+    "family": "deepseek-flash"
   },
   {
     "params_b": 309.785,
@@ -1686,6 +1686,15 @@
     "family": "nemotron"
   },
   {
+    "params_b": 552,
+    "active_b": null,
+    "name": "DeepSeek V4.1 Flash",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-09-10",
+    "family": "deepseek-flash"
+  },
+  {
     "params_b": 552.845,
     "active_b": null,
     "name": "Inkling",
@@ -1773,15 +1782,6 @@
     "source": "models.dev:regex",
     "last_seen": "2026-08-14",
     "family": "glm"
-  },
-  {
-    "params_b": 763.205,
-    "active_b": null,
-    "name": "DeepSeek V4.1 Flash",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-09-10",
-    "family": "deepseek-flash"
   },
   {
     "params_b": 779.961,

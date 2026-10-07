@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-10-06",
-  "gpu_last_updated": "2026-10-06",
+  "last_updated": "2026-10-07",
+  "gpu_last_updated": "2026-10-07",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -667,6 +667,11 @@
       "label": "Mistral Mistral Medium 3.1",
       "input_per_1m": 0.4,
       "output_per_1m": 2
+    },
+    "mistral_mistral_large_4": {
+      "label": "Mistral Mistral Large 4",
+      "input_per_1m": 0.68,
+      "output_per_1m": 2.09
     },
     "mistral_mistral_medium_3": {
       "label": "Mistral Mistral Medium 3",

@@ -595,15 +595,6 @@
   {
     "params_b": 14,
     "active_b": null,
-    "name": "Ministral 14B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-12-02",
-    "family": "mistral"
-  },
-  {
-    "params_b": 14,
-    "active_b": null,
     "name": "Hermes 4 14B",
     "arch": "dense",
     "source": "models.dev:regex",

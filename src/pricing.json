@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-10-07",
-  "gpu_last_updated": "2026-10-07",
+  "last_updated": "2026-10-08",
+  "gpu_last_updated": "2026-10-08",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -152,6 +152,11 @@
       "label": "Anthropic Claude Haiku 4.5",
       "input_per_1m": 1,
       "output_per_1m": 5
+    },
+    "anthropic_claude_haiku_5_5": {
+      "label": "Anthropic Claude Haiku 5.5",
+      "input_per_1m": 0.1,
+      "output_per_1m": 0.5
     },
     "anthropic_claude_sonnet_4_6": {
       "label": "Anthropic Claude Sonnet 4.6",
@@ -345,8 +350,8 @@
     },
     "alibaba_qwen_vl_ocr": {
       "label": "Alibaba Qwen-VL OCR",
-      "input_per_1m": 0.72,
-      "output_per_1m": 0.72
+      "input_per_1m": 0.07,
+      "output_per_1m": 0.16
     },
     "upstage_solar_pro_4": {
       "label": "Upstage Solar Pro 4",
@@ -682,6 +687,11 @@
       "label": "Mistral Mistral Embed",
       "input_per_1m": 0.1,
       "output_per_1m": 0
+    },
+    "mistral_codestral_25_08": {
+      "label": "Mistral Codestral 25.08",
+      "input_per_1m": 0.3,
+      "output_per_1m": 0.9
     },
     "openai_gpt_5_4": {
       "label": "OpenAI GPT-5.4",

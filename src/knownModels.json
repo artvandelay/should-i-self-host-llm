@@ -766,10 +766,10 @@
   {
     "params_b": 26,
     "active_b": 4,
-    "name": "Gemma 4 26B A4B Cybersecurity",
+    "name": "Gemma 4 26B A4B Chimera X Heretic",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-09-19",
+    "last_seen": "2026-10-08",
     "family": "gemma"
   },
   {
@@ -892,10 +892,10 @@
   {
     "params_b": 31,
     "active_b": null,
-    "name": "Gemma 4 31B Split-Untied",
+    "name": "Gemma 4 31B Scarlet",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-09-17",
+    "last_seen": "2026-10-08",
     "family": "gemma"
   },
   {

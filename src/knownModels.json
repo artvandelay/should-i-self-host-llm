@@ -321,7 +321,7 @@
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2025-05-29",
-    "family": "deepseek"
+    "family": "deepseek-thinking"
   },
   {
     "params_b": 8,
@@ -425,10 +425,10 @@
   {
     "params_b": 9,
     "active_b": null,
-    "name": "GLM 4 9B 0414",
+    "name": "AutoGLM Phone 9B Multilingual",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-04-14",
+    "last_seen": "2025-12-10",
     "family": "glm"
   },
   {
@@ -524,10 +524,10 @@
   {
     "params_b": 13,
     "active_b": null,
-    "name": "Mythomax L2 13B",
+    "name": "MythoMax L2 13B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2024-04-25",
+    "last_seen": "2023-08-10",
     "family": "other"
   },
   {
@@ -542,10 +542,10 @@
   {
     "params_b": 13,
     "active_b": null,
-    "name": "MythoMax 13B",
+    "name": "ReMM SLERP 13B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-08-08",
+    "last_seen": "2025-01-01",
     "family": "llama"
   },
   {
@@ -681,15 +681,6 @@
     "source": "models.dev:regex",
     "last_seen": "2024-04-17",
     "family": "mistral"
-  },
-  {
-    "params_b": 22,
-    "active_b": null,
-    "name": "WizardLM-2 8x22B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-04-15",
-    "family": "gpt"
   },
   {
     "params_b": 23.572,
@@ -945,10 +936,10 @@
   {
     "params_b": 32,
     "active_b": null,
-    "name": "DeepSeek R1 Distill Qwen 32B",
+    "name": "Deepseek R1 Distill Qwen 32B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-01-20",
+    "last_seen": "2025-05-29",
     "family": "deepseek-thinking"
   },
   {
@@ -1060,12 +1051,12 @@
     "family": "agi"
   },
   {
-    "params_b": 36,
+    "params_b": 35.952,
     "active_b": null,
-    "name": "TheDrummer: Skyfall 36B V2",
+    "name": "Apodex 1.1 Mini",
     "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-03-15",
+    "source": "models.dev:hf",
+    "last_seen": "2026-08-24",
     "family": "other"
   },
   {
@@ -1267,10 +1258,10 @@
   {
     "params_b": 107.711,
     "active_b": null,
-    "name": "GLM-4.5V",
+    "name": "GLM-4.6V",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-08-11",
+    "last_seen": "2025-12-08",
     "family": "glm"
   },
   {
@@ -1365,10 +1356,10 @@
   {
     "params_b": 127.486,
     "active_b": null,
-    "name": "Ling-3.0-flash",
+    "name": "Ling 3.0 Flash Fin",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-07-23",
+    "last_seen": "2026-09-03",
     "family": "ling"
   },
   {
@@ -1486,6 +1477,15 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-01",
     "family": "other"
+  },
+  {
+    "params_b": 300,
+    "active_b": 47,
+    "name": "ERNIE 4.5 300B A47B",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-01",
+    "family": "ernie"
   },
   {
     "params_b": 304.18,
@@ -1789,7 +1789,7 @@
     "name": "MiMo-V2.5-Pro",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-05-27",
+    "last_seen": "2026-04-22",
     "family": "mimo"
   },
   {

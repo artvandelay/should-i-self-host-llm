@@ -540,15 +540,6 @@
     "family": "hunyuan"
   },
   {
-    "params_b": 13,
-    "active_b": null,
-    "name": "ReMM SLERP 13B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-01-01",
-    "family": "llama"
-  },
-  {
     "params_b": 13.96,
     "active_b": null,
     "name": "Phi-3-medium instruct (4k)",
@@ -712,10 +703,10 @@
   {
     "params_b": 24,
     "active_b": null,
-    "name": "Mistral Small 24B",
+    "name": "Mistral Small 3.2 24B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-09-10",
+    "last_seen": "2026-06-11",
     "family": "mistral-small"
   },
   {
@@ -883,10 +874,10 @@
   {
     "params_b": 31,
     "active_b": null,
-    "name": "Gemma 4 31B Scarlet",
+    "name": "Gemma 4 Dark Thoughts V2 31B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-10-08",
+    "last_seen": "2026-10-13",
     "family": "gemma"
   },
   {
@@ -897,6 +888,15 @@
     "source": "models.dev:regex",
     "last_seen": "2026-05-01",
     "family": "claude"
+  },
+  {
+    "params_b": 31,
+    "active_b": null,
+    "name": "Schattenblume 31B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-10-13",
+    "family": "other"
   },
   {
     "params_b": 31.221,
@@ -1136,7 +1136,7 @@
     "name": "Hermes 3 70B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-01-07",
+    "last_seen": "2024-08-18",
     "family": "nousresearch"
   },
   {
@@ -1172,7 +1172,16 @@
     "name": "Magnum v4 72B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-01-01",
+    "last_seen": "2024-10-22",
+    "family": "other"
+  },
+  {
+    "params_b": 72,
+    "active_b": null,
+    "name": "Magnum V2 72B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2024-07-01",
     "family": "llama"
   },
   {
@@ -1625,10 +1634,10 @@
   {
     "params_b": 405,
     "active_b": null,
-    "name": "Hermes 4 Large",
+    "name": "Hermes 3 405B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-08-26",
+    "last_seen": "2024-08-16",
     "family": "nousresearch"
   },
   {

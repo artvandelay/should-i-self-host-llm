@@ -730,10 +730,10 @@
   {
     "params_b": 24,
     "active_b": 2,
-    "name": "LFM2-24B-A2B",
+    "name": "LFM2.5-24B-A2B",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-02-25",
+    "last_seen": "2026-10-13",
     "family": "liquid"
   },
   {

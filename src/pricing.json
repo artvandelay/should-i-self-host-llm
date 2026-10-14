@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-10-13",
-  "gpu_last_updated": "2026-10-13",
+  "last_updated": "2026-10-14",
+  "gpu_last_updated": "2026-10-14",
   "gpus": [
     {
       "name": "L4 24GB",
@@ -527,6 +527,11 @@
       "label": "Google Gemini 3.1 Flash Live Preview",
       "input_per_1m": 0.75,
       "output_per_1m": 4.5
+    },
+    "google_gemini_4_argon": {
+      "label": "Google Gemini 4 Argon",
+      "input_per_1m": 2,
+      "output_per_1m": 10
     },
     "google_gemini_3_1_flash_lite": {
       "label": "Google Gemini 3.1 Flash Lite",

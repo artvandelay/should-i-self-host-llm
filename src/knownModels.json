@@ -809,6 +809,15 @@
     "family": "qwen3.5"
   },
   {
+    "params_b": 27,
+    "active_b": null,
+    "name": "qwen3.8-27b-4q",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-10-13",
+    "family": "unsloth"
+  },
+  {
     "params_b": 30,
     "active_b": 3,
     "name": "Qwen: Qwen3 30B A3B Instruct 2507",

@@ -406,11 +406,11 @@
   },
   {
     "params_b": 9,
-    "active_b": null,
-    "name": "AutoGLM-Phone-9B-Multilingual",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-12-10",
+    "active_b": 2,
+    "name": "Moondream 3.1",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-10-15",
     "family": "other"
   },
   {

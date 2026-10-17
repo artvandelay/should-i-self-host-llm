@@ -755,12 +755,12 @@
     "family": "gemma"
   },
   {
-    "params_b": 26.124,
-    "active_b": null,
-    "name": "Arcee AI: Trinity Mini",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-01-28",
+    "params_b": 26,
+    "active_b": 4,
+    "name": "Orion 26B A4B v1.1",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-10-16",
     "family": "other"
   },
   {
@@ -816,6 +816,15 @@
     "source": "models.dev:regex",
     "last_seen": "2026-10-13",
     "family": "unsloth"
+  },
+  {
+    "params_b": 29,
+    "active_b": 4,
+    "name": "Xing4.0 29B A4B (free)",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-10-16",
+    "family": "agi"
   },
   {
     "params_b": 30,
@@ -1421,7 +1430,7 @@
     "name": "Step 3.7 Flash",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-05-29",
+    "last_seen": "2026-05-28",
     "family": "other"
   },
   {
@@ -1439,7 +1448,7 @@
     "name": "MiniMax-M2.7",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-03-18",
+    "last_seen": "2026-04-11",
     "family": "minimax"
   },
   {
@@ -1520,7 +1529,7 @@
     "name": "XiaomiMiMo/MiMo-V2-Flash",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-12-19",
+    "last_seen": "2026-01",
     "family": "mimo"
   },
   {
@@ -1684,6 +1693,15 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-06-11",
     "family": "qwen"
+  },
+  {
+    "params_b": 501,
+    "active_b": 23,
+    "name": "Beam 1.0 501B A23B",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-10-16",
+    "family": "beam"
   },
   {
     "params_b": 550,

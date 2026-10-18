@@ -1430,7 +1430,7 @@
     "name": "Step 3.7 Flash",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-05-28",
+    "last_seen": "2026-05-29",
     "family": "other"
   },
   {
@@ -1448,7 +1448,7 @@
     "name": "MiniMax-M2.7",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-04-11",
+    "last_seen": "2026-03-18",
     "family": "minimax"
   },
   {
@@ -1698,8 +1698,8 @@
     "params_b": 501,
     "active_b": 23,
     "name": "Beam 1.0 501B A23B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
+    "arch": "dense",
+    "source": "models.dev:regex",
     "last_seen": "2026-10-16",
     "family": "beam"
   },
@@ -1811,6 +1811,15 @@
     "family": "glm"
   },
   {
+    "params_b": 763.205,
+    "active_b": null,
+    "name": "DeepSeek V4.1 Flash 1017",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-10-17",
+    "family": "deepseek-flash"
+  },
+  {
     "params_b": 779.961,
     "active_b": null,
     "name": "Hy4 preview",
@@ -1818,6 +1827,15 @@
     "source": "models.dev:hf",
     "last_seen": "2026-08-28",
     "family": "Hy"
+  },
+  {
+    "params_b": 816,
+    "active_b": 42,
+    "name": "Muse Spark Open",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-10-15",
+    "family": "muse"
   },
   {
     "params_b": 1023.183,

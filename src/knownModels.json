@@ -198,6 +198,15 @@
     "family": "nemotron"
   },
   {
+    "params_b": 4,
+    "active_b": null,
+    "name": "Gemma 3 4B IT",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-03-10",
+    "family": "unsloth"
+  },
+  {
     "params_b": 5,
     "active_b": null,
     "name": "cosmos-predict1-5b",
@@ -347,7 +356,7 @@
     "name": "Granite 4.2 8B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-08-31",
+    "last_seen": "2026-08-24",
     "family": "granite"
   },
   {
@@ -513,6 +522,15 @@
     "family": "llama"
   },
   {
+    "params_b": 12,
+    "active_b": null,
+    "name": "Gemma 3 12B IT",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-03-10",
+    "family": "unsloth"
+  },
+  {
     "params_b": 12.248,
     "active_b": null,
     "name": "Mistral Nemo Instruct 2407",
@@ -661,7 +679,7 @@
     "name": "Mixtral 8x22B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2024-04-17",
+    "last_seen": "2025-12-11",
     "family": "mixtral"
   },
   {
@@ -829,10 +847,10 @@
   {
     "params_b": 30,
     "active_b": 3,
-    "name": "Qwen: Qwen3 30B A3B Instruct 2507",
+    "name": "Qwen3 30B A3B Instruct 2507",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-03-15",
+    "last_seen": "2026-10-09",
     "family": "qwen"
   },
   {
@@ -939,7 +957,7 @@
     "name": "Qwen3 32B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-04-16",
+    "last_seen": "2026-01",
     "family": "qwen"
   },
   {
@@ -1722,15 +1740,6 @@
     "family": "deepseek-flash"
   },
   {
-    "params_b": 552.845,
-    "active_b": null,
-    "name": "Inkling",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-07-15",
-    "family": "ling"
-  },
-  {
     "params_b": 581.154,
     "active_b": null,
     "name": "Kimi K2 0711 Instruct FP4",
@@ -1738,6 +1747,15 @@
     "source": "models.dev:hf",
     "last_seen": "2025-07-11",
     "family": "kimi-k2"
+  },
+  {
+    "params_b": 604.34,
+    "active_b": null,
+    "name": "Step 5 Preview",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-09-20",
+    "family": "other"
   },
   {
     "params_b": 671,
@@ -1781,6 +1799,15 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2025-05-29",
+    "family": "deepseek-thinking"
+  },
+  {
+    "params_b": 684.531,
+    "active_b": null,
+    "name": "DeepSeek-R1-0528",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2025-05-28",
     "family": "deepseek-thinking"
   },
   {
@@ -1836,6 +1863,15 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-10-15",
     "family": "muse"
+  },
+  {
+    "params_b": 952.378,
+    "active_b": null,
+    "name": "Inkling",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-15",
+    "family": "ling"
   },
   {
     "params_b": 1023.183,
@@ -1899,6 +1935,15 @@
     "source": "models.dev:hf",
     "last_seen": "2026-06-12",
     "family": "kimi-k2"
+  },
+  {
+    "params_b": 1026.879,
+    "active_b": null,
+    "name": "Kimi K2.6",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-04-20",
+    "family": "kimi"
   },
   {
     "params_b": 1058.118,

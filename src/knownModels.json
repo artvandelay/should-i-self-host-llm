@@ -32,7 +32,7 @@
     "name": "Qwen3.5 0.8B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-11-01",
+    "last_seen": "2026-03-02",
     "family": "qwen"
   },
   {
@@ -104,7 +104,7 @@
     "name": "Qwen3.5 2B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-11-01",
+    "last_seen": "2026-03-02",
     "family": "qwen"
   },
   {
@@ -387,6 +387,15 @@
     "family": "other"
   },
   {
+    "params_b": 8,
+    "active_b": null,
+    "name": "Hermes 2 Pro Llama 3 8B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2024-04-30",
+    "family": "hermes"
+  },
+  {
     "params_b": 9,
     "active_b": null,
     "name": "Qwen 3.5 9B",
@@ -500,7 +509,7 @@
     "name": "Mistral Nemo 12B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-01-01",
+    "last_seen": "2024-07-18",
     "family": "mistral-nemo"
   },
   {
@@ -542,10 +551,10 @@
   {
     "params_b": 13,
     "active_b": null,
-    "name": "Hunyuan A13B Instruct",
+    "name": "tencent/Hunyuan-A13B-Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-07-08",
+    "last_seen": "2025-11-25",
     "family": "hunyuan"
   },
   {
@@ -568,10 +577,10 @@
   {
     "params_b": 14,
     "active_b": null,
-    "name": "Ministral 3 14B Instruct",
+    "name": "Ministral 3 14B Reasoning 2512",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-08-01",
+    "last_seen": "2025-12-12",
     "family": "ministral"
   },
   {
@@ -706,7 +715,7 @@
     "name": "Mistral Small 3.2 24B Instruct (2506)",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-03-17",
+    "last_seen": "2025-06-20",
     "family": "mistral-small"
   },
   {
@@ -829,7 +838,7 @@
   {
     "params_b": 30,
     "active_b": 3,
-    "name": "Qwen3 30B A3B Instruct 2507",
+    "name": "Qwen3 30B A3B Thinking 2507",
     "arch": "moe",
     "source": "models.dev:regex_moe",
     "last_seen": "2026-02-25",
@@ -859,7 +868,7 @@
     "name": "Sarvam-30B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-03-06",
+    "last_seen": "2026-02-18",
     "family": "sarvam"
   },
   {
@@ -1078,6 +1087,24 @@
     "family": "other"
   },
   {
+    "params_b": 36,
+    "active_b": null,
+    "name": "ByteDance-Seed/Seed-OSS-36B-Instruct",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-11-25",
+    "family": "seed"
+  },
+  {
+    "params_b": 40,
+    "active_b": null,
+    "name": "Flint 40B Free",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-10-21",
+    "family": "flint"
+  },
+  {
     "params_b": 41.873,
     "active_b": null,
     "name": "Phi-3.5-MoE instruct (128k)",
@@ -1169,10 +1196,10 @@
   {
     "params_b": 72,
     "active_b": null,
-    "name": "EVA-Qwen2.5-72B-v0.2",
+    "name": "Qwen/Qwen2.5-72B-Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-09-25",
+    "last_seen": "2025-11-25",
     "family": "qwen"
   },
   {
@@ -1245,6 +1272,15 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-02-11",
     "family": "qwen"
+  },
+  {
+    "params_b": 102.89,
+    "active_b": null,
+    "name": "inclusionAI/Ling-flash-2.0",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2025-11-25",
+    "family": "ling"
   },
   {
     "params_b": 105,
@@ -1333,7 +1369,7 @@
     "name": "GPT OSS 120B High Throughput",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-02-25",
+    "last_seen": "2025-08-05",
     "family": "gpt-oss"
   },
   {
@@ -1369,8 +1405,17 @@
     "name": "Qwen3.5 122B-A10B FP8",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-08-01",
+    "last_seen": "2026-02-23",
     "family": "qwen"
+  },
+  {
+    "params_b": 122,
+    "active_b": null,
+    "name": "Ornith 1.5 122B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-10-20",
+    "family": "ornith"
   },
   {
     "params_b": 123,
@@ -1431,7 +1476,7 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-02-13",
-    "family": "other"
+    "family": "step"
   },
   {
     "params_b": 201.365,
@@ -1463,10 +1508,10 @@
   {
     "params_b": 235,
     "active_b": 22,
-    "name": "Qwen3 235B A22B",
+    "name": "Qwen3 235B-A22B Instruct 2507",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-01",
+    "last_seen": "2025-09-18",
     "family": "qwen"
   },
   {
@@ -1520,7 +1565,7 @@
     "name": "ERNIE 4.5 300B A47B",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-01",
+    "last_seen": "2025-06-30",
     "family": "ernie"
   },
   {
@@ -1610,7 +1655,7 @@
     "name": "Qwen3.5 397B-A17B FP8",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-08-01",
+    "last_seen": "2026-02-15",
     "family": "qwen"
   },
   {
@@ -1707,8 +1752,8 @@
     "params_b": 501,
     "active_b": 23,
     "name": "Beam 1.0 501B A23B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
+    "arch": "dense",
+    "source": "models.dev:regex",
     "last_seen": "2026-10-16",
     "family": "beam"
   },
@@ -1729,15 +1774,6 @@
     "source": "models.dev:regex",
     "last_seen": "2026-09-10",
     "family": "deepseek-flash"
-  },
-  {
-    "params_b": 552.845,
-    "active_b": null,
-    "name": "Inkling",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-07-15",
-    "family": "ling"
   },
   {
     "params_b": 572.121,
@@ -1804,19 +1840,19 @@
   {
     "params_b": 684.49,
     "active_b": null,
-    "name": "DeepSeek-R1",
+    "name": "deepseek-ai/DeepSeek-R1",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-03-24",
+    "last_seen": "2025-05-28",
     "family": "deepseek-thinking"
   },
   {
     "params_b": 684.49,
     "active_b": null,
-    "name": "DeepSeek-V3",
+    "name": "deepseek-ai/DeepSeek-V3",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2024-12-26",
+    "last_seen": "2025-03-24",
     "family": "deepseek"
   },
   {
@@ -1883,6 +1919,15 @@
     "family": "muse"
   },
   {
+    "params_b": 952.378,
+    "active_b": null,
+    "name": "Inkling",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-15",
+    "family": "ling"
+  },
+  {
     "params_b": 1023.183,
     "active_b": null,
     "name": "MiMo-V2.5-Pro",
@@ -1939,10 +1984,10 @@
   {
     "params_b": 1026.879,
     "active_b": null,
-    "name": "Kimi K2.6",
+    "name": "Kimi K2.7 Code",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-08-01",
+    "last_seen": "2026-06-12",
     "family": "kimi-k2"
   },
   {

@@ -128,10 +128,10 @@
   {
     "params_b": 3,
     "active_b": null,
-    "name": "Llama 3.2 3B Instruct",
+    "name": "Llama 3.2 3B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-01-01",
+    "last_seen": "2024-09-25",
     "family": "llama"
   },
   {
@@ -479,10 +479,10 @@
   {
     "params_b": 11,
     "active_b": null,
-    "name": "Bielik 11B v2.6 Instruct",
+    "name": "Bielik 11B v3.0",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-03-13",
+    "last_seen": "2026-10-15",
     "family": "other"
   },
   {
@@ -497,10 +497,10 @@
   {
     "params_b": 12,
     "active_b": null,
-    "name": "Gemma 4 12B Semancer",
+    "name": "Gemma 4 12B Starry Ocean",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-09-09",
+    "last_seen": "2026-10-15",
     "family": "gemma"
   },
   {
@@ -811,10 +811,10 @@
   {
     "params_b": 27,
     "active_b": null,
-    "name": "Qwen3.5 27B Omega Evolution v2.2 Derestricted Lite",
+    "name": "Qwen3.5 27B Blossom V6.4 Derestricted",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-05-02",
+    "last_seen": "2026-05-15",
     "family": "qwen3.5"
   },
   {
@@ -945,10 +945,10 @@
   {
     "params_b": 32,
     "active_b": null,
-    "name": "Qwen3 32B",
+    "name": "Qwen SEA-LION v4 32B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-09-18",
+    "last_seen": "2026-10-15",
     "family": "qwen"
   },
   {
@@ -1239,6 +1239,15 @@
     "family": "other"
   },
   {
+    "params_b": 78.103,
+    "active_b": null,
+    "name": "Kolibri 1",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-10-03",
+    "family": "other"
+  },
+  {
     "params_b": 79.674,
     "active_b": null,
     "name": "Qwen3 Coder Next",
@@ -1443,6 +1452,15 @@
     "last_seen": "2026-05-25"
   },
   {
+    "params_b": 168.894,
+    "active_b": null,
+    "name": "GLM-5.3-Flash",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-08-26",
+    "family": "glm-flash"
+  },
+  {
     "params_b": 180,
     "active_b": null,
     "name": "Qwen3.8 Flash Next",
@@ -1589,7 +1607,7 @@
   {
     "params_b": 321.323,
     "active_b": null,
-    "name": "GLM-5.3-Flash",
+    "name": "GLM 5.3 Flash",
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-08-26",
@@ -1749,6 +1767,15 @@
     "family": "deepseek-flash"
   },
   {
+    "params_b": 552.845,
+    "active_b": null,
+    "name": "Inkling",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-15",
+    "family": "ling"
+  },
+  {
     "params_b": 572.121,
     "active_b": null,
     "name": "Ling 3.1 Flash",
@@ -1890,15 +1917,6 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-10-15",
     "family": "muse"
-  },
-  {
-    "params_b": 952.378,
-    "active_b": null,
-    "name": "Inkling",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-07-15",
-    "family": "ling"
   },
   {
     "params_b": 1023.183,

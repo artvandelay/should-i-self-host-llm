@@ -128,10 +128,10 @@
   {
     "params_b": 3,
     "active_b": null,
-    "name": "Llama 3.2 3B",
+    "name": "Llama 3.2 3B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2024-09-25",
+    "last_seen": "2025-01-01",
     "family": "llama"
   },
   {
@@ -838,10 +838,10 @@
   {
     "params_b": 30,
     "active_b": 3,
-    "name": "Qwen3 Omni 30B A3B Thinking",
+    "name": "Qwen3 30B A3B Thinking 2507",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2025-09-22",
+    "last_seen": "2026-02-25",
     "family": "qwen"
   },
   {
@@ -1071,10 +1071,10 @@
   {
     "params_b": 35.107,
     "active_b": null,
-    "name": "Nex-N2.5-Mini",
+    "name": "Nex N2.5 Mini",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-09-08",
+    "last_seen": "2026-09-22",
     "family": "agi"
   },
   {
@@ -1508,10 +1508,10 @@
   {
     "params_b": 235,
     "active_b": 22,
-    "name": "Qwen3 235B-A22B Instruct 2507",
+    "name": "Qwen3 235B A22B Instruct",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2025-09-18",
+    "last_seen": "2025-08-13",
     "family": "qwen"
   },
   {
@@ -1643,10 +1643,10 @@
   {
     "params_b": 396.802,
     "active_b": null,
-    "name": "Nex-N2.5-Pro",
+    "name": "Nex N2.5 Pro",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-09-08",
+    "last_seen": "2026-09-22",
     "family": "agi"
   },
   {
@@ -1872,6 +1872,15 @@
     "source": "models.dev:hf",
     "last_seen": "2025-12-01",
     "family": "deepseek"
+  },
+  {
+    "params_b": 744,
+    "active_b": null,
+    "name": "GLM-5.2",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-06-13",
+    "family": "glm"
   },
   {
     "params_b": 753.33,

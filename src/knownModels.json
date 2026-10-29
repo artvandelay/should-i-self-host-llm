@@ -1452,15 +1452,6 @@
     "last_seen": "2026-05-25"
   },
   {
-    "params_b": 168.894,
-    "active_b": null,
-    "name": "GLM-5.3-Flash",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-08-26",
-    "family": "glm-flash"
-  },
-  {
     "params_b": 180,
     "active_b": null,
     "name": "Qwen3.8 Flash Next",
@@ -1508,10 +1499,10 @@
   {
     "params_b": 235,
     "active_b": 22,
-    "name": "Qwen3 235B A22B Instruct",
+    "name": "Qwen3 235B-A22B Instruct 2507",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2025-08-13",
+    "last_seen": "2025-09-18",
     "family": "qwen"
   },
   {
@@ -1607,7 +1598,7 @@
   {
     "params_b": 321.323,
     "active_b": null,
-    "name": "GLM 5.3 Flash",
+    "name": "GLM-5.3-Flash",
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-08-26",
@@ -1758,6 +1749,15 @@
     "family": "nemotron"
   },
   {
+    "params_b": 552,
+    "active_b": null,
+    "name": "DeepSeek V4.1 Flash",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-09-10",
+    "family": "deepseek-flash"
+  },
+  {
     "params_b": 572.121,
     "active_b": null,
     "name": "Ling 3.1 Flash",
@@ -1856,30 +1856,21 @@
     "family": "deepseek"
   },
   {
-    "params_b": 744,
-    "active_b": null,
-    "name": "GLM-5.3",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-08-14",
-    "family": "glm"
-  },
-  {
     "params_b": 753.33,
     "active_b": null,
     "name": "GLM 5.3",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-08-14",
+    "last_seen": "2026-10-26",
     "family": "glm"
   },
   {
-    "params_b": 753.864,
+    "params_b": 754,
     "active_b": null,
-    "name": "GLM-5.1",
+    "name": "GLM-5.3",
     "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-04-07",
+    "source": "models.dev:regex",
+    "last_seen": "2026-08-14",
     "family": "glm"
   },
   {
@@ -1890,15 +1881,6 @@
     "source": "models.dev:hf",
     "last_seen": "2026-10-26",
     "family": "deepseek"
-  },
-  {
-    "params_b": 763.205,
-    "active_b": null,
-    "name": "DeepSeek V4.1 Flash",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-09-10",
-    "family": "deepseek-flash"
   },
   {
     "params_b": 779.961,

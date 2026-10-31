@@ -131,7 +131,7 @@
     "name": "Llama 3.2 3B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2025-01-01",
+    "last_seen": "2024-09-25",
     "family": "llama"
   },
   {
@@ -838,10 +838,10 @@
   {
     "params_b": 30,
     "active_b": 3,
-    "name": "Qwen3 30B A3B Thinking 2507",
+    "name": "Qwen3 Omni 30B A3B Thinking",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-02-25",
+    "last_seen": "2025-09-22",
     "family": "qwen"
   },
   {
@@ -1452,15 +1452,6 @@
     "last_seen": "2026-05-25"
   },
   {
-    "params_b": 168.894,
-    "active_b": null,
-    "name": "GLM-5.3-Flash",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-08-26",
-    "family": "glm-flash"
-  },
-  {
     "params_b": 180,
     "active_b": null,
     "name": "Qwen3.8 Flash Next",
@@ -1535,10 +1526,10 @@
   {
     "params_b": 290.945,
     "active_b": null,
-    "name": "DeepSeek V4 Flash 0731",
+    "name": "DeepSeek V4 Flash",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-07-31",
+    "last_seen": "2026-04-24",
     "family": "deepseek-flash"
   },
   {
@@ -1569,6 +1560,15 @@
     "family": "ernie"
   },
   {
+    "params_b": 304.18,
+    "active_b": null,
+    "name": "DeepSeek V4 Flash 0731",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-31",
+    "family": "deepseek-flash"
+  },
+  {
     "params_b": 309.767,
     "active_b": null,
     "name": "MiMo-V2-Flash",
@@ -1594,6 +1594,15 @@
     "source": "models.dev:hf",
     "last_seen": "2026-08-07",
     "family": "motif"
+  },
+  {
+    "params_b": 321.323,
+    "active_b": null,
+    "name": "GLM-5.3-Flash",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-08-26",
+    "family": "glm-flash"
   },
   {
     "params_b": 356.786,
@@ -1725,8 +1734,8 @@
     "params_b": 501,
     "active_b": 23,
     "name": "Beam 1.0 501B A23B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
+    "arch": "dense",
+    "source": "models.dev:regex",
     "last_seen": "2026-10-16",
     "family": "beam"
   },
@@ -1747,15 +1756,6 @@
     "source": "models.dev:regex",
     "last_seen": "2026-09-10",
     "family": "deepseek-flash"
-  },
-  {
-    "params_b": 552.845,
-    "active_b": null,
-    "name": "Inkling",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-07-15",
-    "family": "ling"
   },
   {
     "params_b": 572.121,
@@ -1856,6 +1856,15 @@
     "family": "deepseek"
   },
   {
+    "params_b": 744,
+    "active_b": null,
+    "name": "GLM-5.3",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-08-14",
+    "family": "glm"
+  },
+  {
     "params_b": 753.33,
     "active_b": null,
     "name": "GLM 5.3",
@@ -1865,12 +1874,12 @@
     "family": "glm"
   },
   {
-    "params_b": 754,
+    "params_b": 753.864,
     "active_b": null,
-    "name": "GLM-5.3",
+    "name": "GLM-5.1",
     "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-08-14",
+    "source": "models.dev:hf",
+    "last_seen": "2026-04-07",
     "family": "glm"
   },
   {
@@ -1899,6 +1908,15 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-10-15",
     "family": "muse"
+  },
+  {
+    "params_b": 952.378,
+    "active_b": null,
+    "name": "Inkling",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-15",
+    "family": "ling"
   },
   {
     "params_b": 1023.183,
@@ -1960,7 +1978,7 @@
     "name": "Kimi K2.7 Code",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-06-12",
+    "last_seen": "2026-10-26",
     "family": "kimi-k2"
   },
   {
@@ -1996,8 +2014,8 @@
     "name": "DeepSeek V4 Pro 0813",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-10-25",
-    "family": "deepseek"
+    "last_seen": "2026-08-22",
+    "family": "deepseek-thinking"
   },
   {
     "params_b": 1775.56,

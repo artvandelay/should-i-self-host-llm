@@ -524,15 +524,6 @@
   {
     "params_b": 12,
     "active_b": null,
-    "name": "Veiled Calla 12B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-04-13",
-    "family": "llama"
-  },
-  {
-    "params_b": 12,
-    "active_b": null,
     "name": "nemotron-nano-v2-12b",
     "arch": "dense",
     "source": "models.dev:regex",
@@ -838,10 +829,10 @@
   {
     "params_b": 30,
     "active_b": 3,
-    "name": "Qwen3 30B A3B Thinking 2507",
+    "name": "Qwen3 Omni 30B A3B Thinking",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-02-25",
+    "last_seen": "2025-09-22",
     "family": "qwen"
   },
   {
@@ -937,10 +928,11 @@
   {
     "params_b": 32,
     "active_b": null,
-    "name": "Qwen2.5 32B",
+    "name": "Assistant Pepe 32B",
     "arch": "dense",
-    "source": "manual",
-    "last_seen": "2026-05-25"
+    "source": "models.dev:regex",
+    "last_seen": "2026-11-03",
+    "family": "other"
   },
   {
     "params_b": 32,
@@ -1004,6 +996,24 @@
     "source": "models.dev:regex",
     "last_seen": "2025-08-21",
     "family": "nemotron"
+  },
+  {
+    "params_b": 32,
+    "active_b": null,
+    "name": "EVA-Qwen2.5-32B-v0.2",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-07-26",
+    "family": "v0"
+  },
+  {
+    "params_b": 32,
+    "active_b": null,
+    "name": "Cogito v1 Preview Qwen 32B",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2025-05-10",
+    "family": "cogito"
   },
   {
     "params_b": 32.764,
@@ -1479,6 +1489,15 @@
     "family": "other"
   },
   {
+    "params_b": 220.491,
+    "active_b": null,
+    "name": "MiniMax-M3.1-Flash",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-10-19",
+    "family": "minimax"
+  },
+  {
     "params_b": 225.796,
     "active_b": null,
     "name": "Laguna M.1",
@@ -1725,8 +1744,8 @@
     "params_b": 501,
     "active_b": 23,
     "name": "Beam 1.0 501B A23B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
+    "arch": "dense",
+    "source": "models.dev:regex",
     "last_seen": "2026-10-16",
     "family": "beam"
   },

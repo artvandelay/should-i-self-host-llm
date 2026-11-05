@@ -306,6 +306,15 @@
     "family": "phi"
   },
   {
+    "params_b": 7.893,
+    "active_b": null,
+    "name": "Ling 3.0 Tiny",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-08-06",
+    "family": "ling"
+  },
+  {
     "params_b": 8,
     "active_b": null,
     "name": "Llama 3.1 8b (uncensored)",
@@ -1141,6 +1150,15 @@
     "last_seen": "2026-05-25"
   },
   {
+    "params_b": 65,
+    "active_b": null,
+    "name": "Ripple 65B Preview",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-11-05",
+    "family": "other"
+  },
+  {
     "params_b": 70,
     "active_b": null,
     "name": "EVA-LLaMA-3.33-70B-v0.1",
@@ -1759,13 +1777,13 @@
     "family": "nemotron"
   },
   {
-    "params_b": 552,
+    "params_b": 552.845,
     "active_b": null,
-    "name": "DeepSeek V4.1 Flash",
+    "name": "Inkling",
     "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-09-10",
-    "family": "deepseek-flash"
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-15",
+    "family": "ling"
   },
   {
     "params_b": 572.121,
@@ -1927,15 +1945,6 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-10-15",
     "family": "muse"
-  },
-  {
-    "params_b": 952.378,
-    "active_b": null,
-    "name": "Inkling",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-07-15",
-    "family": "ling"
   },
   {
     "params_b": 1023.183,

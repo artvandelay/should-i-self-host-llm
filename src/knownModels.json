@@ -131,7 +131,7 @@
     "name": "Llama 3.2 3B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2024-09-25",
+    "last_seen": "2025-01-01",
     "family": "llama"
   },
   {
@@ -1777,15 +1777,6 @@
     "family": "nemotron"
   },
   {
-    "params_b": 552.845,
-    "active_b": null,
-    "name": "Inkling",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-07-15",
-    "family": "ling"
-  },
-  {
     "params_b": 572.121,
     "active_b": null,
     "name": "Ling 3.1 Flash",
@@ -1945,6 +1936,15 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-10-15",
     "family": "muse"
+  },
+  {
+    "params_b": 952.378,
+    "active_b": null,
+    "name": "Inkling",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-15",
+    "family": "ling"
   },
   {
     "params_b": 1023.183,

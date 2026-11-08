@@ -140,7 +140,7 @@
     "name": "Llama 3.2 3B Instruct",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2024-09-25",
+    "last_seen": "2025-01-01",
     "family": "llama"
   },
   {
@@ -475,6 +475,15 @@
     "source": "models.dev:regex",
     "last_seen": "2026-07-29",
     "family": "ornith"
+  },
+  {
+    "params_b": 9,
+    "active_b": null,
+    "name": "DeepSeek V4 Pro Qwen3.5 9B Uncensored Heretic",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-11-07",
+    "family": "deepseek"
   },
   {
     "params_b": 10.293,
@@ -847,10 +856,10 @@
   {
     "params_b": 30,
     "active_b": 3,
-    "name": "Qwen3 30B A3B Thinking 2507",
+    "name": "Qwen3 Omni 30B A3B Thinking",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-02-25",
+    "last_seen": "2025-09-22",
     "family": "qwen"
   },
   {
@@ -1780,8 +1789,8 @@
     "params_b": 501,
     "active_b": 23,
     "name": "Beam 1.0 501B A23B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
+    "arch": "dense",
+    "source": "models.dev:regex",
     "last_seen": "2026-10-16",
     "family": "beam"
   },

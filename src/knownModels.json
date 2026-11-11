@@ -856,10 +856,10 @@
   {
     "params_b": 30,
     "active_b": 3,
-    "name": "Qwen3 30B A3B Thinking 2507",
+    "name": "Qwen3 Omni 30B A3B Thinking",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-02-25",
+    "last_seen": "2025-09-22",
     "family": "qwen"
   },
   {
@@ -1173,7 +1173,7 @@
     "name": "Ripple 65B Preview",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-11-05",
+    "last_seen": "2026-11-04",
     "family": "other"
   },
   {
@@ -1789,8 +1789,8 @@
     "params_b": 501,
     "active_b": 23,
     "name": "Beam 1.0 501B A23B",
-    "arch": "dense",
-    "source": "models.dev:regex",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
     "last_seen": "2026-10-16",
     "family": "beam"
   },
@@ -1802,15 +1802,6 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-06-04",
     "family": "nemotron"
-  },
-  {
-    "params_b": 552,
-    "active_b": null,
-    "name": "DeepSeek V4.1 Flash",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-09-10",
-    "family": "deepseek-flash"
   },
   {
     "params_b": 572.121,
@@ -1913,10 +1904,10 @@
   {
     "params_b": 744,
     "active_b": null,
-    "name": "GLM-5.2",
+    "name": "GLM-5.3",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-06-13",
+    "last_seen": "2026-08-14",
     "family": "glm"
   },
   {
@@ -1929,12 +1920,12 @@
     "family": "glm"
   },
   {
-    "params_b": 754,
+    "params_b": 753.864,
     "active_b": null,
-    "name": "GLM-5.3",
+    "name": "GLM 5.1",
     "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-08-14",
+    "source": "models.dev:hf",
+    "last_seen": "2026-04-07",
     "family": "glm"
   },
   {

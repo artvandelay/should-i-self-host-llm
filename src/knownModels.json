@@ -681,7 +681,7 @@
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2023-08-10",
-    "family": "other"
+    "family": "mythomax"
   },
   {
     "params_b": 13,
@@ -700,15 +700,6 @@
     "source": "models.dev:regex",
     "last_seen": "2023-07-22",
     "family": "remm"
-  },
-  {
-    "params_b": 13,
-    "active_b": null,
-    "name": "MythoMax 13B",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2023-08-10",
-    "family": "mythomax"
   },
   {
     "params_b": 13.96,
@@ -824,7 +815,7 @@
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2024-04-15",
-    "family": "other"
+    "family": "wizardlm"
   },
   {
     "params_b": 22,
@@ -834,15 +825,6 @@
     "source": "models.dev:regex",
     "last_seen": "2024-04-17",
     "family": "mixtral"
-  },
-  {
-    "params_b": 22,
-    "active_b": null,
-    "name": "WizardLM 2 8x22B (Deep Infra)",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2024-04-15",
-    "family": "wizardlm"
   },
   {
     "params_b": 23.572,
@@ -1136,8 +1118,8 @@
     "params_b": 30,
     "active_b": 3,
     "name": "Nemotron 3.5 Lightning 30B A3B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
+    "arch": "dense",
+    "source": "models.dev:regex",
     "last_seen": "2026-08-11",
     "family": "nemotron-lightning"
   },
@@ -1165,7 +1147,7 @@
     "name": "Qwen3-Coder 30B-A3B Instruct",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2025-07-31",
+    "last_seen": "2025-09-18",
     "family": "qwen-coder"
   },
   {
@@ -1351,7 +1333,7 @@
   {
     "params_b": 32,
     "active_b": null,
-    "name": "QwQ 32B",
+    "name": "Qwq 32B",
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2025-03-05",
@@ -1668,7 +1650,7 @@
     "name": "Qwen3-Next 80B-A3B Instruct",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2025-09",
+    "last_seen": "2025-11-25",
     "family": "qwen"
   },
   {
@@ -1856,15 +1838,6 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-09-03",
-    "family": "ling"
-  },
-  {
-    "params_b": 127.486,
-    "active_b": null,
-    "name": "inclusionAI: Ling 3.0 Flash",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-07-23",
     "family": "ling-flash"
   },
   {
@@ -2052,7 +2025,7 @@
     "name": "Motif 3",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-11-02",
+    "last_seen": "2026-08-07",
     "family": "motif"
   },
   {
@@ -2126,6 +2099,15 @@
     "source": "models.dev:regex",
     "last_seen": "2026-08-24",
     "family": "ornith"
+  },
+  {
+    "params_b": 397,
+    "active_b": 17,
+    "name": "Qwen3.5 397B-A17B",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-02-15",
+    "family": "qwen-free"
   },
   {
     "params_b": 398.635,
@@ -2203,8 +2185,8 @@
     "params_b": 501,
     "active_b": 23,
     "name": "Beam 1.0 501B A23B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
+    "arch": "dense",
+    "source": "models.dev:regex",
     "last_seen": "2026-10-16",
     "family": "beam"
   },
@@ -2227,27 +2209,18 @@
     "family": "nemotron-ultra-free"
   },
   {
-    "params_b": 552.845,
+    "params_b": 552,
     "active_b": null,
-    "name": "Inkling",
+    "name": "DeepSeek V4.1 Flash",
     "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-07-15",
-    "family": "inkling"
+    "source": "models.dev:regex",
+    "last_seen": "2026-09-10",
+    "family": "deepseek-flash"
   },
   {
     "params_b": 572.121,
     "active_b": null,
     "name": "Ling 3.1 Flash",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-09-29",
-    "family": "ling"
-  },
-  {
-    "params_b": 572.121,
-    "active_b": null,
-    "name": "inclusionAI: Ling 3.1 Flash",
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-09-29",
@@ -2336,25 +2309,16 @@
   {
     "params_b": 684.49,
     "active_b": null,
-    "name": "deepseek-ai/DeepSeek-R1",
+    "name": "DeepSeek R1",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2025-05-28",
+    "last_seen": "2025-05-29",
     "family": "deepseek-r"
   },
   {
     "params_b": 684.531,
     "active_b": null,
     "name": "DeepSeek-R1-0528",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2025-05-28",
-    "family": "deepseek-thinking"
-  },
-  {
-    "params_b": 684.531,
-    "active_b": null,
-    "name": "DeepSeek R1 0528",
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2025-05-28",
@@ -2431,6 +2395,15 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2026-10-15",
     "family": "muse-spark"
+  },
+  {
+    "params_b": 952.378,
+    "active_b": null,
+    "name": "Inkling",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-07-15",
+    "family": "inkling"
   },
   {
     "params_b": 1023.183,

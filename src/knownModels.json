@@ -383,7 +383,7 @@
     "name": "Ling 3.0 Tiny",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-08-06",
+    "last_seen": "2026-08-07",
     "family": "ling-tiny"
   },
   {
@@ -393,7 +393,7 @@
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2025-02-04",
-    "family": "llama"
+    "family": "aion-rp"
   },
   {
     "params_b": 8,
@@ -488,20 +488,20 @@
   {
     "params_b": 8,
     "active_b": null,
-    "name": "AionLabs: Aion-RP 1.0 (8B)",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2025-02-04",
-    "family": "aion-rp"
-  },
-  {
-    "params_b": 8,
-    "active_b": null,
     "name": "Cosmos Reason2 8B",
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2025-12-01",
     "family": "other"
+  },
+  {
+    "params_b": 8,
+    "active_b": null,
+    "name": "Neural Daredevil 8B abliterated",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2024-12-01",
+    "family": "llama"
   },
   {
     "params_b": 9,
@@ -1003,7 +1003,7 @@
     "name": "DaisyRose 27B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-11-21",
+    "last_seen": "2026-11-20",
     "family": "other"
   },
   {
@@ -1057,7 +1057,7 @@
     "name": "Qwen3 30B A3B Thinking 2507",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2026-02-25",
+    "last_seen": "2025-07-30",
     "family": "qwen"
   },
   {
@@ -1103,7 +1103,7 @@
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2026-08-10",
-    "family": "muse-glimmer"
+    "family": "muse-glimmer-free"
   },
   {
     "params_b": 30,
@@ -1167,6 +1167,15 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2025-09-22",
     "family": "qwen-omni"
+  },
+  {
+    "params_b": 30,
+    "active_b": null,
+    "name": "Muse Glimmer 30B (TR)",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-08-10",
+    "family": "muse-glimmer"
   },
   {
     "params_b": 31,
@@ -1418,15 +1427,6 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-09-22",
-    "family": "agi"
-  },
-  {
-    "params_b": 35.107,
-    "active_b": null,
-    "name": "Nex-N2.5-Mini",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-09-08",
     "family": "nex-n-mini"
   },
   {
@@ -1436,7 +1436,7 @@
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-08-24",
-    "family": "other"
+    "family": "apodex-mini"
   },
   {
     "params_b": 36,
@@ -1497,7 +1497,7 @@
     "name": "Ripple 65B Preview",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-11-04",
+    "last_seen": "2026-11-05",
     "family": "other"
   },
   {
@@ -2025,7 +2025,7 @@
     "name": "Motif 3",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-08-07",
+    "last_seen": "2026-11-02",
     "family": "motif"
   },
   {
@@ -2067,20 +2067,11 @@
   {
     "params_b": 396.802,
     "active_b": null,
-    "name": "Nex-N2.5-Pro",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2026-09-08",
-    "family": "nex-n-pro"
-  },
-  {
-    "params_b": 396.802,
-    "active_b": null,
     "name": "Nex N2.5 Pro",
     "arch": "dense",
     "source": "models.dev:hf",
     "last_seen": "2026-09-22",
-    "family": "agi"
+    "family": "nex-n-pro"
   },
   {
     "params_b": 397,
@@ -2099,15 +2090,6 @@
     "source": "models.dev:regex",
     "last_seen": "2026-08-24",
     "family": "ornith"
-  },
-  {
-    "params_b": 397,
-    "active_b": 17,
-    "name": "Qwen3.5 397B-A17B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2026-02-15",
-    "family": "qwen-free"
   },
   {
     "params_b": 398.635,
@@ -2379,6 +2361,15 @@
     "family": "deepseek"
   },
   {
+    "params_b": 774.434,
+    "active_b": null,
+    "name": "Hy4",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2026-11-04",
+    "family": "other"
+  },
+  {
     "params_b": 779.961,
     "active_b": null,
     "name": "Hy4 preview",
@@ -2431,15 +2422,6 @@
     "source": "models.dev:hf",
     "last_seen": "2026-05-14",
     "family": "other"
-  },
-  {
-    "params_b": 1026.408,
-    "active_b": null,
-    "name": "Kimi K2 0905",
-    "arch": "dense",
-    "source": "models.dev:hf",
-    "last_seen": "2025-09-05",
-    "family": "kimi-k2"
   },
   {
     "params_b": 1026.471,

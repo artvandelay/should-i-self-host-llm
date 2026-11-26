@@ -383,7 +383,7 @@
     "name": "Ling 3.0 Tiny",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-08-06",
+    "last_seen": "2026-08-07",
     "family": "ling-tiny"
   },
   {
@@ -1003,7 +1003,7 @@
     "name": "DaisyRose 27B",
     "arch": "dense",
     "source": "models.dev:regex",
-    "last_seen": "2026-11-21",
+    "last_seen": "2026-11-20",
     "family": "other"
   },
   {
@@ -1103,7 +1103,7 @@
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2026-08-10",
-    "family": "muse-glimmer-free"
+    "family": "muse-glimmer"
   },
   {
     "params_b": 30,
@@ -1147,7 +1147,7 @@
     "name": "Qwen3-Coder 30B-A3B Instruct",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2025-09-18",
+    "last_seen": "2025-07-31",
     "family": "qwen-coder"
   },
   {
@@ -1167,15 +1167,6 @@
     "source": "models.dev:regex_moe",
     "last_seen": "2025-09-22",
     "family": "qwen-omni"
-  },
-  {
-    "params_b": 30,
-    "active_b": null,
-    "name": "Muse Glimmer 30B (TR)",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-08-10",
-    "family": "muse-glimmer"
   },
   {
     "params_b": 31,
@@ -1342,7 +1333,7 @@
   {
     "params_b": 32,
     "active_b": null,
-    "name": "Qwq 32B",
+    "name": "QwQ 32B",
     "arch": "dense",
     "source": "models.dev:regex",
     "last_seen": "2025-03-05",
@@ -2043,7 +2034,7 @@
     "name": "Motif 3",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-11-02",
+    "last_seen": "2026-08-07",
     "family": "motif"
   },
   {
@@ -2108,6 +2099,15 @@
     "source": "models.dev:regex",
     "last_seen": "2026-08-24",
     "family": "ornith"
+  },
+  {
+    "params_b": 397,
+    "active_b": 17,
+    "name": "Qwen3.5 397B-A17B",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
+    "last_seen": "2026-02-15",
+    "family": "qwen-free"
   },
   {
     "params_b": 398.635,
@@ -2185,8 +2185,8 @@
     "params_b": 501,
     "active_b": 23,
     "name": "Beam 1.0 501B A23B",
-    "arch": "dense",
-    "source": "models.dev:regex",
+    "arch": "moe",
+    "source": "models.dev:regex_moe",
     "last_seen": "2026-10-16",
     "family": "beam"
   },
@@ -2307,6 +2307,15 @@
     "family": "deepseek"
   },
   {
+    "params_b": 684.49,
+    "active_b": null,
+    "name": "deepseek-ai/DeepSeek-R1",
+    "arch": "dense",
+    "source": "models.dev:hf",
+    "last_seen": "2025-05-28",
+    "family": "deepseek-r"
+  },
+  {
     "params_b": 684.531,
     "active_b": null,
     "name": "DeepSeek R1",
@@ -2323,15 +2332,6 @@
     "source": "models.dev:hf",
     "last_seen": "2025-12-01",
     "family": "deepseek"
-  },
-  {
-    "params_b": 744,
-    "active_b": null,
-    "name": "GLM-5.2",
-    "arch": "dense",
-    "source": "models.dev:regex",
-    "last_seen": "2026-06-13",
-    "family": "glm"
   },
   {
     "params_b": 753.33,
@@ -2516,10 +2516,10 @@
   {
     "params_b": 2780.11,
     "active_b": null,
-    "name": "Kimi K3.1 Pro",
+    "name": "Kimi K3.1 Pro Abliterated (YetaLabs)",
     "arch": "dense",
     "source": "models.dev:hf",
-    "last_seen": "2026-10-23",
+    "last_seen": "2026-11-25",
     "family": "kimi-pro"
   }
 ]

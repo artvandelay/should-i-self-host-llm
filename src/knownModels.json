@@ -1650,7 +1650,7 @@
     "name": "Qwen3-Next 80B-A3B Instruct",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2025-11-25",
+    "last_seen": "2025-09",
     "family": "qwen"
   },
   {
@@ -1923,10 +1923,10 @@
   {
     "params_b": 235,
     "active_b": 22,
-    "name": "Qwen3 235B-A22B Instruct 2507",
+    "name": "Qwen3 235B A22B Instruct",
     "arch": "moe",
     "source": "models.dev:regex_moe",
-    "last_seen": "2025-09-18",
+    "last_seen": "2025-08-13",
     "family": "qwen"
   },
   {
@@ -2099,15 +2099,6 @@
     "source": "models.dev:regex",
     "last_seen": "2026-08-24",
     "family": "ornith"
-  },
-  {
-    "params_b": 397,
-    "active_b": 17,
-    "name": "Qwen3.5 397B-A17B",
-    "arch": "moe",
-    "source": "models.dev:regex_moe",
-    "last_seen": "2026-02-15",
-    "family": "qwen-free"
   },
   {
     "params_b": 398.635,
@@ -2332,6 +2323,15 @@
     "source": "models.dev:hf",
     "last_seen": "2025-12-01",
     "family": "deepseek"
+  },
+  {
+    "params_b": 744,
+    "active_b": null,
+    "name": "GLM-5.2",
+    "arch": "dense",
+    "source": "models.dev:regex",
+    "last_seen": "2026-06-13",
+    "family": "glm"
   },
   {
     "params_b": 753.33,
